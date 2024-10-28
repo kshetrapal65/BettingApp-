@@ -1,0 +1,81 @@
+.odds-table {
+  width: 100%;
+  margin: 0 auto;
+  height: 400px;
+  overflow-y: scroll;
+
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.game-row {
+  /* display: flex; */
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.team-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.team-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.odds-info {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex: 3;
+}
+
+.bookmaker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  /* background-color: #f1f1f1; */
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+.bookmaker-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.odds {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.point {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 12px;
+  color: #888;
+}

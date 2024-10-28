@@ -6,7 +6,7 @@ import PublicRouter from "./Router/PublicRouter";
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/betting">
         <PublicRouter />
       </BrowserRouter>
     </>

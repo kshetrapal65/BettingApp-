@@ -1,0 +1,22 @@
+const Images = {
+  logo: require("../Assets/Images/logo.png"),
+  down_arrow: require("../Assets/Images/down_arrow.png"),
+  up_arrow: require("../Assets/Images/up_arrow.png"),
+  Edit: require("../Assets/Images/Edit.png"),
+  Settings: require("../Assets/Images/Settings.png"),
+  location: require("../Assets/Images/location.png"),
+  Fav_Businesses: require("../Assets/Images/Fav_Businesses.png"),
+  Book_History: require("../Assets/Images/Book_History.png"),
+  heart: require("../Assets/Images/heart.png"),
+  HR: require("../Assets/Images/HR.png"),
+  barber: require("../Assets/Images/barber.png"),
+  rain: require("../Assets/Images/rain.png"),
+  pro: require("../Assets/Images/pro.png"),
+  computer: require("../Assets/Images/computer.png"),
+  filter: require("../Assets/Images/interface.png"),
+  backArrow: require("../Assets/Images/back.png"),
+  profile: require("../Assets/Images/profile.png"),
+  user: require("../Assets/Images/user.png"),
+  group: require("../Assets/Images/Group.png"),
+};
+export default Images;

@@ -15,7 +15,7 @@ nav {
   width: 100%;
   height: 100%;
   height: 70px;
-  background: #155239;
+  background: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   z-index: 99;
 }
@@ -32,7 +32,7 @@ nav .navbar {
 }
 .navbar .logo a {
   font-size: 30px;
-  color: #fff;
+  color: black;
   text-decoration: none;
   font-weight: 600;
 }
@@ -55,9 +55,9 @@ nav .navbar .links li a {
   height: 100%;
   text-decoration: none;
   white-space: nowrap;
-  color: #fff;
+  color: black;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: bold;
 }
 .links li:hover .htmlcss-arrow,
 .links li:hover .js-arrow {
@@ -70,7 +70,7 @@ nav .navbar .links li .arrow {
   line-height: 70px;
   text-align: center;
   display: inline-block;
-  color: #fff;
+  color: black;
   transition: all 0.3s ease;
 }
 nav .navbar .links li .sub-menu {
@@ -78,7 +78,7 @@ nav .navbar .links li .sub-menu {
   top: 70px;
   left: 0;
   line-height: 40px;
-  background: #155239;
+  background: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 0 0 4px 4px;
   display: none;
@@ -93,7 +93,7 @@ nav .navbar .links li:hover .js-sub-menu {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .navbar .links li .sub-menu a {
-  color: #fff;
+  color: black;
   font-size: 15px;
   font-weight: 500;
 }
@@ -176,6 +176,7 @@ nav .navbar .links li:hover .js-sub-menu {
 }
 .navbar .bx-menu {
   display: none;
+  color: black;
 }
 @media (max-width: 920px) {
   nav .navbar {
@@ -200,6 +201,7 @@ nav .navbar .links li:hover .js-sub-menu {
 
   .navbar .bx-menu {
     display: block;
+    color: black;
   }
   nav .navbar .nav-links {
     position: fixed;
@@ -208,7 +210,7 @@ nav .navbar .links li:hover .js-sub-menu {
     display: block;
     max-width: 270px;
     width: 100%;
-    background: #155239;
+    background: #fff;
     line-height: 40px;
     padding: 20px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -222,12 +224,12 @@ nav .navbar .links li:hover .js-sub-menu {
   }
   .sidebar-logo .logo-name {
     font-size: 25px;
-    color: #fff;
+    color: black;
   }
   .sidebar-logo i,
   .navbar .bx-menu {
     font-size: 25px;
-    color: #fff;
+    color: black !important;
   }
   nav .navbar .links {
     display: block;
@@ -290,24 +292,22 @@ nav .navbar .links li:hover .js-sub-menu {
     transform: rotate(90deg);
   }
   .navbar .nav-links.open {
-    left: 0; /* Show the drawer */
+    left: 0;
   }
 
-  /* Mobile submenu styles */
   .navbar .nav-links .sub-menu {
-    display: none; /* Hide submenus by default */
+    display: none;
   }
 
   .navbar .nav-links.show1 .htmlCss-sub-menu,
   .navbar .nav-links.show3 .js-sub-menu,
   .navbar .nav-links.show2 .more .more-sub-menu {
-    display: block; /* Show submenus when respective menu is toggled */
+    display: block;
   }
 
-  /* Adjust arrows for mobile */
   .links li:hover .htmlCss-sub-menu,
   .links li:hover .js-sub-menu {
-    display: block; /* Show submenus on hover for desktop */
+    display: block;
   }
 }
 @media (max-width: 370px) {
@@ -318,4 +318,27 @@ nav .navbar .links li:hover .js-sub-menu {
 nav .navbar .links li:hover .htmlCss-sub-menu,
 nav .navbar .links li:hover .js-sub-menu {
   display: block;
+}
+
+/* >>>>>>>>>>>>>>>>>>>>>> OLD CSS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+.htmlCss-sub-menu {
+  max-height: 300px; /* Adjust height as needed */
+  overflow-y: auto; /* Enables vertical scrolling */
+  padding: 0; /* Remove default padding if necessary */
+  margin: 0; /* Remove default margin if necessary */
+  list-style: none; /* Removes bullet points */
+}
+
+.htmlCss-sub-menu li {
+  padding: 10px; /* Space around each item */
+  border-bottom: 1px solid black; /* Optional: adds a border between items */
+}
+
+.htmlCss-sub-menu li a {
+  text-decoration: none;
+  color: #333; /* Adjust text color as needed */
+}
+
+.htmlCss-sub-menu li:hover {
+  background-color: #f0f0f0; /* Optional: adds hover effect */
 }

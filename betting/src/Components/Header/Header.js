@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import "../Header.css"; // Ensure this path is correct
+import SportList from "../../JSON/SportList";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [showHtmlCssSubMenu, setShowHtmlCssSubMenu] = useState(false);
   const [showJsSubMenu, setShowJsSubMenu] = useState(false);
+  const navigate = useNavigate();
+
   const [showMoreSubMenu, setShowMoreSubMenu] = useState(false);
+  const data = SportList;
+  console.log("DATA", data);
 
   const toggleDrawer = () => {
     setDrawerOpen((prevState) => !prevState);
@@ -15,9 +21,15 @@ const Header = () => {
   const toggleSearchInput = () => {
     setShowSearchInput(!showSearchInput);
   };
+  const uniqueGroups = [];
+  data?.map((item) => {
+    if (!uniqueGroups?.includes(item.group)) {
+      uniqueGroups.push(item.group);
+    }
+  });
 
   return (
-    <nav>
+    <nav className="navbar">
       <div className="navbar">
         <i className="bx bx-menu" onClick={toggleDrawer}></i>
         <div className="logo">
@@ -30,7 +42,10 @@ const Header = () => {
           </div>
           <ul className="links">
             <li>
-              <a href="#">HOME</a>
+              <Link to="/">
+                {" "}
+                <a href="#">HOME</a>
+              </Link>
             </li>
             <li>
               <a
@@ -43,16 +58,17 @@ const Header = () => {
                 className="bx bxs-chevron-down htmlcss-arrow arrow"
                 onClick={() => setShowHtmlCssSubMenu(!showHtmlCssSubMenu)}
               ></i>
+
               {showHtmlCssSubMenu && (
                 <ul className="htmlCss-sub-menu sub-menu">
-                  <li>
-                    <a href="#">Web Design</a>
+                  {/* <li>
+                    <a href="#">Neumorphism</a>
                   </li>
                   <li>
-                    <a href="#">Login Forms</a>
-                  </li>
+                    <a href="#">Neumorphism</a>
+                  </li>{" "}
                   <li>
-                    <a href="#">Card Design</a>
+                    <a href="#">Neumorphism</a>
                   </li>
                   <li className="more">
                     <span onClick={() => setShowMoreSubMenu(!showMoreSubMenu)}>
@@ -72,10 +88,16 @@ const Header = () => {
                         </li>
                       </ul>
                     )}
-                  </li>
+                  </li> */}
+                  {uniqueGroups?.map((group, index) => (
+                    <li onClick={() => navigate(`/title/${group}`)} key={index}>
+                      <a href="#">{group}</a>
+                    </li>
+                  ))}
                 </ul>
               )}
             </li>
+
             <li>
               <a href="#" onClick={() => setShowJsSubMenu(!showJsSubMenu)}>
                 Odds
@@ -85,19 +107,15 @@ const Header = () => {
                 onClick={() => setShowJsSubMenu(!showJsSubMenu)}
               ></i>
               {showJsSubMenu && (
-                <ul className="js-sub-menu sub-menu">
-                  <li>
-                    <a href="#">Dynamic Clock</a>
-                  </li>
-                  <li>
-                    <a href="#">Form Validation</a>
-                  </li>
-                  <li>
-                    <a href="#">Card Slider</a>
-                  </li>
-                  <li>
-                    <a href="#">Complete Website</a>
-                  </li>
+                <ul className="htmlCss-sub-menu sub-menu">
+                  {data?.map((group, index) => (
+                    <li
+                      onClick={() => navigate(`/odds/${group.key}`)}
+                      key={index}
+                    >
+                      <a href="#">{group.title}</a>
+                    </li>
+                  ))}
                 </ul>
               )}
             </li>
@@ -106,6 +124,9 @@ const Header = () => {
             </li>
             <li>
               <a href="#">CONTACT US</a>
+            </li>
+            <li>
+              <a href="#">LogIn</a>
             </li>
           </ul>
         </div>
@@ -123,3 +144,4 @@ const Header = () => {
 };
 
 export default Header;
+// >>>>>>>>>>>>>>>>>>>>>>>>> Above CODE IS WORKING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
