@@ -6,14 +6,16 @@ import SportList from "../../JSON/SportList";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import moment from "moment";
 import Event from "../../JSON/event";
+import { useNavigate } from "react-router-dom";
 const sports = SportList;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 const Home = () => {
-  const [sport, setSport] = React.useState("americanfootball_cfl");
+  const [sport, setSport] = React.useState("americanfootball_nfl");
   const [event, setEvent] = React.useState([]);
+  const navigate = useNavigate();
 
-  console.log("event", event);
+  // console.log("event", event);
   useEffect(() => {
     fetchEvent();
   }, [sport]);
@@ -823,7 +825,9 @@ const Home = () => {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
+                      cursor: "pointer",
                     }}
+                    onClick={() => navigate("/event-score", { state: event })}
                   >
                     <div style={{ textAlign: "center" }}>
                       {/* Home Team Image and Name */}
@@ -920,7 +924,7 @@ const Home = () => {
             </Col>
           </Row>
           <Row className="mt-5 justify-content-around  ">
-            <Col className="bg-light p-4 rounded-5" lg={8}>
+            <Col className="bg-light p-4 rounded-5" lg={12}>
               <Row>
                 <Col>
                   <h5>Recent Stories</h5>
@@ -932,8 +936,8 @@ const Home = () => {
                 </Col>
               </Row>
 
-              <Row className="mt-3">
-                <Col lg={6} className="d-flex ">
+              <Row className="mt-3 p-3">
+                <Col lg={4} className="d-flex ">
                   <div className="me-3">
                     <Image
                       style={{
@@ -951,7 +955,7 @@ const Home = () => {
                     <p>Jacob Wayne • 4 hours ago</p>
                   </div>
                 </Col>
-                <Col lg={6} className="d-flex">
+                <Col lg={4} className="d-flex">
                   <div className="me-3">
                     <Image
                       style={{
@@ -969,7 +973,7 @@ const Home = () => {
                     <p>Jacob Wayne • 4 hours ago</p>
                   </div>
                 </Col>
-                <Col lg={6} className="d-flex">
+                <Col lg={4} className="d-flex">
                   <div className="me-3">
                     <Image
                       style={{
@@ -987,7 +991,43 @@ const Home = () => {
                     <p>Jacob Wayne • 4 hours ago</p>
                   </div>
                 </Col>
-                <Col lg={6} className="d-flex">
+                <Col lg={4} className="d-flex">
+                  <div className="me-3">
+                    <Image
+                      style={{
+                        maxWidth: "100%",
+                        objectFit: "cover",
+                        aspectRatio: "1",
+                        borderRadius: "18px",
+                      }}
+                      src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                    />
+                  </div>
+                  <div className="d-flex-column">
+                    <h5 className="">NFL</h5>
+                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                    <p>Jacob Wayne • 4 hours ago</p>
+                  </div>
+                </Col>
+                <Col lg={4} className="d-flex">
+                  <div className="me-3">
+                    <Image
+                      style={{
+                        maxWidth: "100%",
+                        objectFit: "cover",
+                        aspectRatio: "1",
+                        borderRadius: "18px",
+                      }}
+                      src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                    />
+                  </div>
+                  <div className="d-flex-column">
+                    <h5 className="">NFL</h5>
+                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                    <p>Jacob Wayne • 4 hours ago</p>
+                  </div>
+                </Col>
+                <Col lg={4} className="d-flex">
                   <div className="me-3">
                     <Image
                       style={{

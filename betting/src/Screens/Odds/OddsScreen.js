@@ -1014,31 +1014,31 @@ export const OddsScreen = () => {
       "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/MIN",
   };
   useEffect(() => {
-    fetchEvent();
+    // fetchEvent();
   }, [sport, region, market]);
-  const fetchEvent = async () => {
-    try {
-      const response = await fetch(
-        `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apikey}&regions=${region}&markets=${market},spreads&oddsFormat=american`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // const fetchEvent = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apikey}&regions=${region}&markets=${market},spreads&oddsFormat=american`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      console.log("response", data);
-      setData(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     const data = await response.json();
+  //     console.log("response", data);
+  //     setData(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <Container className="mt-3">
@@ -1112,9 +1112,12 @@ export const OddsScreen = () => {
         </Row>
       </Form>
       <Row className="mt-3">
-        <Col className="text-start" lg={8}>
+        {/* <Col className="text-start" lg={8}>
           <div className="odds-table">
-            {data.map((game) => (
+            {Data.map((game) =>
+             
+            
+            (
               <div key={game.id} className="game-row">
                 <Row className="">
                   <Col lg={5}>
@@ -1157,35 +1160,142 @@ export const OddsScreen = () => {
                   </Col>
                   <Col className="" lg={7}>
                     <div className="odds-info">
-                      {game.bookmakers.map((bookmaker) => (
-                        <div key={bookmaker.key} className="bookmaker shadow">
-                          {/* Display bookmaker title */}
-                          <div className="bookmaker-title">
-                            {bookmaker.title}
+                      {game.bookmakers
+                        .find((m) => m.key === "fanduel")
+                        .map((bookmaker) => (
+                          <div key={bookmaker.key} className="bookmaker shadow">
+                            
+                            <div className="bookmaker-title">
+                              {bookmaker.title}
+                            </div>
+                            <div style={{ cursor: "pointer" }} className="odds">
+                              <span className="point">
+                                {bookmaker.markets[0].outcomes[0].point}
+                              </span>
+                              <span className="price">
+                                {bookmaker.markets[0].outcomes[0].price}
+                              </span>
+                            </div>
+                            <div style={{ cursor: "pointer" }} className="odds">
+                              <span className="point">
+                                {bookmaker.markets[0].outcomes[1].point}
+                              </span>
+                              <span className="price">
+                                {bookmaker.markets[0].outcomes[1].price}
+                              </span>
+                            </div>
                           </div>
-                          <div style={{ cursor: "pointer" }} className="odds">
-                            <span className="point">
-                              {bookmaker.markets[0].outcomes[0].point}
-                            </span>
-                            <span className="price">
-                              {bookmaker.markets[0].outcomes[0].price}
-                            </span>
-                          </div>
-                          <div style={{ cursor: "pointer" }} className="odds">
-                            <span className="point">
-                              {bookmaker.markets[0].outcomes[1].point}
-                            </span>
-                            <span className="price">
-                              {bookmaker.markets[0].outcomes[1].price}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </Col>
                 </Row>
               </div>
             ))}
+          </div>
+        </Col> */}
+        <Col className="text-start" lg={8}>
+          <div className="odds-table">
+            {Data.map((game) => {
+              // Find the fanduel bookmaker within the game's bookmakers
+              const fanduelBookmaker = game.bookmakers.find(
+                (bookmaker) => bookmaker.key === "fanduel"
+              );
+
+              // Check if fanduel bookmaker exists for this game
+              if (!fanduelBookmaker) return null;
+
+              return (
+                <div key={game.id} className="game-row">
+                  <Row>
+                    <Col lg={5}>
+                      <div className="team-info">
+                        <div className="team">
+                          <img
+                            src={
+                              teamImages[game.home_team] ||
+                              "https://assets.actionnetwork.com/372790_jets.png"
+                            }
+                            alt={game.home_team}
+                            className="team-logo"
+                          />
+                          <span className="team-name">{game.home_team}</span>
+                        </div>
+                        <div className="team">
+                          <img
+                            src={
+                              teamImages[game.away_team] ||
+                              "https://assets.actionnetwork.com/372790_jets.png"
+                            }
+                            alt={game.away_team}
+                            className="team-logo"
+                          />
+                          <span className="team-name">{game.away_team}</span>
+                        </div>
+                        <p
+                          style={{
+                            textAlign: "start",
+                            fontSize: "13px",
+                            color: "#666",
+                            marginTop: "10px",
+                          }}
+                        >
+                          {moment(game.commence_time).format(
+                            "MMMM Do YYYY, h:mm A"
+                          )}
+                        </p>
+                      </div>
+                    </Col>
+                    <Col lg={7}>
+                      <div className="odds-info">
+                        <div>
+                          {/* <div className=" ">{fanduelBookmaker.title}</div> */}
+
+                          {/* Display each market as a separate row */}
+                          {fanduelBookmaker.markets.map((market) => (
+                            <Row
+                              key={market.key}
+                              className="market-row   shadow"
+                            >
+                              <Col lg={12}>
+                                <h6 className="market-title">
+                                  {market.key === "h2h"
+                                    ? "Moneyline"
+                                    : market.key === "spreads"
+                                    ? "Spread"
+                                    : "Totals"}
+                                </h6>
+                              </Col>
+                              <Col lg={12} className="market-outcomes d-flex">
+                                {market.outcomes.map((outcome, index) => (
+                                  <div
+                                    key={index}
+                                    className="outcome d-flex justify-content-between"
+                                  >
+                                    {market.key !== "h2h" &&
+                                      outcome.point !== undefined && (
+                                        <span className="point">
+                                          {outcome.point > 0
+                                            ? `+${outcome.point}`
+                                            : outcome.point}
+                                        </span>
+                                      )}
+                                    <span className="price">
+                                      {outcome.price > 0
+                                        ? `+${outcome.price}`
+                                        : outcome.price}
+                                    </span>
+                                  </div>
+                                ))}
+                              </Col>
+                            </Row>
+                          ))}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              );
+            })}
           </div>
         </Col>
       </Row>

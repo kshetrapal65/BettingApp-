@@ -1,0 +1,810 @@
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Badge,
+  Tab,
+  Tabs,
+  Image,
+  Container,
+} from "react-bootstrap";
+import { BsCalendar3 } from "react-icons/bs"; // Import from react-icons
+import {
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  Divider,
+  Grid,
+} from "@mui/material";
+import ApiEndPoints from "../../Network_Call/ApiEndPoints";
+const teamImages = {
+  "Miami Dolphins":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s",
+  "Arizona Cardinals":
+    "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ari.png",
+  "Tampa Bay Buccaneers":
+    "https://s.yimg.com/cv/apiv2/default/nfl/20200508/500x500/buccaneers_wbg.png",
+  "Atlanta Falcons": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
+  "Cleveland Browns":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy5_SHiF_yAYbBSETLZuNEibZVlRkJK9qxng&s",
+  "Baltimore Ravens":
+    "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png",
+  "Cincinnati Bengals":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDppAnFbz2lOHRN9zJwk9pcR6rJuNIELLW3g&s",
+  "Philadelphia Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3dvuXHhgej47jbV4hzvBC5A1SXOutMSMCaQ&s",
+  "Detroit Lions":
+    "https://i.pinimg.com/564x/b1/25/7e/b1257e5575a2f9fc4be1525d99cbdba7.jpg",
+  "Tennessee Titans":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqyWzdbNoWlQ3gNiTRBs25Irr9K8-7ZcctQ&s",
+  "Jacksonville Jaguars":
+    "https://logos-world.net/wp-content/uploads/2020/05/Jacksonville-Jaguars-logo.png",
+  "Green Bay Packers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0jBDfjBjyaoGMWt_R2Ot3w8ZZvfgW1FxPSg&s",
+  "Houston Texans ":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4S2cxlWIl7hix8DsFjpnCf8jihH7EV0jhkQ&s",
+  "Indianapolis Colts":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBzglwjrScKxVzFEoK9W5rPh3Mo8SbcZ7TFA&s",
+  "New England Patriots":
+    "https://i.pinimg.com/736x/8a/63/ce/8a63ce622b259803664a005af2af1246.jpg",
+  "New York Jets":
+    "https://upload.wikimedia.org/wikipedia/commons/6/69/New_York_Jets_2024.svg",
+  "Los Angeles Chargers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ3XUuD3vggtDNtqHN8cFJZzjKBLTeGwoiWg&s",
+  "New Orleans Saints":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAUsJ0RNgSO_iBeYSSfoRvhVpu5ayGSC9CQw&s",
+  "Denver Broncos":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScc7P9_0RgZCha0_IMK1aEc4fSWID12i1xNQ&s",
+  "Carolina Panthers":
+    "https://static.vecteezy.com/system/resources/previews/015/863/696/non_2x/carolina-panthers-logo-on-transparent-background-free-vector.jpg",
+  "Washington Commanders":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Washington_Commanders_logo.svg/1200px-Washington_Commanders_logo.svg.png",
+  "Chicago Bears":
+    "https://i.pinimg.com/originals/89/b2/03/89b2034542640a7163e19b10feae7d8c.jpg",
+  "Las Vegas Raiders":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROQSPM0GNafhVzkW3we-PhDy8bCSbxqzbkdQ&s",
+  "Kansas City Chiefs":
+    "https://logos-world.net/wp-content/uploads/2020/05/Kansas-City-Chiefs-logo.png",
+  "San Francisco 49ers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrNZ-Akry_wiS5_qyYnFsi9e_A_z1CkrUMmQ&s",
+  "Dallas Cowboys":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Dallas_Cowboys.svg/1076px-Dallas_Cowboys.svg.png",
+  "Pittsburgh Steelers":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Pittsburgh_Steelers_logo.svg/2048px-Pittsburgh_Steelers_logo.svg.png",
+  "Seattle Seahawks":
+    "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/SEA",
+  "Buffalo Bills":
+    "https://i.pinimg.com/736x/4e/3f/b5/4e3fb55ae54317fbaf15e4f7e8628cb3.jpg",
+  "Houston Texans":
+    "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/HOU",
+  "New York Giants":
+    "https://i.pinimg.com/736x/cb/f4/5e/cbf45e420aeabf14c8aff15e02f3acb4.jpg",
+  "Los Angeles Rams":
+    "https://media.rams.1rmg.com/wp-content/uploads/2020/03/24153922/2020_LA_Mark_thumb_up.png",
+  "Minnesota Vikings":
+    "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/MIN",
+  "Toronto Argonauts":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQjNligZVHoY5xXPLoYx8GoaSWIgeKVG4eJg&s",
+  "Florida International Panthers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/FIU_Panthers_logo.svg/800px-FIU_Panthers_logo.svg.png",
+  "Texas State Bobcats":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/9/97/Texas_State_Bobcats_logo.svg/640px-Texas_State_Bobcats_logo.svg.png",
+  "Sam Houston State Bearkats":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSibMSvFLHicJvVtY3rYUIVvtAIcnfUcWxClw&s",
+  "Louisiana Tech Bulldogs":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzENC-yroo1QjC7zeTeyfJKzpFxCULsb6SjQ&s",
+  "Liberty Flames":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQRZCa5Djo_GS2EriJR_cQUsGbah5_qKAnJw&s",
+  "Jacksonville State Gamecocks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/2/20/Jacksonville_State_Gamecocks_logo.svg/800px-Jacksonville_State_Gamecocks_logo.svg.png",
+  "Western Kentucky Hilltoppers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/WKU_Athletics_logo.svg/1200px-WKU_Athletics_logo.svg.png",
+  "Kennesaw State Owls":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/WKU_Athletics_logo.svg/1200px-WKU_Athletics_logo.svg.png",
+  "New Mexico State Aggies":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/New_Mexico_State_Aggies_logo.svg/800px-New_Mexico_State_Aggies_logo.svg.png",
+  "Louisiana Ragin Cajuns":
+    "https://1000logos.net/wp-content/uploads/2021/06/Louisiana-Ragin-Cajuns-logo.png",
+  "Charlotte 49ers":
+    "https://static.charlotte49ers.com/custompages/New%20logos/Primary_C_RGB_7484.png",
+  "Tulane Green Wave":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/2/28/Tulane_Green_Wave_logo.svg/1200px-Tulane_Green_Wave_logo.svg.png",
+  "Ottawa Redblacks":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa57oOcscrYo7STspGQHMJGNMG4242MUyzTg&s",
+  "Saskatchewan Roughriders":
+    "https://i.pinimg.com/originals/e8/b7/46/e8b746398101e297622be001814d6b57.gif",
+  "BC Lions":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwGhNPmJI4sKkyvi8ifjMZ_c4UBK4N-W48wQ&s",
+  "Kennesaw State Owls":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpamIyjM4-BJyEEZQuPtjrUu5FCprY66kGnQ&s",
+  "UConn Huskies":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe6A4QEZ2dAl5alkNc632xyr4fouQlr4VcOw&s",
+  "Georgia State Panthers":
+    "https://upload.wikimedia.org/wikipedia/en/3/3b/Georgia_State_Athletics_logo.svg",
+  "Florida Atlantic Owls":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkQU9ZaWGU2SUvgWMOXFlD5E5uAlpOPt1tgA&s",
+  "South Florida Bulls":
+    "https://upload.wikimedia.org/wikipedia/commons/1/13/Official_USF_Bulls_Athletic_Logo.png",
+  "Kia Tigers":
+    "https://upload.wikimedia.org/wikipedia/en/e/e0/Kia_Tigers_2017_New_Team_Logo.png",
+  "Samsung Lions":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbkD8Xn5tLzuHIyAs6Gjl1hXyHNUwmDoHf3g&s",
+  "New York Yankees":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6h3rsvDZBUGa9nMjhl71KvUUoYPZJc7rv0w&s",
+  "Los Angeles Dodgers":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Los_Angeles_Dodgers_Logo.svg/640px-Los_Angeles_Dodgers_Logo.svg.png",
+  "Fukuoka SoftBank Hawks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/9/94/Softbank_hawks_emblem.svg/1200px-Softbank_hawks_emblem.svg.png",
+  "Yokohama DeNA BayStars":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdn9TwUvBcbZ4d6OJ31yvXKABC8vgt-ttuzw&s",
+  "Ohio State Buckeyes":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Ohio_State_Buckeyes_logo.svg/1200px-Ohio_State_Buckeyes_logo.svg.png",
+  "Texas Longhorns":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Texas_Longhorns_logo.svg/1200px-Texas_Longhorns_logo.svg.png",
+  "Gonzaga Bulldogs":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbJzW41l0zd4sb3o6ixV-G3EHNkUgFq9D0og&s",
+  "Baylor Bears":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYIP8pRPJtpjvmDw7Q9MGHpUm_3EvExCP13A&s",
+  Nepal: "https://cdn.worldvectorlogo.com/logos/nepal-1.svg",
+  Scotland:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxQXXcqTsJdsanTfYOCY5phWLeJSTICITn5g&s",
+  Bangladesh:
+    "https://i.pinimg.com/originals/94/0e/8e/940e8e796893938ca9d483219e57d492.jpg",
+  "South Africa":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC49PeN61VvuP7ORqGKr_cFHFyZRlF8DdU6w&s",
+  "Brisbane Roar":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Brisbane_Roar_FC_logo.svg/1200px-Brisbane_Roar_FC_logo.svg.png",
+  "Sydney FC":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Sydney_FC_Logo.svg/1200px-Sydney_FC_Logo.svg.png",
+};
+
+export const EventScore = () => {
+  const [scoreData, setScoreData] = useState([]);
+  const [eventOdds, setEventOdds] = useState([]);
+  const location = useLocation();
+  const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
+  const event = location.state || {};
+  const apikey = "0119dd31fef7c240837b6c47a04c03ee";
+  console.log("Fandualodds>>>>", Fandualodds);
+  console.log("eventOdds>>>>", eventOdds);
+  useEffect(() => {
+    fetchScore();
+    fetchEventOdds();
+  }, [event]);
+  const fetchScore = async () => {
+    try {
+      const response = await fetch(
+        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
+        ` https://api.the-odds-api.com/v4/sports/${event?.sport_key}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}&eventIds=${event?.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      //   console.log("responseOFSCOREEEEEE", data);
+      setScoreData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchEventOdds = async () => {
+    try {
+      const response = await fetch(
+        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=spreads,totals,h2h&oddsFormat=american`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("responseOFODSSSSSS>>>>", data);
+      setEventOdds(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const GameInfo = ({ game }) => {
+    return (
+      <Card className="my-4 mx-auto">
+        <Card.Body>
+          {/* Game Heading */}
+          <Card.Title className="text-center">
+            Buccaneers vs. Chiefs Odds & Betting Predictions -{" "}
+            {new Date(game.commence_time).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </Card.Title>
+
+          {/* Matchup Information */}
+          <div className="text-center my-3">
+            <h5>
+              Tampa Bay Buccaneers <span className="mx-2">8-9</span> Kansas City
+              Chiefs
+            </h5>
+          </div>
+
+          {/* Game Time */}
+          <p className="text-center text-muted">
+            {new Date(game.commence_time).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZoneName: "short",
+            })}{" "}
+            • ESPN
+          </p>
+
+          {/* Team Logos and Records */}
+          <Row className="text-center">
+            <Col>
+              <Image
+                src="https://logos-world.net/wp-content/uploads/2020/05/Kansas-City-Chiefs-logo.png"
+                alt="Buccaneers Logo"
+                width={50}
+                height={50}
+                rounded
+              />
+              <h6 className="mt-2">Tampa Bay Buccaneers</h6>
+              <p className="text-muted">4-4</p>
+            </Col>
+            <Col>
+              <Image
+                src="https://logos-world.net/wp-content/uploads/2020/05/Kansas-City-Chiefs-logo.png"
+                alt="Chiefs Logo"
+                width={50}
+                height={50}
+                rounded
+              />
+              <h6 className="mt-2">Kansas City Chiefs</h6>
+              <p className="text-muted">7-0</p>
+            </Col>
+          </Row>
+
+          {/* Tabs for Details, News, Picks, etc. */}
+          {/* <Tabs defaultActiveKey="details" id="game-info-tabs" className="mt-4">
+            <Tab eventKey="details" title="Details">
+              <p className="mt-3">Game details will go here.</p>
+            </Tab>
+            <Tab eventKey="news" title="News">
+              <p className="mt-3">Latest news will be shown here.</p>
+            </Tab>
+            <Tab eventKey="picks" title="Picks">
+              <p className="mt-3">
+                Picks and predictions will be displayed here.
+              </p>
+            </Tab>
+            <Tab eventKey="props" title="Props">
+              <p className="mt-3">Props information will be listed here.</p>
+            </Tab>
+            <Tab eventKey="trends" title="Trends">
+              <p className="mt-3">Trending stats and information.</p>
+            </Tab>
+            <Tab eventKey="stats" title="Stats">
+              <p className="mt-3">Stats data will be displayed here.</p>
+            </Tab>
+          </Tabs> */}
+        </Card.Body>
+      </Card>
+    );
+  };
+  const GameScoreCard = () => {
+    return (
+      <Container className="p-4">
+        <Card className="p-4 text-center">
+          <h5 className="text-start fw-bold mb-4">
+            {scoreData[0]?.home_team} vs. {scoreData[0]?.away_team} Odds &
+            Betting Predictions -{" "}
+            {new Date(scoreData[0]?.commence_time).toLocaleString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+              hour12: true,
+            })}
+          </h5>
+          {/* <h6>
+            Broncos at Ravens <span className="text-muted">11:30 pm • CBS</span>
+          </h6> */}
+          <Row className="mt-4">
+            <Col className="d-flex flex-column align-items-center">
+              <img
+                src={teamImages[scoreData[0]?.home_team]}
+                alt="Denver Broncos"
+                style={{ width: "60px" }}
+              />
+              <h6 className="mt-2 fw-bold">{scoreData[0]?.home_team}</h6>
+              {/* <p className="text-muted">5-4</p> */}
+            </Col>
+            <Col className="d-flex flex-column align-items-center justify-content-center">
+              <h2 className="mb-0">
+                {scoreData[0]?.home_score}-{scoreData[0]?.away_score}
+              </h2>
+            </Col>
+            <Col className="d-flex flex-column align-items-center">
+              <img
+                src={teamImages[scoreData[0]?.away_team]}
+                alt="Baltimore Ravens"
+                style={{ width: "60px" }}
+              />
+              <h6 className="mt-2 fw-bold">{scoreData[0]?.away_team}</h6>
+              {/* <p className="text-muted">6-3</p> */}
+            </Col>
+          </Row>
+        </Card>
+      </Container>
+    );
+  };
+  // const BetSlip = () => {
+  //   const [isExpanded, setIsExpanded] = useState(false);
+
+  //   const toggleBetSlip = () => {
+  //     setIsExpanded(!isExpanded);
+  //   };
+
+  //   const bets = [
+  //     {
+  //       team: "CIN",
+  //       opponent: "BAL",
+  //       spread: "+6",
+  //       odds: "-110",
+  //       risk: 1,
+  //       toWin: 0.91,
+  //     },
+  //   ];
+
+  //   return (
+  //     <Box
+  //       sx={{
+  //         position: "fixed",
+  //         bottom: 16,
+  //         right: 16,
+  //         width: isExpanded ? 300 : "auto",
+  //         zIndex: 1000,
+  //       }}
+  //     >
+  //       {!isExpanded ? (
+  //         <Button
+  //           variant="contained"
+  //           color="primary"
+  //           onClick={toggleBetSlip}
+  //           sx={{ width: "200px", padding: "8px", textAlign: "center" }}
+  //         >
+  //           Open BetSlip
+  //         </Button>
+  //       ) : (
+  //         <Paper elevation={3} sx={{ padding: 2 }}>
+  //           <Box
+  //             display="flex"
+  //             justifyContent="space-between"
+  //             alignItems="center"
+  //           >
+  //             <Typography variant="h6">BetSlip</Typography>
+  //             <Button size="small" color="primary" onClick={toggleBetSlip}>
+  //               Close
+  //             </Button>
+  //           </Box>
+  //           <Divider sx={{ my: 1 }} />
+
+  //           {bets.map((bet, index) => (
+  //             <Box key={index} sx={{ mb: 2 }}>
+  //               <Typography variant="subtitle1">
+  //                 {bet.team} {bet.spread} {bet.odds}
+  //               </Typography>
+  //               <Typography variant="body2" color="textSecondary">
+  //                 {bet.team} @ {bet.opponent}
+  //               </Typography>
+  //               <Box
+  //                 display="flex"
+  //                 justifyContent="space-between"
+  //                 alignItems="center"
+  //                 mt={1}
+  //               >
+  //                 <TextField
+  //                   label="Risk"
+  //                   variant="outlined"
+  //                   size="small"
+  //                   // value={`$`}
+  //                   sx={{ width: "40%" }}
+  //                   InputProps={{
+  //                     readOnly: false,
+  //                   }}
+  //                 />
+  //                 <TextField
+  //                   label="To Win"
+  //                   variant="outlined"
+  //                   size="small"
+  //                   value={`$${bet.toWin}`}
+  //                   sx={{ width: "40%" }}
+  //                   InputProps={{
+  //                     readOnly: true,
+  //                   }}
+  //                 />
+  //               </Box>
+  //             </Box>
+  //           ))}
+
+  //           <Divider sx={{ my: 1 }} />
+  //           <Box display="flex" justifyContent="space-between" mt={2}>
+  //             <Typography>Total Risk</Typography>
+  //             <Typography>
+  //               ${bets.reduce((sum, bet) => sum + bet.risk, 0).toFixed(2)}
+  //             </Typography>
+  //           </Box>
+  //           <Box display="flex" justifyContent="space-between" mt={1}>
+  //             <Typography>Total To Win</Typography>
+  //             <Typography>
+  //               ${bets.reduce((sum, bet) => sum + bet.toWin, 0).toFixed(2)}
+  //             </Typography>
+  //           </Box>
+
+  //           <Button
+  //             variant="contained"
+  //             color="success"
+  //             fullWidth
+  //             sx={{ mt: 2 }}
+  //           >
+  //             Track Bets
+  //           </Button>
+  //         </Paper>
+  //       )}
+  //     </Box>
+  //   );
+  // };
+
+  // Sample usage with props from API data
+  const gameData = {
+    sport_key: "americanfootball_nfl",
+    sport_title: "NFL",
+    commence_time: "2024-11-05T01:15:00Z",
+    completed: false,
+    home_team: "Kansas City Chiefs",
+    away_team: "Tampa Bay Buccaneers",
+    scores: null,
+    last_update: null,
+  };
+
+  const GameOdds = ({ data }) => {
+    // const bookmaker = data.bookmakers[0];
+    const spreadMarket = data?.markets?.find((m) => m.key === "spreads");
+    const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
+    const totalsMarket = data?.markets?.find((m) => m.key === "totals");
+
+    return (
+      <Container
+        className="p-4"
+        style={
+          {
+            // padding: "20px",
+            // maxWidth: "800px",
+            // backgroundColor: "#f9f9fb",
+            // borderRadius: "8px",
+          }
+        }
+      >
+        {/* <p className="text-start f-md text-muted">Spread, Total, Moneyline</p> */}
+        <Card className="p-4 text-start">
+          <h5 className="text-start font-weight-bold">
+            Spread, Total, Moneyline
+          </h5>
+          <hr />
+
+          <Row className="text-center font-weight-bold text-muted">
+            <Col xs={4}>Matchup</Col>
+            {/* <Col xs={2}>Open</Col> */}
+            <Col xs={2}>Spread</Col>
+            <Col xs={2}>Total</Col>
+            <Col xs={2}>Moneyline</Col>
+          </Row>
+
+          {/* Away Team Row */}
+          <Row className="align-items-center mt-3 text-center">
+            <Col
+              xs={4}
+              className="d-flex align-items-center justify-content-center"
+            >
+              <Image
+                src={teamImages[eventOdds?.away_team]}
+                alt={eventOdds?.away_team}
+                width="30"
+                className="mr-2"
+              />
+              <span>{eventOdds?.away_team}</span>
+            </Col>
+            {/* <Col xs={2}>+{spreadMarket.outcomes[1].point}</Col> */}
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                onClick={() =>
+                  console.log(
+                    spreadMarket?.outcomes[1].point,
+                    spreadMarket?.outcomes[1].price,
+                    spreadMarket?.outcomes[1].name
+                  )
+                }
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                {spreadMarket?.outcomes[1].point} <br /> (
+                {spreadMarket?.outcomes[1].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                o{totalsMarket?.outcomes[0].point} (
+                {totalsMarket?.outcomes[0].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                {moneylineMarket?.outcomes[1].price}
+              </Button>
+            </Col>
+          </Row>
+
+          {/* Home Team Row */}
+          <Row className="align-items-center mt-3 text-center">
+            <Col
+              xs={4}
+              className="d-flex align-items-center justify-content-center"
+            >
+              <Image
+                src={teamImages[eventOdds?.home_team]}
+                alt={eventOdds?.home_team}
+                width="30"
+                className="mr-2"
+              />
+              <span>{eventOdds?.home_team}</span>
+            </Col>
+            {/* <Col xs={2}>u{totalsMarket.outcomes[1].point}</Col> */}
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                onClick={() =>
+                  console.log(
+                    spreadMarket?.outcomes[0].point,
+                    spreadMarket?.outcomes[0].price,
+                    spreadMarket?.outcomes[0].name,
+                    spreadMarket
+                  )
+                }
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                {spreadMarket?.outcomes[0].point} (
+                {spreadMarket?.outcomes[0].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                u{totalsMarket?.outcomes[1].point} (
+                {totalsMarket?.outcomes[1].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "40px" }}
+              >
+                {moneylineMarket?.outcomes[0].price}
+              </Button>
+            </Col>
+          </Row>
+
+          <hr />
+
+          {/* Date and Time */}
+          <div className="d-flex justify-content-start align-items-center mt-2">
+            <BsCalendar3 className="me-1 text-muted" />
+            <span className="text-muted">
+              {new Date(eventOdds?.commence_time).toLocaleString("en-US", {
+                weekday: "long",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+              , {new Date(eventOdds?.commence_time).toLocaleDateString()}
+            </span>
+          </div>
+        </Card>
+      </Container>
+    );
+  };
+
+  // Example usage with the data you provided
+  const data = {
+    away_team: "Cincinnati Bengals",
+    home_team: "Baltimore Ravens",
+    commence_time: "2024-11-08T01:15:00Z",
+    bookmakers: [
+      {
+        title: "FanDuel",
+        markets: [
+          {
+            key: "h2h",
+            outcomes: [
+              { name: "Baltimore Ravens", price: -260 },
+              { name: "Cincinnati Bengals", price: 215 },
+            ],
+          },
+          {
+            key: "spreads",
+            outcomes: [
+              { name: "Baltimore Ravens", point: -6.5, price: -102 },
+              { name: "Cincinnati Bengals", point: 6.5, price: -120 },
+            ],
+          },
+          {
+            key: "totals",
+            outcomes: [
+              { name: "Over", point: 52.5, price: -110 },
+              { name: "Under", point: 52.5, price: -110 },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const BetSlip = () => {
+    return (
+      <Container className="border mt-4 rounded p-4">
+        {/* Header */}
+        <Row className="d-flex justify-content-between align-items-center mb-3">
+          <Col xs="auto">
+            <h5 className="mb-0">
+              Betslip <Badge bg="success">2</Badge>
+            </h5>
+          </Col>
+          <Col xs="auto">
+            <Button
+              variant="link"
+              size="sm"
+              className="p-0 text-decoration-none ms-3"
+            >
+              Settled
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Same Game Parlay Section */}
+        {/* <Card className="bg-light mb-3">
+          <Card.Body>
+            <Card.Title
+              className="text-muted text-uppercase mb-0"
+              style={{ fontSize: "0.9em" }}
+            >
+              Same Game Parlay
+            </Card.Title>
+          </Card.Body>
+        </Card> */}
+
+        {/* Straights Section */}
+        <Row className="d-flex justify-content-between align-items-center mb-2">
+          <Col xs="auto">
+            <h6 className="text-uppercase mb-0">Straights</h6>
+          </Col>
+          <Col xs="auto">
+            <Button variant="link" size="sm" className="text-danger p-0">
+              Clear All
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Bet Item */}
+        <div style={{ maxHeight: "280px" }} className=" overflow-y-scroll">
+          <Card className="mb-2">
+            <Card.Body>
+              <Row className="d-flex justify-content-between align-items-center">
+                <Col xs="auto">
+                  <Card.Title className="mb-0">Orlando Magic +6.5</Card.Title>
+                </Col>
+                <Col xs="auto" className="text-success">
+                  -110
+                </Col>
+              </Row>
+              <Card.Text className="text-muted mb-1">
+                Spread <br />
+                Orlando Magic at Indiana Pacers
+              </Card.Text>
+              <Button variant="outline-secondary" size="sm">
+                Cash Out
+              </Button>
+
+              {/* Wager Section */}
+              <Row className="mt-2">
+                <Col>
+                  <div className="d-flex flex-column">
+                    <span>Wager</span>
+                    <input
+                      type="number"
+                      placeholder="0.00"
+                      className="form-control"
+                    />
+                  </div>
+                </Col>
+                <Col>
+                  <div className="d-flex flex-column">
+                    <span>To Win</span>
+                    <input
+                      type="number"
+                      placeholder="0.00"
+                      className="form-control"
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </div>
+
+        {/* Cash Wager Section */}
+        <Row className="mt-2 mb-2">
+          <Col xs={6}>
+            <h6>Cash Wager:</h6>
+          </Col>
+          <Col xs={6} className="text-end">
+            <h6>$0.00</h6>
+          </Col>
+        </Row>
+
+        <Row className="mt-2 mb-4">
+          <Col xs={6}>
+            <h6>Pays:</h6>
+          </Col>
+          <Col xs={6} className="text-end">
+            <h6>$0.00</h6>
+          </Col>
+        </Row>
+
+        {/* Login Button */}
+        <Button variant="success" size="lg" className="w-100">
+          Bet Now
+        </Button>
+      </Container>
+    );
+  };
+
+  return (
+    <Container className="">
+      <Row>
+        <Col lg={8}>
+          {/* <GameInfo game={gameData} /> */}
+          <GameScoreCard />
+          <GameOdds data={Fandualodds} />
+        </Col>
+        <Col lg={4}>
+          <BetSlip />
+        </Col>
+      </Row>
+    </Container>
+  );
+};
