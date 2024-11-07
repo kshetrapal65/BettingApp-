@@ -126,7 +126,10 @@ const Header = () => {
               <a href="#">CONTACT US</a>
             </li>
             <li>
-              <a href="#">LogIn</a>
+              <Link to="/register">
+                {" "}
+                <a href="#">LogIn</a>
+              </Link>
             </li>
           </ul>
         </div>
