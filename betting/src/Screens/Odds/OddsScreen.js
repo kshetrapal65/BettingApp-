@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Col, Container, Form, Image, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import oddsData from "../../JSON/Odds";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -12,9 +12,9 @@ export const OddsScreen = () => {
   const [market, setMarket] = React.useState("h2h");
   const [region, setRegion] = React.useState("us");
   const [data, setData] = React.useState([]);
-  console.log("sport", sport);
-  console.log("market", market);
-  console.log("region", region);
+  const [cartData, setCartData] = React.useState([]);
+
+  console.log("cartData", cartData);
 
   const SportList = [
     {
@@ -1016,6 +1016,11 @@ export const OddsScreen = () => {
   useEffect(() => {
     // fetchEvent();
   }, [sport, region, market]);
+
+  const handleSportClick = (prev) => {
+    console.log("prevvv", prev);
+    setCartData([...cartData, prev]);
+  };
   // const fetchEvent = async () => {
   //   try {
   //     const response = await fetch(
@@ -1049,7 +1054,7 @@ export const OddsScreen = () => {
       </Row>
       <Form>
         <Row>
-          <Col md={4}>
+          <Col md={2}>
             <Form.Group controlId="firstSelect">
               <Form.Select
                 value={sport}
@@ -1064,7 +1069,7 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col md={4}>
+          {/* <Col md={4}>
             <Form.Group controlId="secondSelect">
               <Form.Select
                 className="fw-bold"
@@ -1108,21 +1113,32 @@ export const OddsScreen = () => {
                 </option>
               </Form.Select>
             </Form.Group>
-          </Col>
+          </Col> */}
         </Row>
       </Form>
       <Row className="mt-3">
-        {/* <Col className="text-start" lg={8}>
+        <Col className="text-start" lg={8}>
           <div className="odds-table">
-            {Data.map((game) =>
-             
-            
-            (
-              <div key={game.id} className="game-row">
-                <Row className="">
-                  <Col lg={5}>
-                    <div className="team-info">
-                      <div className="team">
+            {Data.map((game) => {
+              const fanduelBookmaker = game.bookmakers.find(
+                (bookmaker) => bookmaker.key === "fanduel"
+              );
+              const moneylineMarket = fanduelBookmaker.markets.find(
+                (market) => market.key === "h2h"
+              );
+              const spreadMarket = fanduelBookmaker.markets.find(
+                (market) => market.key === "spreads"
+              );
+              const totalsMarket = fanduelBookmaker.markets.find(
+                (market) => market.key === "totals"
+              );
+              if (!fanduelBookmaker) return null;
+
+              return (
+                <div key={game.id} className="game-row">
+                  <Row className="mb-4">
+                    <Col lg={5}>
+                      <div className="team-info d-flex align-items-center">
                         <img
                           src={
                             teamImages[game.home_team] ||
@@ -1130,10 +1146,104 @@ export const OddsScreen = () => {
                           }
                           alt={game.home_team}
                           className="team-logo"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            marginRight: "10px",
+                          }}
                         />
                         <span className="team-name">{game.home_team}</span>
                       </div>
-                      <div className="team">
+                    </Col>
+
+                    <Col lg={7} sm={12} md={12}>
+                      <Row className="text-center justify-content-evenly font-weight-bold text-muted">
+                        <Col xs={2} className="fw-bold">
+                          Moneyline
+                        </Col>
+                        <Col xs={2} className="fw-bold">
+                          Spread
+                        </Col>
+                        <Col xs={2} className="fw-bold">
+                          Total
+                        </Col>
+                      </Row>
+
+                      <Row className="justify-content-evenly text-center mt-2">
+                        <Col xs={2}>
+                          {moneylineMarket?.outcomes[0] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: moneylineMarket.key,
+                                  price: moneylineMarket.outcomes[0].price,
+                                  name: moneylineMarket.outcomes[0].name,
+                                })
+                              }
+                            >
+                              {moneylineMarket.outcomes[0].price > 0
+                                ? `+${moneylineMarket.outcomes[0].price}`
+                                : moneylineMarket.outcomes[0].price}
+                            </Button>
+                          )}
+                        </Col>
+
+                        <Col xs={2}>
+                          {spreadMarket?.outcomes[0] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: spreadMarket.key,
+                                  price: spreadMarket.outcomes[0].price,
+                                  name: spreadMarket.outcomes[0].name,
+                                })
+                              }
+                            >
+                              {spreadMarket.outcomes[0].point > 0
+                                ? `+${spreadMarket.outcomes[0].point}`
+                                : spreadMarket.outcomes[0].point}
+                              <br />(
+                              {spreadMarket.outcomes[0].price > 0
+                                ? `+${spreadMarket.outcomes[0].price}`
+                                : spreadMarket.outcomes[0].price}
+                              )
+                            </Button>
+                          )}
+                        </Col>
+
+                        <Col xs={2}>
+                          {totalsMarket?.outcomes[0] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: totalsMarket.key,
+                                  price: totalsMarket.outcomes[0].price,
+                                  name: totalsMarket.outcomes[0].name,
+                                })
+                              }
+                            >
+                              {totalsMarket.outcomes[0].point > 0
+                                ? `o${totalsMarket.outcomes[0].point}`
+                                : `u${totalsMarket.outcomes[0].point}`}
+                              <br />(
+                              {totalsMarket.outcomes[0].price > 0
+                                ? `+${totalsMarket.outcomes[0].price}`
+                                : totalsMarket.outcomes[0].price}
+                              )
+                            </Button>
+                          )}
+                        </Col>
+                      </Row>
+                    </Col>
+
+                    <Col lg={5}>
+                      <div className="team-info d-flex align-items-center mt-1">
                         <img
                           src={
                             teamImages[game.away_team] ||
@@ -1141,12 +1251,92 @@ export const OddsScreen = () => {
                           }
                           alt={game.away_team}
                           className="team-logo"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            marginRight: "10px",
+                          }}
                         />
                         <span className="team-name">{game.away_team}</span>
                       </div>
+                    </Col>
+
+                    <Col lg={7} sm={12} md={12}>
+                      <Row className="justify-content-evenly text-center mt-2">
+                        <Col xs={2}>
+                          {moneylineMarket?.outcomes[1] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: moneylineMarket.key,
+                                  price: moneylineMarket.outcomes[1].price,
+                                  name: moneylineMarket.outcomes[1].name,
+                                })
+                              }
+                            >
+                              {moneylineMarket.outcomes[1].price > 0
+                                ? `+${moneylineMarket.outcomes[1].price}`
+                                : moneylineMarket.outcomes[1].price}
+                            </Button>
+                          )}
+                        </Col>
+
+                        <Col xs={2}>
+                          {spreadMarket?.outcomes[1] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: spreadMarket.key,
+                                  price: spreadMarket.outcomes[1].price,
+                                  name: spreadMarket.outcomes[1].name,
+                                })
+                              }
+                            >
+                              {spreadMarket.outcomes[1].point > 0
+                                ? `+${spreadMarket.outcomes[1].point}`
+                                : spreadMarket.outcomes[1].point}
+                              <br />(
+                              {spreadMarket.outcomes[1].price > 0
+                                ? `+${spreadMarket.outcomes[1].price}`
+                                : spreadMarket.outcomes[1].price}
+                              )
+                            </Button>
+                          )}
+                        </Col>
+                        <Col xs={2}>
+                          {totalsMarket?.outcomes[1] && (
+                            <Button
+                              variant="outline-secondary"
+                              style={{ minWidth: "100px", minHeight: "62px" }}
+                              onClick={() =>
+                                handleSportClick({
+                                  key: totalsMarket.key,
+                                  price: totalsMarket.outcomes[1].price,
+                                  name: totalsMarket.outcomes[1].name,
+                                })
+                              }
+                            >
+                              {totalsMarket.outcomes[1].point > 0
+                                ? `o${totalsMarket.outcomes[1].point}`
+                                : `u${totalsMarket.outcomes[1].point}`}
+                              <br />(
+                              {totalsMarket.outcomes[1].price > 0
+                                ? `+${totalsMarket.outcomes[1].price}`
+                                : totalsMarket.outcomes[1].price}
+                              )
+                            </Button>
+                          )}
+                        </Col>
+                      </Row>
+                    </Col>
+
+                    <Col lg={12} className="text-start mt-3">
                       <p
                         style={{
-                          textAlign: "start",
                           fontSize: "13px",
                           color: "#666",
                           marginTop: "10px",
@@ -1156,141 +1346,6 @@ export const OddsScreen = () => {
                           "MMMM Do YYYY, h:mm A"
                         )}
                       </p>
-                    </div>
-                  </Col>
-                  <Col className="" lg={7}>
-                    <div className="odds-info">
-                      {game.bookmakers
-                        .find((m) => m.key === "fanduel")
-                        .map((bookmaker) => (
-                          <div key={bookmaker.key} className="bookmaker shadow">
-                            
-                            <div className="bookmaker-title">
-                              {bookmaker.title}
-                            </div>
-                            <div style={{ cursor: "pointer" }} className="odds">
-                              <span className="point">
-                                {bookmaker.markets[0].outcomes[0].point}
-                              </span>
-                              <span className="price">
-                                {bookmaker.markets[0].outcomes[0].price}
-                              </span>
-                            </div>
-                            <div style={{ cursor: "pointer" }} className="odds">
-                              <span className="point">
-                                {bookmaker.markets[0].outcomes[1].point}
-                              </span>
-                              <span className="price">
-                                {bookmaker.markets[0].outcomes[1].price}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-            ))}
-          </div>
-        </Col> */}
-        <Col className="text-start" lg={8}>
-          <div className="odds-table">
-            {Data.map((game) => {
-              // Find the fanduel bookmaker within the game's bookmakers
-              const fanduelBookmaker = game.bookmakers.find(
-                (bookmaker) => bookmaker.key === "fanduel"
-              );
-
-              // Check if fanduel bookmaker exists for this game
-              if (!fanduelBookmaker) return null;
-
-              return (
-                <div key={game.id} className="game-row">
-                  <Row>
-                    <Col lg={5}>
-                      <div className="team-info">
-                        <div className="team">
-                          <img
-                            src={
-                              teamImages[game.home_team] ||
-                              "https://assets.actionnetwork.com/372790_jets.png"
-                            }
-                            alt={game.home_team}
-                            className="team-logo"
-                          />
-                          <span className="team-name">{game.home_team}</span>
-                        </div>
-                        <div className="team">
-                          <img
-                            src={
-                              teamImages[game.away_team] ||
-                              "https://assets.actionnetwork.com/372790_jets.png"
-                            }
-                            alt={game.away_team}
-                            className="team-logo"
-                          />
-                          <span className="team-name">{game.away_team}</span>
-                        </div>
-                        <p
-                          style={{
-                            textAlign: "start",
-                            fontSize: "13px",
-                            color: "#666",
-                            marginTop: "10px",
-                          }}
-                        >
-                          {moment(game.commence_time).format(
-                            "MMMM Do YYYY, h:mm A"
-                          )}
-                        </p>
-                      </div>
-                    </Col>
-                    <Col lg={7}>
-                      <div className="odds-info">
-                        <div>
-                          {/* <div className=" ">{fanduelBookmaker.title}</div> */}
-
-                          {/* Display each market as a separate row */}
-                          {fanduelBookmaker.markets.map((market) => (
-                            <Row
-                              key={market.key}
-                              className="market-row   shadow"
-                            >
-                              <Col lg={12}>
-                                <h6 className="market-title">
-                                  {market.key === "h2h"
-                                    ? "Moneyline"
-                                    : market.key === "spreads"
-                                    ? "Spread"
-                                    : "Totals"}
-                                </h6>
-                              </Col>
-                              <Col lg={12} className="market-outcomes d-flex">
-                                {market.outcomes.map((outcome, index) => (
-                                  <div
-                                    key={index}
-                                    className="outcome d-flex justify-content-between"
-                                  >
-                                    {market.key !== "h2h" &&
-                                      outcome.point !== undefined && (
-                                        <span className="point">
-                                          {outcome.point > 0
-                                            ? `+${outcome.point}`
-                                            : outcome.point}
-                                        </span>
-                                      )}
-                                    <span className="price">
-                                      {outcome.price > 0
-                                        ? `+${outcome.price}`
-                                        : outcome.price}
-                                    </span>
-                                  </div>
-                                ))}
-                              </Col>
-                            </Row>
-                          ))}
-                        </div>
-                      </div>
                     </Col>
                   </Row>
                 </div>
@@ -1300,7 +1355,7 @@ export const OddsScreen = () => {
         </Col>
       </Row>
       <Row className="mt-5 justify-content-around  ">
-        <Col className="bg-light p-4 rounded-5" lg={8}>
+        <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
               <h5>Recent Stories</h5>
@@ -1313,7 +1368,7 @@ export const OddsScreen = () => {
           </Row>
 
           <Row className="mt-3">
-            <Col lg={6} className="d-flex ">
+            <Col lg={4} className="d-flex ">
               <div className="me-3">
                 <Image
                   style={{
@@ -1331,7 +1386,7 @@ export const OddsScreen = () => {
                 <p>Jacob Wayne • 4 hours ago</p>
               </div>
             </Col>
-            <Col lg={6} className="d-flex">
+            <Col lg={4} className="d-flex">
               <div className="me-3">
                 <Image
                   style={{
@@ -1349,7 +1404,7 @@ export const OddsScreen = () => {
                 <p>Jacob Wayne • 4 hours ago</p>
               </div>
             </Col>
-            <Col lg={6} className="d-flex">
+            <Col lg={4} className="d-flex">
               <div className="me-3">
                 <Image
                   style={{
@@ -1367,7 +1422,43 @@ export const OddsScreen = () => {
                 <p>Jacob Wayne • 4 hours ago</p>
               </div>
             </Col>
-            <Col lg={6} className="d-flex">
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
               <div className="me-3">
                 <Image
                   style={{
