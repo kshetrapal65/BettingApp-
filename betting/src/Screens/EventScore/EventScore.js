@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import "./EventScore.css";
+
 import {
   Card,
   Row,
@@ -21,6 +23,7 @@ import {
   Grid,
 } from "@mui/material";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
+import moment from "moment";
 const teamImages = {
   "Miami Dolphins":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s",
@@ -165,12 +168,13 @@ const teamImages = {
 export const EventScore = () => {
   const [scoreData, setScoreData] = useState([]);
   const [eventOdds, setEventOdds] = useState([]);
+  const [selectedMarkets, setSelectedMarkets] = useState([]);
   const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
   const event = location.state || {};
   const apikey = "0119dd31fef7c240837b6c47a04c03ee";
-  console.log("Fandualodds>>>>", Fandualodds);
-  console.log("eventOdds>>>>", eventOdds);
+
+  console.log("event>>>>", event);
   useEffect(() => {
     fetchScore();
     fetchEventOdds();
@@ -312,22 +316,26 @@ export const EventScore = () => {
     return (
       <Container className="p-4">
         <Card className="p-4 text-center">
-          <h5 className="text-start fw-bold mb-4">
-            {scoreData[0]?.home_team} vs. {scoreData[0]?.away_team} Odds &
-            Betting Predictions -{" "}
-            {new Date(scoreData[0]?.commence_time).toLocaleString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
-              hour12: true,
-            })}
+          <h5 className="text-center fw-bold mb-4">
+            {event?.home_team} vs. {event?.away_team}
           </h5>
-          {/* <h6>
-            Broncos at Ravens <span className="text-muted">11:30 pm • CBS</span>
-          </h6> */}
+          <h6>
+            {/* {scoreData[0]?.home_team} at {scoreData[0]?.away_team}  */}
+            <span className="text-muted">
+              {/* {" "}
+              {new Date(scoreData[0]?.commence_time).toLocaleString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: true,
+              })} */}
+              {moment(event?.commence_time).format("ddd MM/DD, h:mm A")}
+            </span>
+          </h6>
+          <hr />
           <Row className="mt-4">
             <Col className="d-flex flex-column align-items-center">
               <img
@@ -355,6 +363,22 @@ export const EventScore = () => {
           </Row>
         </Card>
       </Container>
+    );
+  };
+  const handleWagerChange = (index, wager) => {
+    setSelectedMarkets((prevMarkets) =>
+      prevMarkets.map((market, i) =>
+        i === index
+          ? {
+              ...market,
+              wager,
+              winAmount:
+                market.price > 0
+                  ? (market.price / 100) * wager
+                  : (100 / Math.abs(market.price)) * wager,
+            }
+          : market
+      )
     );
   };
   // const BetSlip = () => {
@@ -537,13 +561,6 @@ export const EventScore = () => {
             <Col xs={2}>
               <Button
                 variant="outline-secondary"
-                onClick={() =>
-                  console.log(
-                    spreadMarket?.outcomes[1].point,
-                    spreadMarket?.outcomes[1].price,
-                    spreadMarket?.outcomes[1].name
-                  )
-                }
                 style={{ minWidth: "80px", minHeight: "40px" }}
               >
                 {spreadMarket?.outcomes[1].point} <br /> (
@@ -587,14 +604,6 @@ export const EventScore = () => {
             <Col xs={2}>
               <Button
                 variant="outline-secondary"
-                onClick={() =>
-                  console.log(
-                    spreadMarket?.outcomes[0].point,
-                    spreadMarket?.outcomes[0].price,
-                    spreadMarket?.outcomes[0].name,
-                    spreadMarket
-                  )
-                }
                 style={{ minWidth: "80px", minHeight: "40px" }}
               >
                 {spreadMarket?.outcomes[0].point} (
@@ -639,6 +648,207 @@ export const EventScore = () => {
       </Container>
     );
   };
+  const GameOdds1 = ({ data }) => {
+    // console.log("selectedMarkets", selectedMarkets);
+
+    const spreadMarket = data?.markets?.find((m) => m.key === "spreads");
+    const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
+    const totalsMarket = data?.markets?.find((m) => m.key === "totals");
+
+    const handleMarketClick = (marketData) => {
+      setSelectedMarkets((prev) => [...prev, marketData]);
+    };
+
+    return (
+      <Container className="p-4 ">
+        <Card className="p-4 text-start">
+          <h5 className="fw-bold">
+            {event?.home_team} vs. {event?.away_team} Odds
+          </h5>
+          <h7 className="text-start font-weight-bold">
+            Spread, Total, Moneyline
+          </h7>
+          <hr />
+          <OddsTabBar />
+          <hr />
+          <Row className="text-center font-weight-bold text-muted">
+            <Col className="fw-bold" xs={4}>
+              Matchup
+            </Col>
+            <Col className="fw-bold" xs={2}>
+              Spread
+            </Col>
+            <Col className="fw-bold" xs={2}>
+              Total
+            </Col>
+            <Col className="fw-bold" xs={2}>
+              Moneyline
+            </Col>
+          </Row>
+          <hr />
+
+          {/* Away Team Row */}
+          <Row className="align-items-center mt-3 text-center">
+            <Col
+              xs={4}
+              className="d-flex align-items-center justify-content-center"
+            >
+              <Image
+                src={teamImages[eventOdds?.away_team]}
+                // alt={eventOdds?.away_team}
+                width="30"
+                className="mr-2"
+              />
+              <span>{event?.away_team}</span>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() => {
+                  handleMarketClick({
+                    team: eventOdds?.away_team,
+                    market: "spread",
+                    ...spreadMarket.outcomes[1],
+                  });
+                }}
+              >
+                {spreadMarket?.outcomes[1].point} <br /> (
+                {spreadMarket?.outcomes[1].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() =>
+                  handleMarketClick({
+                    team: eventOdds?.away_team,
+                    market: "total",
+                    ...totalsMarket.outcomes[0],
+                  })
+                }
+              >
+                o{totalsMarket?.outcomes[0].point} (
+                {totalsMarket?.outcomes[0].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() =>
+                  handleMarketClick({
+                    team: eventOdds?.away_team,
+                    market: "moneyline",
+                    ...moneylineMarket.outcomes[1],
+                  })
+                }
+              >
+                {moneylineMarket?.outcomes[1].price}
+              </Button>
+            </Col>
+          </Row>
+
+          {/* Home Team Row */}
+          <Row className="align-items-center mt-3 text-center">
+            <Col
+              xs={4}
+              className="d-flex align-items-center justify-content-center"
+            >
+              <Image
+                src={teamImages[eventOdds?.home_team]}
+                // alt={eventOdds?.home_team}
+                width="30"
+                className="mr-2"
+              />
+              <span>{event?.home_team}</span>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() =>
+                  handleMarketClick({
+                    team: eventOdds?.home_team,
+                    market: "spread",
+                    ...spreadMarket.outcomes[0],
+                  })
+                }
+              >
+                {spreadMarket?.outcomes[0].point} (
+                {spreadMarket?.outcomes[0].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() =>
+                  handleMarketClick({
+                    team: eventOdds?.home_team,
+                    market: "total",
+                    ...totalsMarket.outcomes[1],
+                  })
+                }
+              >
+                u{totalsMarket?.outcomes[1].point} (
+                {totalsMarket?.outcomes[1].price})
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="shadow"
+                variant="outline-secondary"
+                style={{ minWidth: "80px", minHeight: "62px" }}
+                onClick={() =>
+                  handleMarketClick({
+                    team: eventOdds?.home_team,
+                    market: "moneyline",
+                    ...moneylineMarket.outcomes[0],
+                  })
+                }
+              >
+                {moneylineMarket?.outcomes[0].price}
+              </Button>
+            </Col>
+          </Row>
+
+          <hr />
+
+          {/* Date and Time */}
+          <div className="d-flex justify-content-start align-items-center mt-2">
+            {/* <BsCalendar3 className="me-1 text-muted" /> */}
+            <span className="text-muted">
+              {/* {new Date(eventOdds?.commence_time).toLocaleString("en-US", {
+                weekday: "long",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+              , {new Date(eventOdds?.commence_time).toLocaleDateString()} */}
+              {moment(event.commence_time).format("ddd MM/DD, h:mm A")}
+            </span>
+          </div>
+
+          {/* Display selected markets */}
+          {/* <div className="mt-4">
+          <h6>Selected Markets:</h6>
+            {selectedMarkets.map((market, index) => (
+              <div key={index} className="selected-market">
+                <p>{`${market.team} - ${market.market} - Point: ${market.point}, Price: ${market.price}`}</p>
+              </div>
+            ))}
+          </div> */}
+        </Card>
+      </Container>
+    );
+  };
 
   // Example usage with the data you provided
   const data = {
@@ -675,13 +885,25 @@ export const EventScore = () => {
     ],
   };
   const BetSlip = () => {
+    // Calculate the total wager amount
+    const totalWager = selectedMarkets.reduce(
+      (total, market) => total + (market.wager || 0),
+      0
+    );
+
+    // Calculate the total payout amount
+    const totalPays = selectedMarkets.reduce(
+      (total, market) => total + (market.winAmount || 0),
+      0
+    );
+
     return (
       <Container className="border mt-4 rounded p-4">
         {/* Header */}
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip <Badge bg="success">2</Badge>
+              Betslip <Badge bg="success">{selectedMarkets.length}</Badge>
             </h5>
           </Col>
           <Col xs="auto">
@@ -695,75 +917,80 @@ export const EventScore = () => {
           </Col>
         </Row>
 
-        {/* Same Game Parlay Section */}
-        {/* <Card className="bg-light mb-3">
-          <Card.Body>
-            <Card.Title
-              className="text-muted text-uppercase mb-0"
-              style={{ fontSize: "0.9em" }}
-            >
-              Same Game Parlay
-            </Card.Title>
-          </Card.Body>
-        </Card> */}
-
         {/* Straights Section */}
         <Row className="d-flex justify-content-between align-items-center mb-2">
           <Col xs="auto">
             <h6 className="text-uppercase mb-0">Straights</h6>
           </Col>
           <Col xs="auto">
-            <Button variant="link" size="sm" className="text-danger p-0">
+            <Button
+              onClick={() => setSelectedMarkets([])}
+              variant="link"
+              size="sm"
+              className="text-danger p-0"
+            >
               Clear All
             </Button>
           </Col>
         </Row>
 
         {/* Bet Item */}
-        <div style={{ maxHeight: "280px" }} className=" overflow-y-scroll">
-          <Card className="mb-2">
-            <Card.Body>
-              <Row className="d-flex justify-content-between align-items-center">
-                <Col xs="auto">
-                  <Card.Title className="mb-0">Orlando Magic +6.5</Card.Title>
-                </Col>
-                <Col xs="auto" className="text-success">
-                  -110
-                </Col>
-              </Row>
-              <Card.Text className="text-muted mb-1">
-                Spread <br />
-                Orlando Magic at Indiana Pacers
-              </Card.Text>
-              <Button variant="outline-secondary" size="sm">
-                Cash Out
-              </Button>
+        <div style={{ maxHeight: "280px" }} className="overflow-y-scroll">
+          {selectedMarkets?.length === 0 && (
+            <p className="text-center">No bets added</p>
+          )}
 
-              {/* Wager Section */}
-              <Row className="mt-2">
-                <Col>
-                  <div className="d-flex flex-column">
-                    <span>Wager</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="form-control"
-                    />
-                  </div>
-                </Col>
-                <Col>
-                  <div className="d-flex flex-column">
-                    <span>To Win</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="form-control"
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+          {selectedMarkets?.map((market, index) => (
+            <Card key={index} className="mb-2">
+              <Card.Body>
+                <Row className="d-flex justify-content-between align-items-center">
+                  <Col xs="auto">
+                    <Card.Title className="mb-0">{market?.team}</Card.Title>
+                  </Col>
+                  <Col xs="auto" className=" ">
+                    <span>{market?.name}</span>
+                    <span className="fw-bold"> {market?.point}</span>
+                    <span className="text-muted"> {market?.price}</span>
+                  </Col>
+                </Row>
+                <Card.Text className="text-muted mb-1">
+                  {market?.market}
+                </Card.Text>
+
+                {/* Wager Section */}
+                <Row className="mt-2">
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>Wager</span>
+                      <input
+                        type="text"
+                        placeholder="0.00"
+                        className="form-control"
+                        value={market.wager || ""}
+                        onChange={(e) =>
+                          handleWagerChange(
+                            index,
+                            parseFloat(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
+                  </Col>
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>To Win</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={market.winAmount || ""}
+                        readOnly
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))}
         </div>
 
         {/* Cash Wager Section */}
@@ -772,26 +999,49 @@ export const EventScore = () => {
             <h6>Cash Wager:</h6>
           </Col>
           <Col xs={6} className="text-end">
-            <h6>$0.00</h6>
+            <h6>${totalWager.toFixed(2)}</h6>
           </Col>
         </Row>
 
+        {/* Total Pays Section */}
         <Row className="mt-2 mb-4">
           <Col xs={6}>
             <h6>Pays:</h6>
           </Col>
           <Col xs={6} className="text-end">
-            <h6>$0.00</h6>
+            <h6>${totalPays.toFixed(2)}</h6>
           </Col>
         </Row>
 
-        {/* Login Button */}
+        {/* Bet Now Button */}
         <Button variant="success" size="lg" className="w-100">
           Bet Now
         </Button>
       </Container>
     );
   };
+  function OddsTabBar() {
+    const [activeTab, setActiveTab] = useState("game");
+
+    const handleSelect = (key) => setActiveTab(key);
+    console.log("activeTab", activeTab);
+
+    return (
+      <Tabs
+        activeKey={activeTab}
+        onSelect={handleSelect}
+        className="mb-2 odds-tab-bar border-bottom-0"
+      >
+        <Tab eventKey="game" title="Game"></Tab>
+        <Tab eventKey="1h" title="1H"></Tab>
+        <Tab eventKey="2h" title="2H"></Tab>
+        <Tab eventKey="1q" title="1Q"></Tab>
+        <Tab eventKey="2q" title="2Q"></Tab>
+        <Tab eventKey="3q" title="3Q"></Tab>
+        <Tab eventKey="4q" title="4Q"></Tab>
+      </Tabs>
+    );
+  }
 
   return (
     <Container className="">
@@ -799,7 +1049,8 @@ export const EventScore = () => {
         <Col lg={8}>
           {/* <GameInfo game={gameData} /> */}
           <GameScoreCard />
-          <GameOdds data={Fandualodds} />
+
+          <GameOdds1 data={Fandualodds} />
         </Col>
         <Col lg={4}>
           <BetSlip />

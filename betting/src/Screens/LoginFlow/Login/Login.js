@@ -1,12 +1,6 @@
-// import React from "react";
-
-// const Login = () => {
-//   return <div>Login</div>;
-// };
-
-// export default Login;
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
@@ -53,9 +47,11 @@ const Login = () => {
                   />
                 </Form.Group>
                 <div className="text-end mt-3 mb-2">
-                  <a href="#" className="small forgot-text">
-                    Forgot your password?
-                  </a>
+                  <Link to="/forgot-password">
+                    <a href="#" className="small forgot-text">
+                      Forgot your password?
+                    </a>
+                  </Link>
                 </div>
                 <Button
                   variant="primary"
@@ -67,7 +63,9 @@ const Login = () => {
               </Form>
 
               <div className="text-center mt-4">
-                <a className="small">Don't have an account? Sign up</a>
+                <Link to="/register">
+                  <a className="small">Don't have an account? Sign up</a>
+                </Link>
               </div>
             </Card.Body>
           </Card>

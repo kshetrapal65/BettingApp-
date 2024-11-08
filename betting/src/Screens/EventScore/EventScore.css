@@ -1,0 +1,16 @@
+.odds-tab-bar .nav-item .nav-link {
+  color: #555; /* Text color */
+  font-weight: bold;
+  border: 1px solid #dee2e6; /* Light border */
+}
+
+.odds-tab-bar .nav-item .nav-link.active {
+  color: #000; /* Active text color */
+  border-bottom: 3px solid green; /* Green underline */
+  background-color: #f8f9fa; /* Background color for active tab */
+}
+
+.odds-tab-bar .nav-item .nav-link:hover {
+  color: #000; /* Hover color */
+  background-color: #f8f9fa;
+}

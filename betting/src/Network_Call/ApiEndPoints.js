@@ -3,7 +3,7 @@ const APPConfig = {
 };
 
 const ApiEndPoints = {
-  ApiKey: "49b34a81ab3b6e31820052b16f9684c7",
+  ApiKey: "770e21540bd6eda56ddbc97be3999aa7",
   Login: `${APPConfig.API_URL}/login`,
   BusinessRegister: `${APPConfig.API_URL}/business-register`,
   ClientRegister: `${APPConfig.API_URL}/client-register`,

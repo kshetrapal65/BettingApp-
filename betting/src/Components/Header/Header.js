@@ -47,7 +47,7 @@ const Header = () => {
                 <a href="#">HOME</a>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="#"
                 onClick={() => setShowHtmlCssSubMenu(!showHtmlCssSubMenu)}
@@ -61,34 +61,7 @@ const Header = () => {
 
               {showHtmlCssSubMenu && (
                 <ul className="htmlCss-sub-menu sub-menu">
-                  {/* <li>
-                    <a href="#">Neumorphism</a>
-                  </li>
-                  <li>
-                    <a href="#">Neumorphism</a>
-                  </li>{" "}
-                  <li>
-                    <a href="#">Neumorphism</a>
-                  </li>
-                  <li className="more">
-                    <span onClick={() => setShowMoreSubMenu(!showMoreSubMenu)}>
-                      <a href="#">More</a>
-                      <i className="bx bxs-chevron-right arrow more-arrow"></i>
-                    </span>
-                    {showMoreSubMenu && (
-                      <ul className="more-sub-menu sub-menu">
-                        <li>
-                          <a href="#">Neumorphism</a>
-                        </li>
-                        <li>
-                          <a href="#">Pre-loader</a>
-                        </li>
-                        <li>
-                          <a href="#">Glassmorphism</a>
-                        </li>
-                      </ul>
-                    )}
-                  </li> */}
+                 
                   {uniqueGroups?.map((group, index) => (
                     <li onClick={() => navigate(`/title/${group}`)} key={index}>
                       <a href="#">{group}</a>
@@ -96,7 +69,7 @@ const Header = () => {
                   ))}
                 </ul>
               )}
-            </li>
+            </li> */}
 
             <li>
               <a href="#" onClick={() => setShowJsSubMenu(!showJsSubMenu)}>

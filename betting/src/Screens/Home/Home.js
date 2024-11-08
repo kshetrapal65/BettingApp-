@@ -307,6 +307,24 @@ const Home = () => {
       "https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Brisbane_Roar_FC_logo.svg/1200px-Brisbane_Roar_FC_logo.svg.png",
     "Sydney FC":
       "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Sydney_FC_Logo.svg/1200px-Sydney_FC_Logo.svg.png",
+    "Coastal Carolina Chanticleers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Coastal_Carolina_Chanticleers_logo.svg/1200px-Coastal_Carolina_Chanticleers_logo.svg.png",
+    "Appalachian State Mountaineers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5jB5Py9_7R7wl6cI7MCOe_n6n1vi5TyUpFA&s",
+    "East Carolina Pirates":
+      "https://upload.wikimedia.org/wikipedia/en/c/c7/East_Carolina_Pirates_logo.svg",
+    "Wake Forest Demon Deacons":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTokSf00bdqJJoBfUy0JMhVKwuM8SDac3My5A&s",
+    "California Golden Bears":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCFTXOT5G47H31zVnvtIyEyIwYf36V8NidrQ&s",
+    "Montreal Alouettes":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+    "Winnipeg Blue Bombers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+    "Winnipeg Blue Bombers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8_2WzZutk2qDDuXSEf5TCm-L2OVySoLtalg&s",
+    "Brynäs IF":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
   };
   return (
     <>
@@ -581,12 +599,12 @@ const Home = () => {
                   ))}
                 </Form.Select>
               </Form.Group>
-              <Form.Group controlId="formSelect ">
+              {/* <Form.Group controlId="formSelect ">
                 <Form.Select aria-label="Select option">
                   <option value="1">spreads</option>
                   <option value="2">totals</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
             </Col>
             {/* <Col className="" lg={10}>
               <div
@@ -802,125 +820,135 @@ const Home = () => {
               </div>
             </Col> */}
             <Col lg={10}>
-              <div
-                style={{
-                  height: "220px",
-                  overflowX: "scroll",
-                  overflowY: "hidden",
-                  padding: "10px",
-                  display: "flex",
-                  gap: "15px",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {event.map((event) => (
-                  <div
-                    key={event.id}
-                    className="border p-3"
-                    style={{
-                      minWidth: "300px",
-                      borderRadius: "8px",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                      backgroundColor: "#f8f9fa",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => navigate("/event-score", { state: event })}
-                  >
-                    <div style={{ textAlign: "center" }}>
-                      {/* Home Team Image and Name */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "start",
-                          gap: "8px",
-                          maxWidth: "300px",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <img
-                          src={teamImages[event.home_team]}
-                          alt={`${event.home_team} logo`}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <p
-                          style={{
-                            margin: 0,
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            color: "#333",
-                          }}
-                        >
-                          {event.home_team}
-                        </p>
-                      </div>
-
-                      <span style={{ fontSize: "12px", color: "white" }}>
-                        vs
-                      </span>
-
-                      {/* Away Team Image and Name */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "start",
-                          gap: "8px",
-                          maxWidth: "180px",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <img
-                          src={teamImages[event.away_team]}
-                          alt={`${event.away_team} logo`}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <p
-                          style={{
-                            margin: 0,
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            color: "#333",
-                          }}
-                        >
-                          {event.away_team}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Event Time */}
-                    <p
+              {event.length > 0 ? (
+                <div
+                  style={{
+                    height: "220px",
+                    overflowX: "scroll",
+                    overflowY: "hidden",
+                    padding: "10px",
+                    display: "flex",
+                    gap: "15px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {event.map((event) => (
+                    <div
+                      key={event.id}
+                      className="border p-3"
                       style={{
-                        textAlign: "center",
-                        fontSize: "13px",
-                        color: "#666",
-                        marginTop: "10px",
+                        minWidth: "300px",
+                        borderRadius: "8px",
+                        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: "#f8f9fa",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        cursor: "pointer",
                       }}
+                      onClick={() => navigate("/event-score", { state: event })}
                     >
-                      {moment(event.commence_time).format(
-                        "MMMM Do YYYY, h:mm A"
-                      )}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                      <div style={{ textAlign: "center" }}>
+                        {/* Home Team Image and Name */}
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "start",
+                            gap: "8px",
+                            maxWidth: "300px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          <img
+                            src={teamImages[event.home_team]}
+                            // alt={`${event.home_team} logo`}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              color: "#333",
+                            }}
+                          >
+                            {event.home_team
+                              ? event.home_team
+                              : "Not Available"}
+                          </p>
+                        </div>
+
+                        <span style={{ fontSize: "12px", color: "white" }}>
+                          vs
+                        </span>
+
+                        {/* Away Team Image and Name */}
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "start",
+                            gap: "8px",
+                            maxWidth: "180px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          <img
+                            src={teamImages[event.away_team]}
+                            // alt={`${event.away_team} logo`}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              color: "#333",
+                            }}
+                          >
+                            {event.away_team
+                              ? event.away_team
+                              : "Not Available"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Event Time */}
+                      <p
+                        style={{
+                          textAlign: "start",
+                          fontSize: "13px",
+                          color: "#666",
+                          marginTop: "10px",
+                        }}
+                      >
+                        {moment(event.commence_time).format(
+                          "ddd MM/DD, h:mm A"
+                        )}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ textAlign: "center", color: "#666" }}>
+                  No events available.
+                </p>
+              )}
             </Col>
           </Row>
           <Row className="mt-5 justify-content-around  ">
@@ -950,9 +978,11 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p style={{ fontSize: "12px" }} className="text-muted">
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
                 <Col lg={4} className="d-flex">
