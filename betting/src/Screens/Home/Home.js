@@ -325,6 +325,14 @@ const Home = () => {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8_2WzZutk2qDDuXSEf5TCm-L2OVySoLtalg&s",
     "Brynäs IF":
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
+    "UCLA Bruins":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh_HDseanPbGEwlTxlEYUjo2O8YdQIWsHKOg&s",
+    "Iowa Hawkeyes":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJQkUnTXylCBou7z-WzwE2o25a_L7xHGk3MA&s",
+    "Memphis Tigers":
+      "https://upload.wikimedia.org/wikipedia/en/4/45/Memphis_Tigers_logo.svg",
+    "Rice Owls":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rice_Owls_logo.svg/640px-Rice_Owls_logo.svg.png",
   };
   return (
     <>
@@ -588,10 +596,7 @@ const Home = () => {
           <Row className="mt-3  bg-light rounded-2">
             <Col className="text-start align-content-center  " lg={2}>
               <Form.Group controlId="formSelect " className="mb-3">
-                <Form.Select
-                  onChange={handleSport}
-                  aria-label="Select option  "
-                >
+                <Form.Select onChange={handleSport} aria-label="Select option">
                   {sports.map((sport, index) => (
                     <option key={index} value={sport.key}>
                       {sport.title}
@@ -998,9 +1003,11 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p className="text-muted" style={{ fontSize: "12px" }}>
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
                 <Col lg={4} className="d-flex">
@@ -1016,9 +1023,11 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p className="text-muted" style={{ fontSize: "12px" }}>
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
                 <Col lg={4} className="d-flex">
@@ -1034,9 +1043,11 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p className="text-muted" style={{ fontSize: "12px" }}>
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
                 <Col lg={4} className="d-flex">
@@ -1052,9 +1063,11 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p className="text-muted" style={{ fontSize: "12px" }}>
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
                 <Col lg={4} className="d-flex">
@@ -1070,9 +1083,12 @@ const Home = () => {
                     />
                   </div>
                   <div className="d-flex-column">
-                    <h5 className="">NFL</h5>
-                    <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                    <p>Jacob Wayne • 4 hours ago</p>
+                    <h5 className="fw-bold">NFL</h5>
+                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
+                    <p className="text-muted" style={{ fontSize: "12px" }}>
+                      {" "}
+                      Jacob Wayne • 4 hours ago
+                    </p>
                   </div>
                 </Col>
               </Row>

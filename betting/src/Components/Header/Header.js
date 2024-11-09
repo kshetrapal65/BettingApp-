@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../Header.css"; // Ensure this path is correct
 import SportList from "../../JSON/SportList";
 import { Link, useNavigate } from "react-router-dom";
+import { getToken } from "../../Helper/Storage";
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -13,6 +14,8 @@ const Header = () => {
   const [showMoreSubMenu, setShowMoreSubMenu] = useState(false);
   const data = SportList;
   console.log("DATA", data);
+  const token = getToken();
+  console.log("token", token);
 
   const toggleDrawer = () => {
     setDrawerOpen((prevState) => !prevState);
@@ -27,13 +30,17 @@ const Header = () => {
       uniqueGroups.push(item.group);
     }
   });
+  const logout = () => {
+    localStorage.removeItem("@userToken");
+    navigate("/login");
+  };
 
   return (
     <nav className="navbar">
       <div className="navbar">
         <i className="bx bx-menu" onClick={toggleDrawer}></i>
         <div className="logo">
-          <a href="#">Logo</a>
+          <a href="#">BetApp</a>
         </div>
         <div className={`nav-links ${drawerOpen ? "open" : ""}`}>
           <div className="sidebar-logo">
@@ -99,10 +106,16 @@ const Header = () => {
               <a href="#">CONTACT US</a>
             </li>
             <li>
-              <Link to="/register">
-                {" "}
-                <a href="#">LogIn</a>
-              </Link>
+              {token ? (
+                <a onClick={logout} href="#">
+                  LogOut
+                </a>
+              ) : (
+                <Link to="/login">
+                  {" "}
+                  <a href="#">LogIn</a>
+                </Link>
+              )}
             </li>
           </ul>
         </div>
