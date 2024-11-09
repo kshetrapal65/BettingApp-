@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
-import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Image,
+  Row,
+} from "react-bootstrap";
 import oddsData from "../../JSON/Odds";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -13,6 +23,17 @@ export const OddsScreen = () => {
   const [region, setRegion] = React.useState("us");
   const [data, setData] = React.useState([]);
   const [cartData, setCartData] = React.useState([]);
+  useEffect(() => {
+    // Load cart data from local storage when component mounts
+    const savedCartData = localStorage.getItem("cartData");
+    if (savedCartData) {
+      setCartData(JSON.parse(savedCartData));
+    }
+  }, []);
+  useEffect(() => {
+    // Update local storage whenever cartData changes
+    localStorage.setItem("cartData", JSON.stringify(cartData));
+  }, [cartData]);
 
   console.log("cartData", cartData);
 
@@ -1015,35 +1036,185 @@ export const OddsScreen = () => {
   };
   useEffect(() => {
     // fetchEvent();
-  }, [sport, region, market]);
+  }, [sport]);
 
   const handleSportClick = (prev) => {
-    console.log("prevvv", prev);
-    setCartData([...cartData, prev]);
+    console.log("prev", prev);
+    setCartData((currentCartData) => [...currentCartData, prev]);
   };
-  // const fetchEvent = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apikey}&regions=${region}&markets=${market},spreads&oddsFormat=american`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+  const handleWagerChange = (index, wager) => {
+    setCartData((prevMarkets) =>
+      prevMarkets.map((market, i) =>
+        i === index
+          ? {
+              ...market,
+              wager,
+              winAmount:
+                market.price > 0
+                  ? (market.price / 100) * wager
+                  : (100 / Math.abs(market.price)) * wager,
+            }
+          : market
+      )
+    );
+  };
 
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
+  const BetSlip = () => {
+    const totalWager = cartData.reduce(
+      (total, market) => total + (market.wager || 0),
+      0
+    );
 
-  //     const data = await response.json();
-  //     console.log("response", data);
-  //     setData(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+    const totalPays = cartData.reduce(
+      (total, market) => total + (market.winAmount || 0),
+      0
+    );
+
+    return (
+      <Container className="border  rounded p-4">
+        <Row className="d-flex justify-content-between align-items-center mb-3">
+          <Col xs="auto">
+            <h5 className="mb-0">
+              Betslip <Badge bg="success">{cartData.length}</Badge>
+            </h5>
+          </Col>
+          <Col xs="auto">
+            <Button
+              variant="link"
+              size="sm"
+              className="p-0 text-decoration-none ms-3"
+            >
+              Settled
+            </Button>
+          </Col>
+        </Row>
+
+        <Row className="d-flex justify-content-between align-items-center mb-2">
+          <Col xs="auto">
+            <h6 className="text-uppercase mb-0">Straights</h6>
+          </Col>
+          <Col xs="auto">
+            <Button
+              onClick={() => setCartData([])}
+              variant="link"
+              size="sm"
+              className="text-danger p-0"
+            >
+              Clear All
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Bet Item */}
+        <div style={{ maxHeight: "280px" }} className="overflow-y-scroll">
+          {cartData?.length === 0 && (
+            <p className="text-center">No bets added</p>
+          )}
+
+          {cartData?.map((market, index) => (
+            <Card key={index} className="mb-2">
+              <Card.Body>
+                <Row className="d-flex justify-content-between align-items-start">
+                  {/* <Col xs="auto">
+                    <Card.Title className="mb-0">{market?.team}</Card.Title>
+                  </Col> */}
+                  <Col xs="auto" className=" ">
+                    <span>{market?.name}</span>
+                    <span className="fw-bold"> {market?.point}</span>
+                    <span className="text-muted"> {market?.price}</span>
+                  </Col>
+                </Row>
+                <Card.Text className="text-muted mb-1">
+                  {market?.market}
+                </Card.Text>
+
+                {/* Wager Section */}
+                <Row className="mt-2">
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>Wager</span>
+                      <input
+                        type="text"
+                        placeholder="0.00"
+                        className="form-control"
+                        value={market.wager || ""}
+                        onChange={(e) =>
+                          handleWagerChange(
+                            index,
+                            parseFloat(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
+                  </Col>
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>To Win</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={market.winAmount || ""}
+                        readOnly
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+
+        {/* Cash Wager Section */}
+        <Row className="mt-2 mb-2">
+          <Col xs={6}>
+            <h6>Cash Wager:</h6>
+          </Col>
+          <Col xs={6} className="text-end">
+            <h6>${totalWager.toFixed(2)}</h6>
+          </Col>
+        </Row>
+
+        {/* Total Pays Section */}
+        <Row className="mt-2 mb-4">
+          <Col xs={6}>
+            <h6>Pays:</h6>
+          </Col>
+          <Col xs={6} className="text-end">
+            <h6>${totalPays.toFixed(2)}</h6>
+          </Col>
+        </Row>
+
+        {/* Bet Now Button */}
+        <Button variant="success" size="lg" className="w-100">
+          Bet Now
+        </Button>
+      </Container>
+    );
+  };
+
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(
+        `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=totals,h2h,spreads&oddsFormat=american`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("response", data);
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Container className="mt-3">
@@ -1054,7 +1225,7 @@ export const OddsScreen = () => {
       </Row>
       <Form>
         <Row>
-          <Col md={2}>
+          <Col md={4}>
             <Form.Group controlId="firstSelect">
               <Form.Select
                 value={sport}
@@ -1119,17 +1290,17 @@ export const OddsScreen = () => {
       <Row className="mt-3">
         <Col className="text-start" lg={8}>
           <div className="odds-table">
-            {Data.map((game) => {
-              const fanduelBookmaker = game.bookmakers.find(
+            {data.map((game) => {
+              const fanduelBookmaker = game?.bookmakers.find(
                 (bookmaker) => bookmaker.key === "fanduel"
               );
-              const moneylineMarket = fanduelBookmaker.markets.find(
+              const moneylineMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "h2h"
               );
-              const spreadMarket = fanduelBookmaker.markets.find(
+              const spreadMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "spreads"
               );
-              const totalsMarket = fanduelBookmaker.markets.find(
+              const totalsMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "totals"
               );
               if (!fanduelBookmaker) return null;
@@ -1352,6 +1523,9 @@ export const OddsScreen = () => {
               );
             })}
           </div>
+        </Col>
+        <Col lg={4}>
+          <BetSlip />
         </Col>
       </Row>
       <Row className="mt-5 justify-content-around  ">

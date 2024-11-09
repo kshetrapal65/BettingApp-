@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import moment from "moment";
+import toast from "react-hot-toast";
 const teamImages = {
   "Miami Dolphins":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s",
@@ -163,16 +164,45 @@ const teamImages = {
     "https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Brisbane_Roar_FC_logo.svg/1200px-Brisbane_Roar_FC_logo.svg.png",
   "Sydney FC":
     "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Sydney_FC_Logo.svg/1200px-Sydney_FC_Logo.svg.png",
+  "Coastal Carolina Chanticleers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Coastal_Carolina_Chanticleers_logo.svg/1200px-Coastal_Carolina_Chanticleers_logo.svg.png",
+  "Appalachian State Mountaineers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5jB5Py9_7R7wl6cI7MCOe_n6n1vi5TyUpFA&s",
+  "East Carolina Pirates":
+    "https://upload.wikimedia.org/wikipedia/en/c/c7/East_Carolina_Pirates_logo.svg",
+  "Wake Forest Demon Deacons":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTokSf00bdqJJoBfUy0JMhVKwuM8SDac3My5A&s",
+  "California Golden Bears":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCFTXOT5G47H31zVnvtIyEyIwYf36V8NidrQ&s",
+  "Montreal Alouettes":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+  "Winnipeg Blue Bombers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+  "Winnipeg Blue Bombers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8_2WzZutk2qDDuXSEf5TCm-L2OVySoLtalg&s",
+  "Brynäs IF":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
 };
 
-export const EventScore = () => {
+export const EventScore = React.memo(() => {
   const [scoreData, setScoreData] = useState([]);
   const [eventOdds, setEventOdds] = useState([]);
-  const [selectedMarkets, setSelectedMarkets] = useState([]);
+  const [selectedMarkets, setSelectedMarkets] = useState(() => {
+    const storedMarkets = localStorage.getItem("selectedMarkets");
+    return storedMarkets ? JSON.parse(storedMarkets) : [];
+  });
+  useEffect(() => {
+    // Update local storage whenever selectedMarkets changes
+    localStorage.setItem("selectedMarkets", JSON.stringify(selectedMarkets));
+  }, [selectedMarkets]);
   const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
   const event = location.state || {};
   const apikey = "0119dd31fef7c240837b6c47a04c03ee";
+  console.log("render main component");
+  const handleMarketClick = (marketData) => {
+    setSelectedMarkets((prev) => [...prev, marketData]);
+  };
 
   console.log("event>>>>", event);
   useEffect(() => {
@@ -365,6 +395,7 @@ export const EventScore = () => {
       </Container>
     );
   };
+
   const handleWagerChange = (index, wager) => {
     setSelectedMarkets((prevMarkets) =>
       prevMarkets.map((market, i) =>
@@ -648,16 +679,10 @@ export const EventScore = () => {
       </Container>
     );
   };
-  const GameOdds1 = ({ data }) => {
-    // console.log("selectedMarkets", selectedMarkets);
-
+  const GameOdds1 = React.memo(({ data }) => {
     const spreadMarket = data?.markets?.find((m) => m.key === "spreads");
     const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
     const totalsMarket = data?.markets?.find((m) => m.key === "totals");
-
-    const handleMarketClick = (marketData) => {
-      setSelectedMarkets((prev) => [...prev, marketData]);
-    };
 
     return (
       <Container className="p-4 ">
@@ -699,7 +724,7 @@ export const EventScore = () => {
                 width="30"
                 className="mr-2"
               />
-              <span>{event?.away_team}</span>
+              <span className="fw-bold ms-2">{event?.away_team}</span>
             </Col>
             <Col xs={2}>
               <Button
@@ -765,7 +790,7 @@ export const EventScore = () => {
                 width="30"
                 className="mr-2"
               />
-              <span>{event?.home_team}</span>
+              <span className="fw-bold ms-2">{event?.home_team}</span>
             </Col>
             <Col xs={2}>
               <Button
@@ -848,7 +873,7 @@ export const EventScore = () => {
         </Card>
       </Container>
     );
-  };
+  });
 
   // Example usage with the data you provided
   const data = {
@@ -884,14 +909,12 @@ export const EventScore = () => {
       },
     ],
   };
-  const BetSlip = () => {
-    // Calculate the total wager amount
+  const BetSlip = React.memo(() => {
     const totalWager = selectedMarkets.reduce(
       (total, market) => total + (market.wager || 0),
       0
     );
 
-    // Calculate the total payout amount
     const totalPays = selectedMarkets.reduce(
       (total, market) => total + (market.winAmount || 0),
       0
@@ -963,6 +986,7 @@ export const EventScore = () => {
                     <div className="d-flex flex-column">
                       <span>Wager</span>
                       <input
+                        key={index}
                         type="text"
                         placeholder="0.00"
                         className="form-control"
@@ -1014,12 +1038,17 @@ export const EventScore = () => {
         </Row>
 
         {/* Bet Now Button */}
-        <Button variant="success" size="lg" className="w-100">
+        <Button
+          onClick={() => toast.success("Comming soon...")}
+          variant="success"
+          size="lg"
+          className="w-100"
+        >
           Bet Now
         </Button>
       </Container>
     );
-  };
+  });
   function OddsTabBar() {
     const [activeTab, setActiveTab] = useState("game");
 
@@ -1058,4 +1087,4 @@ export const EventScore = () => {
       </Row>
     </Container>
   );
-};
+});
