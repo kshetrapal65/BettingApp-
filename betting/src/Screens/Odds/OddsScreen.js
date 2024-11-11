@@ -1033,9 +1033,108 @@ export const OddsScreen = () => {
       "https://media.rams.1rmg.com/wp-content/uploads/2020/03/24153922/2020_LA_Mark_thumb_up.png",
     "Minnesota Vikings":
       "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/MIN",
+    "Toronto Argonauts":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQjNligZVHoY5xXPLoYx8GoaSWIgeKVG4eJg&s",
+    "Florida International Panthers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/FIU_Panthers_logo.svg/800px-FIU_Panthers_logo.svg.png",
+    "Texas State Bobcats":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/9/97/Texas_State_Bobcats_logo.svg/640px-Texas_State_Bobcats_logo.svg.png",
+    "Sam Houston State Bearkats":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSibMSvFLHicJvVtY3rYUIVvtAIcnfUcWxClw&s",
+    "Louisiana Tech Bulldogs":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzENC-yroo1QjC7zeTeyfJKzpFxCULsb6SjQ&s",
+    "Liberty Flames":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQRZCa5Djo_GS2EriJR_cQUsGbah5_qKAnJw&s",
+    "Jacksonville State Gamecocks":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/2/20/Jacksonville_State_Gamecocks_logo.svg/800px-Jacksonville_State_Gamecocks_logo.svg.png",
+    "Western Kentucky Hilltoppers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/WKU_Athletics_logo.svg/1200px-WKU_Athletics_logo.svg.png",
+    "Kennesaw State Owls":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/WKU_Athletics_logo.svg/1200px-WKU_Athletics_logo.svg.png",
+    "New Mexico State Aggies":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/New_Mexico_State_Aggies_logo.svg/800px-New_Mexico_State_Aggies_logo.svg.png",
+    "Louisiana Ragin Cajuns":
+      "https://1000logos.net/wp-content/uploads/2021/06/Louisiana-Ragin-Cajuns-logo.png",
+    "Charlotte 49ers":
+      "https://static.charlotte49ers.com/custompages/New%20logos/Primary_C_RGB_7484.png",
+    "Tulane Green Wave":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/2/28/Tulane_Green_Wave_logo.svg/1200px-Tulane_Green_Wave_logo.svg.png",
+    "Ottawa Redblacks":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa57oOcscrYo7STspGQHMJGNMG4242MUyzTg&s",
+    "Saskatchewan Roughriders":
+      "https://i.pinimg.com/originals/e8/b7/46/e8b746398101e297622be001814d6b57.gif",
+    "BC Lions":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwGhNPmJI4sKkyvi8ifjMZ_c4UBK4N-W48wQ&s",
+    "Kennesaw State Owls":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpamIyjM4-BJyEEZQuPtjrUu5FCprY66kGnQ&s",
+    "UConn Huskies":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe6A4QEZ2dAl5alkNc632xyr4fouQlr4VcOw&s",
+    "Georgia State Panthers":
+      "https://upload.wikimedia.org/wikipedia/en/3/3b/Georgia_State_Athletics_logo.svg",
+    "Florida Atlantic Owls":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkQU9ZaWGU2SUvgWMOXFlD5E5uAlpOPt1tgA&s",
+    "South Florida Bulls":
+      "https://upload.wikimedia.org/wikipedia/commons/1/13/Official_USF_Bulls_Athletic_Logo.png",
+    "Kia Tigers":
+      "https://upload.wikimedia.org/wikipedia/en/e/e0/Kia_Tigers_2017_New_Team_Logo.png",
+    "Samsung Lions":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbkD8Xn5tLzuHIyAs6Gjl1hXyHNUwmDoHf3g&s",
+    "New York Yankees":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6h3rsvDZBUGa9nMjhl71KvUUoYPZJc7rv0w&s",
+    "Los Angeles Dodgers":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Los_Angeles_Dodgers_Logo.svg/640px-Los_Angeles_Dodgers_Logo.svg.png",
+    "Fukuoka SoftBank Hawks":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/9/94/Softbank_hawks_emblem.svg/1200px-Softbank_hawks_emblem.svg.png",
+    "Yokohama DeNA BayStars":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdn9TwUvBcbZ4d6OJ31yvXKABC8vgt-ttuzw&s",
+    "Ohio State Buckeyes":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Ohio_State_Buckeyes_logo.svg/1200px-Ohio_State_Buckeyes_logo.svg.png",
+    "Texas Longhorns":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Texas_Longhorns_logo.svg/1200px-Texas_Longhorns_logo.svg.png",
+    "Gonzaga Bulldogs":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbJzW41l0zd4sb3o6ixV-G3EHNkUgFq9D0og&s",
+    "Baylor Bears":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYIP8pRPJtpjvmDw7Q9MGHpUm_3EvExCP13A&s",
+    Nepal: "https://cdn.worldvectorlogo.com/logos/nepal-1.svg",
+    Scotland:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxQXXcqTsJdsanTfYOCY5phWLeJSTICITn5g&s",
+    Bangladesh:
+      "https://i.pinimg.com/originals/94/0e/8e/940e8e796893938ca9d483219e57d492.jpg",
+    "South Africa":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC49PeN61VvuP7ORqGKr_cFHFyZRlF8DdU6w&s",
+    "Brisbane Roar":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Brisbane_Roar_FC_logo.svg/1200px-Brisbane_Roar_FC_logo.svg.png",
+    "Sydney FC":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Sydney_FC_Logo.svg/1200px-Sydney_FC_Logo.svg.png",
+    "Coastal Carolina Chanticleers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Coastal_Carolina_Chanticleers_logo.svg/1200px-Coastal_Carolina_Chanticleers_logo.svg.png",
+    "Appalachian State Mountaineers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5jB5Py9_7R7wl6cI7MCOe_n6n1vi5TyUpFA&s",
+    "East Carolina Pirates":
+      "https://upload.wikimedia.org/wikipedia/en/c/c7/East_Carolina_Pirates_logo.svg",
+    "Wake Forest Demon Deacons":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTokSf00bdqJJoBfUy0JMhVKwuM8SDac3My5A&s",
+    "California Golden Bears":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCFTXOT5G47H31zVnvtIyEyIwYf36V8NidrQ&s",
+    "Montreal Alouettes":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+    "Winnipeg Blue Bombers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzt9Va1Hpuf5zW_EQbgYq1v859oBHNSpZwmg&s",
+    "Winnipeg Blue Bombers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8_2WzZutk2qDDuXSEf5TCm-L2OVySoLtalg&s",
+    "Brynäs IF":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
+    "UCLA Bruins":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh_HDseanPbGEwlTxlEYUjo2O8YdQIWsHKOg&s",
+    "Iowa Hawkeyes":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJQkUnTXylCBou7z-WzwE2o25a_L7xHGk3MA&s",
+    "Memphis Tigers":
+      "https://upload.wikimedia.org/wikipedia/en/4/45/Memphis_Tigers_logo.svg",
+    "Rice Owls":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rice_Owls_logo.svg/640px-Rice_Owls_logo.svg.png",
   };
   useEffect(() => {
-    // fetchEvent();
+    fetchEvent();
   }, [sport]);
 
   const handleSportClick = (prev) => {
@@ -1106,7 +1205,7 @@ export const OddsScreen = () => {
         </Row>
 
         {/* Bet Item */}
-        <div style={{ maxHeight: "280px" }} className="overflow-y-scroll">
+        <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
           {cartData?.length === 0 && (
             <p className="text-center">No bets added</p>
           )}
@@ -1119,13 +1218,13 @@ export const OddsScreen = () => {
                     <Card.Title className="mb-0">{market?.team}</Card.Title>
                   </Col> */}
                   <Col xs="auto" className=" ">
-                    <span>{market?.name}</span>
+                    <span className="fw-bold">{market?.name}</span>
                     <span className="fw-bold"> {market?.point}</span>
-                    <span className="text-muted"> {market?.price}</span>
+                    <span className="text-muted "> ({market?.price})</span>
                   </Col>
                 </Row>
-                <Card.Text className="text-muted mb-1">
-                  {market?.market}
+                <Card.Text className="fw-bold mb-1">
+                  {market?.market == "h2h" ? "Moneyline" : market?.market}
                 </Card.Text>
 
                 {/* Wager Section */}
@@ -1312,7 +1411,7 @@ export const OddsScreen = () => {
                       <div className="team-info d-flex align-items-center">
                         <img
                           src={
-                            teamImages[game.home_team] ||
+                            teamImages[moneylineMarket?.outcomes[0].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.home_team}
@@ -1323,7 +1422,9 @@ export const OddsScreen = () => {
                             marginRight: "10px",
                           }}
                         />
-                        <span className="team-name">{game.home_team}</span>
+                        <span className="team-name">
+                          {moneylineMarket?.outcomes[0].name}
+                        </span>
                       </div>
                     </Col>
 
@@ -1347,16 +1448,22 @@ export const OddsScreen = () => {
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
+                                // handleSportClick({
+                                //   key: moneylineMarket.key,
+                                //   price: moneylineMarket.outcomes[0].price,
+                                //   name: moneylineMarket.outcomes[0].name,
+                                // })
                                 handleSportClick({
-                                  key: moneylineMarket.key,
-                                  price: moneylineMarket.outcomes[0].price,
-                                  name: moneylineMarket.outcomes[0].name,
+                                  market: moneylineMarket.key,
+                                  price: moneylineMarket?.outcomes[0].price,
+                                  name: moneylineMarket?.outcomes[0].name,
+                                  ...moneylineMarket?.outcomes[0],
                                 })
                               }
                             >
-                              {moneylineMarket.outcomes[0].price > 0
-                                ? `+${moneylineMarket.outcomes[0].price}`
-                                : moneylineMarket.outcomes[0].price}
+                              {moneylineMarket?.outcomes[0].price > 0
+                                ? `+${moneylineMarket?.outcomes[0].price}`
+                                : moneylineMarket?.outcomes[0].price}
                             </Button>
                           )}
                         </Col>
@@ -1368,19 +1475,20 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  key: spreadMarket.key,
-                                  price: spreadMarket.outcomes[0].price,
-                                  name: spreadMarket.outcomes[0].name,
+                                  market: spreadMarket.key,
+                                  price: spreadMarket?.outcomes[0].price,
+                                  name: spreadMarket?.outcomes[0].name,
+                                  ...spreadMarket?.outcomes[0],
                                 })
                               }
                             >
-                              {spreadMarket.outcomes[0].point > 0
-                                ? `+${spreadMarket.outcomes[0].point}`
-                                : spreadMarket.outcomes[0].point}
+                              {spreadMarket?.outcomes[0].point > 0
+                                ? `+${spreadMarket?.outcomes[0].point}`
+                                : spreadMarket?.outcomes[0].point}
                               <br />(
-                              {spreadMarket.outcomes[0].price > 0
-                                ? `+${spreadMarket.outcomes[0].price}`
-                                : spreadMarket.outcomes[0].price}
+                              {spreadMarket?.outcomes[0].price > 0
+                                ? `+${spreadMarket?.outcomes[0].price}`
+                                : spreadMarket?.outcomes[0].price}
                               )
                             </Button>
                           )}
@@ -1393,19 +1501,20 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  key: totalsMarket.key,
-                                  price: totalsMarket.outcomes[0].price,
-                                  name: totalsMarket.outcomes[0].name,
+                                  market: totalsMarket.key,
+                                  price: totalsMarket?.outcomes[0].price,
+                                  name: totalsMarket?.outcomes[0].name,
+                                  ...totalsMarket?.outcomes[0],
                                 })
                               }
                             >
-                              {totalsMarket.outcomes[0].point > 0
-                                ? `o${totalsMarket.outcomes[0].point}`
-                                : `u${totalsMarket.outcomes[0].point}`}
+                              {totalsMarket?.outcomes[0].point > 0
+                                ? `o${totalsMarket?.outcomes[0].point}`
+                                : `u${totalsMarket?.outcomes[0].point}`}
                               <br />(
-                              {totalsMarket.outcomes[0].price > 0
-                                ? `+${totalsMarket.outcomes[0].price}`
-                                : totalsMarket.outcomes[0].price}
+                              {totalsMarket?.outcomes[0].price > 0
+                                ? `+${totalsMarket?.outcomes[0].price}`
+                                : totalsMarket?.outcomes[0].price}
                               )
                             </Button>
                           )}
@@ -1417,7 +1526,7 @@ export const OddsScreen = () => {
                       <div className="team-info d-flex align-items-center mt-1">
                         <img
                           src={
-                            teamImages[game.away_team] ||
+                            teamImages[moneylineMarket?.outcomes[1].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.away_team}
@@ -1428,7 +1537,9 @@ export const OddsScreen = () => {
                             marginRight: "10px",
                           }}
                         />
-                        <span className="team-name">{game.away_team}</span>
+                        <span className="team-name">
+                          {moneylineMarket?.outcomes[1].name}
+                        </span>
                       </div>
                     </Col>
 
@@ -1441,15 +1552,16 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  key: moneylineMarket.key,
-                                  price: moneylineMarket.outcomes[1].price,
-                                  name: moneylineMarket.outcomes[1].name,
+                                  market: moneylineMarket?.key,
+                                  price: moneylineMarket?.outcomes[1].price,
+                                  name: moneylineMarket?.outcomes[1].name,
+                                  ...moneylineMarket?.outcomes[1],
                                 })
                               }
                             >
-                              {moneylineMarket.outcomes[1].price > 0
-                                ? `+${moneylineMarket.outcomes[1].price}`
-                                : moneylineMarket.outcomes[1].price}
+                              {moneylineMarket?.outcomes[1].price > 0
+                                ? `+${moneylineMarket?.outcomes[1].price}`
+                                : moneylineMarket?.outcomes[1].price}
                             </Button>
                           )}
                         </Col>
@@ -1461,19 +1573,20 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  key: spreadMarket.key,
-                                  price: spreadMarket.outcomes[1].price,
-                                  name: spreadMarket.outcomes[1].name,
+                                  market: spreadMarket?.key,
+                                  price: spreadMarket?.outcomes[1].price,
+                                  name: spreadMarket?.outcomes[1].name,
+                                  ...spreadMarket?.outcomes[1],
                                 })
                               }
                             >
-                              {spreadMarket.outcomes[1].point > 0
-                                ? `+${spreadMarket.outcomes[1].point}`
-                                : spreadMarket.outcomes[1].point}
+                              {spreadMarket?.outcomes[1].point > 0
+                                ? `+${spreadMarket?.outcomes[1].point}`
+                                : spreadMarket?.outcomes[1].point}
                               <br />(
-                              {spreadMarket.outcomes[1].price > 0
-                                ? `+${spreadMarket.outcomes[1].price}`
-                                : spreadMarket.outcomes[1].price}
+                              {spreadMarket?.outcomes[1].price > 0
+                                ? `+${spreadMarket?.outcomes[1].price}`
+                                : spreadMarket?.outcomes[1].price}
                               )
                             </Button>
                           )}
@@ -1485,19 +1598,20 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  key: totalsMarket.key,
-                                  price: totalsMarket.outcomes[1].price,
-                                  name: totalsMarket.outcomes[1].name,
+                                  market: totalsMarket.key,
+                                  price: totalsMarket?.outcomes[1].price,
+                                  name: totalsMarket?.outcomes[1].name,
+                                  ...totalsMarket?.outcomes[1],
                                 })
                               }
                             >
-                              {totalsMarket.outcomes[1].point > 0
-                                ? `o${totalsMarket.outcomes[1].point}`
-                                : `u${totalsMarket.outcomes[1].point}`}
+                              {totalsMarket?.outcomes[1].point > 0
+                                ? `o${totalsMarket?.outcomes[1].point}`
+                                : `u${totalsMarket?.outcomes[1].point}`}
                               <br />(
-                              {totalsMarket.outcomes[1].price > 0
-                                ? `+${totalsMarket.outcomes[1].price}`
-                                : totalsMarket.outcomes[1].price}
+                              {totalsMarket?.outcomes[1].price > 0
+                                ? `+${totalsMarket?.outcomes[1].price}`
+                                : totalsMarket?.outcomes[1].price}
                               )
                             </Button>
                           )}
@@ -1513,7 +1627,7 @@ export const OddsScreen = () => {
                           marginTop: "10px",
                         }}
                       >
-                        {moment(game.commence_time).format(
+                        {moment(game?.commence_time).format(
                           "MMMM Do YYYY, h:mm A"
                         )}
                       </p>
@@ -1524,9 +1638,7 @@ export const OddsScreen = () => {
             })}
           </div>
         </Col>
-        <Col lg={4}>
-          <BetSlip />
-        </Col>
+        <Col lg={4}>{BetSlip()}</Col>
       </Row>
       <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>

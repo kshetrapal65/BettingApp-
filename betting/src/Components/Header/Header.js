@@ -33,6 +33,7 @@ const Header = () => {
   const logout = () => {
     localStorage.removeItem("@userToken");
     navigate("/login");
+    toggleDrawer();
   };
 
   return (
@@ -51,7 +52,9 @@ const Header = () => {
             <li>
               <Link to="/">
                 {" "}
-                <a href="#">HOME</a>
+                <a onClick={toggleDrawer} href="#">
+                  HOME
+                </a>
               </Link>
             </li>
             {/* <li>
@@ -80,7 +83,7 @@ const Header = () => {
 
             <li>
               <a href="#" onClick={() => setShowJsSubMenu(!showJsSubMenu)}>
-                Odds
+                ODDS
               </a>
               <i
                 className="bx bxs-chevron-down js-arrow arrow"
@@ -100,20 +103,26 @@ const Header = () => {
               )}
             </li>
             <li>
-              <a href="#">ABOUT US</a>
+              <a onClick={toggleDrawer} href="#">
+                ABOUT US
+              </a>
             </li>
             <li>
-              <a href="#">CONTACT US</a>
+              <a onClick={toggleDrawer} href="#">
+                CONTACT US
+              </a>
             </li>
             <li>
               {token ? (
                 <a onClick={logout} href="#">
-                  LogOut
+                  LOGOUT
                 </a>
               ) : (
                 <Link to="/login">
                   {" "}
-                  <a href="#">LogIn</a>
+                  <a onClick={toggleDrawer} href="#">
+                    LOGIN
+                  </a>
                 </Link>
               )}
             </li>
