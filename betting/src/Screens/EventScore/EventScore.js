@@ -206,8 +206,8 @@ export const EventScore = React.memo(() => {
 
   console.log("event>>>>", event);
   useEffect(() => {
-    fetchScore();
-    fetchEventOdds();
+    // fetchScore();
+    // fetchEventOdds();
   }, [event]);
   const fetchScore = async () => {
     try {
@@ -735,7 +735,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.away_team,
                     market: "spread",
-                    ...spreadMarket.outcomes[1],
+                    ...spreadMarket?.outcomes[1],
                   });
                 }}
               >
@@ -752,7 +752,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.away_team,
                     market: "total",
-                    ...totalsMarket.outcomes[0],
+                    ...totalsMarket?.outcomes[0],
                   })
                 }
               >
@@ -769,7 +769,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.away_team,
                     market: "moneyline",
-                    ...moneylineMarket.outcomes[1],
+                    ...moneylineMarket?.outcomes[1],
                   })
                 }
               >
@@ -801,7 +801,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.home_team,
                     market: "spread",
-                    ...spreadMarket.outcomes[0],
+                    ...spreadMarket?.outcomes[0],
                   })
                 }
               >
@@ -818,7 +818,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.home_team,
                     market: "total",
-                    ...totalsMarket.outcomes[1],
+                    ...totalsMarket?.outcomes[1],
                   })
                 }
               >
@@ -835,7 +835,7 @@ export const EventScore = React.memo(() => {
                   handleMarketClick({
                     team: eventOdds?.home_team,
                     market: "moneyline",
-                    ...moneylineMarket.outcomes[0],
+                    ...moneylineMarket?.outcomes[0],
                   })
                 }
               >
@@ -909,7 +909,7 @@ export const EventScore = React.memo(() => {
       },
     ],
   };
-  const BetSlip = React.memo(() => {
+  const BetSlip = () => {
     const totalWager = selectedMarkets.reduce(
       (total, market) => total + (market.wager || 0),
       0
@@ -958,7 +958,7 @@ export const EventScore = React.memo(() => {
         </Row>
 
         {/* Bet Item */}
-        <div style={{ maxHeight: "280px" }} className="overflow-y-scroll">
+        <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
           {selectedMarkets?.length === 0 && (
             <p className="text-center">No bets added</p>
           )}
@@ -1048,7 +1048,7 @@ export const EventScore = React.memo(() => {
         </Button>
       </Container>
     );
-  });
+  };
   function OddsTabBar() {
     const [activeTab, setActiveTab] = useState("game");
 
@@ -1081,9 +1081,7 @@ export const EventScore = React.memo(() => {
 
           <GameOdds1 data={Fandualodds} />
         </Col>
-        <Col lg={4}>
-          <BetSlip />
-        </Col>
+        <Col lg={4}>{BetSlip()}</Col>
       </Row>
     </Container>
   );

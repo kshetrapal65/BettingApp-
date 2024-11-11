@@ -11,13 +11,13 @@ const sports = SportList;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 const Home = () => {
-  const [sport, setSport] = React.useState("americanfootball_nfl");
+  const [sport, setSport] = React.useState("americanfootball_cfl");
   const [event, setEvent] = React.useState([]);
   const navigate = useNavigate();
 
   // console.log("event", event);
   useEffect(() => {
-    fetchEvent();
+    // fetchEvent();
   }, [sport]);
   const fetchEvent = async () => {
     try {
