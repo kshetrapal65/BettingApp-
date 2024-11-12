@@ -11,6 +11,9 @@ import Register from "../Screens/LoginFlow/Register/Register";
 import ForgotPassword from "../Screens/LoginFlow/Forgot/ForgotPassword";
 import VerifyOtp from "../Screens/LoginFlow/VerifyOtp/VerifyOtp";
 import ResetPassword from "../Screens/LoginFlow/ResetPassword/ResetPassword";
+import Profile from "../Screens/Profile/Profile";
+import RecentNews from "../Screens/RecentNews/RecentNews";
+import RecentNewsDetails from "../Screens/RecentNews/RecentNewsDetails";
 
 const PublicRouter = () => {
   return (
@@ -26,6 +29,9 @@ const PublicRouter = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/recent-news" element={<RecentNews />} />
+        <Route path="/recent-news/:id" element={<RecentNewsDetails />} />
       </Routes>
       <Footer />
     </>

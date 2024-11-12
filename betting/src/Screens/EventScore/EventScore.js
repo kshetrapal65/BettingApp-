@@ -206,9 +206,10 @@ export const EventScore = React.memo(() => {
 
   console.log("event>>>>", event);
   useEffect(() => {
-    // fetchScore();
-    // fetchEventOdds();
+    fetchScore();
+    fetchEventOdds();
   }, [event]);
+
   const fetchScore = async () => {
     try {
       const response = await fetch(

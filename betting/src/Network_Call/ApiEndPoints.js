@@ -3,12 +3,16 @@ const APPConfig = {
 };
 
 const ApiEndPoints = {
-  ApiKey: "5269f50f7cb93fcfadbc3b2e991d2477",
+  ApiKey: "5269f50f7cb93fcfadbc3b2e991d2477s",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
   ForgotPassword: `${APPConfig.API_URL}/forgot-password`,
   VerifyOtp: `${APPConfig.API_URL}/forgot-verify-email-otp`,
   ResetPassword: `${APPConfig.API_URL}/reset-password`,
+  ProfileGet: `${APPConfig.API_URL}/profile`,
+  ProfileUpdate: `${APPConfig.API_URL}/update-profile`,
+  BankUpdate: `${APPConfig.API_URL}/update-bank-info`,
+  BankInfo: `${APPConfig.API_URL}/bank-info`,
 };
 
 export default ApiEndPoints;

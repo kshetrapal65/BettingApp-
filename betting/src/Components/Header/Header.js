@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../Header.css"; // Ensure this path is correct
 import SportList from "../../JSON/SportList";
 import { Link, useNavigate } from "react-router-dom";
-import { getToken } from "../../Helper/Storage";
+import { getToken, getUserdata } from "../../Helper/Storage";
+import { formatCapital } from "../formatCapitalize";
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -13,9 +14,9 @@ const Header = () => {
 
   const [showMoreSubMenu, setShowMoreSubMenu] = useState(false);
   const data = SportList;
-  console.log("DATA", data);
   const token = getToken();
-  console.log("token", token);
+  const userData = getUserdata();
+  const userName = userData?.name?.slice(0, 1);
 
   const toggleDrawer = () => {
     setDrawerOpen((prevState) => !prevState);
@@ -112,20 +113,24 @@ const Header = () => {
                 CONTACT US
               </a>
             </li>
-            <li>
-              {token ? (
-                <a onClick={logout} href="#">
-                  LOGOUT
-                </a>
-              ) : (
+
+            {token ? (
+              <li
+                className="username-main"
+                onClick={() => navigate("/profile")}
+              >
+                <span className="username">{formatCapital(userName)}</span>
+              </li>
+            ) : (
+              <li>
                 <Link to="/login">
                   {" "}
                   <a onClick={toggleDrawer} href="#">
                     LOGIN
                   </a>
                 </Link>
-              )}
-            </li>
+              </li>
+            )}
           </ul>
         </div>
         {/* <div className="search-box">

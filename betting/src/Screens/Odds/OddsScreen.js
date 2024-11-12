@@ -13,6 +13,7 @@ import oddsData from "../../JSON/Odds";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
+import RecentStory from "../../Components/RecentStory";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -1640,7 +1641,7 @@ export const OddsScreen = () => {
         </Col>
         <Col lg={4}>{BetSlip()}</Col>
       </Row>
-      <Row className="mt-5 justify-content-around  ">
+      {/* <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
@@ -1765,7 +1766,8 @@ export const OddsScreen = () => {
           </Row>
         </Col>
         <Col className="  text-end" lg={4}></Col>
-      </Row>
+      </Row> */}
+      <RecentStory />
     </Container>
   );
 };
