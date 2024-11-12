@@ -58,6 +58,7 @@ const Register = () => {
         setUserData(response?.result);
         setLoad(false);
         navigate("/");
+        window.location.reload();
       } else {
         setLoad(false);
         toast.error(response.msg);

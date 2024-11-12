@@ -7,6 +7,7 @@ import { apiCallNew } from "../../Network_Call/apiservices";
 import moment from "moment";
 import Event from "../../JSON/event";
 import { useNavigate } from "react-router-dom";
+import RecentStory from "../../Components/RecentStory";
 const sports = SportList;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -15,7 +16,6 @@ const Home = () => {
   const [event, setEvent] = React.useState([]);
   const navigate = useNavigate();
 
-  // console.log("event", event);
   useEffect(() => {
     // fetchEvent();
   }, [sport]);
@@ -42,6 +42,29 @@ const Home = () => {
       console.log(error);
     }
   };
+
+  // const getRecentNews = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     console.log("responsenewsresponse", response);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const data = await response.json();
+  //     console.log("responsenews", data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const Data = Event;
   const matches = [
     {
@@ -956,7 +979,7 @@ const Home = () => {
               )}
             </Col>
           </Row>
-          <Row className="mt-5 justify-content-around  ">
+          {/* <Row className="mt-5 justify-content-around  ">
             <Col className="bg-light p-4 rounded-5" lg={12}>
               <Row>
                 <Col>
@@ -970,131 +993,39 @@ const Home = () => {
               </Row>
 
               <Row className="mt-3 p-3">
-                <Col lg={4} className="d-flex ">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/NFL-Pass-or-Play-Week-8.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p style={{ fontSize: "12px" }} className="text-muted">
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
-                <Col lg={4} className="d-flex">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/nfl-luck-rankings-picks.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p className="text-muted" style={{ fontSize: "12px" }}>
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
-                <Col lg={4} className="d-flex">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/juan-soto-2.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p className="text-muted" style={{ fontSize: "12px" }}>
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
-                <Col lg={4} className="d-flex">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p className="text-muted" style={{ fontSize: "12px" }}>
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
-                <Col lg={4} className="d-flex">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p className="text-muted" style={{ fontSize: "12px" }}>
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
-                <Col lg={4} className="d-flex">
-                  <div className="me-3">
-                    <Image
-                      style={{
-                        maxWidth: "100%",
-                        objectFit: "cover",
-                        aspectRatio: "1",
-                        borderRadius: "18px",
-                      }}
-                      src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                    />
-                  </div>
-                  <div className="d-flex-column">
-                    <h5 className="fw-bold">NFL</h5>
-                    <h7>NFL NFL Picks, Predictions Week 8: Expert</h7>
-                    <p className="text-muted" style={{ fontSize: "12px" }}>
-                      {" "}
-                      Jacob Wayne • 4 hours ago
-                    </p>
-                  </div>
-                </Col>
+                {newsData?.map((item, index) => (
+                  <Col lg={4} md={6} sm={12} className="d-flex" key={index}>
+                    <div className="d-flex mb-3" style={{ width: "100%" }}>
+                      <div style={{ flexShrink: 0, width: "120px" }}>
+                        <Image
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            objectFit: "cover",
+                            aspectRatio: "1/1",
+                            borderRadius: "18px",
+                          }}
+                          src={item.urlToImage}
+                        />
+                      </div>
+                      <div
+                        className="d-flex flex-column ms-3"
+                        style={{ flex: 1 }}
+                      >
+                        <h5 className="fw-bold">{item.title}</h5>
+                        <p>{item.description}</p>
+                        <p style={{ fontSize: "12px" }} className="text-muted">
+                          {new Date(item.publishedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </Col>
+                ))} 
               </Row>
             </Col>
             <Col className="  text-end" lg={4}></Col>
-          </Row>
+          </Row> */}
+          <RecentStory />
         </Container>
       </div>
     </>

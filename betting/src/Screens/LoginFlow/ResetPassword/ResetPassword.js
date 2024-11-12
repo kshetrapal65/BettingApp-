@@ -27,7 +27,6 @@ const ResetPassword = () => {
   const [load, setLoad] = useState(false);
   const navigate = useNavigate();
 
-  console.log("erorooror", errors);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

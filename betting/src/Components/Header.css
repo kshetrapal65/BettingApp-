@@ -342,3 +342,23 @@ nav .navbar .links li:hover .js-sub-menu {
 .htmlCss-sub-menu li:hover {
   background-color: #f0f0f0; /* Optional: adds hover effect */
 }
+
+.username-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 10px;
+}
+.username {
+  background-color: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+}
