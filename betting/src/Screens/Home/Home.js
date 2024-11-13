@@ -17,7 +17,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // fetchEvent();
+    fetchEvent();
   }, [sport]);
   const fetchEvent = async () => {
     try {

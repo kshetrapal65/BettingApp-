@@ -1,16 +1,36 @@
 .odds-tab-bar .nav-item .nav-link {
-  color: #555; /* Text color */
+  color: #555;
   font-weight: bold;
-  border: 1px solid #dee2e6; /* Light border */
+  border: 1px solid #dee2e6;
 }
 
 .odds-tab-bar .nav-item .nav-link.active {
-  color: #000; /* Active text color */
-  border-bottom: 3px solid green; /* Green underline */
-  background-color: #f8f9fa; /* Background color for active tab */
+  color: #000;
+  border-bottom: 3px solid green;
+  background-color: #f8f9fa;
 }
 
 .odds-tab-bar .nav-item .nav-link:hover {
-  color: #000; /* Hover color */
+  color: #000;
   background-color: #f8f9fa;
+}
+
+/* odds-tab-bar-new */
+.odds-tab-bar-new .nav-link {
+  background-color: transparent;
+  border: none;
+  color: #6f6e6e;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.odds-tab-bar-new .nav-link.active {
+  border-bottom: 2px solid green;
+}
+
+.odds-tab-bar-new .nav-link:hover {
+  text-decoration: underline;
+  text-decoration: none;
 }

@@ -112,3 +112,42 @@
   object-fit: cover; /* Ensures the image doesn't get distorted */
   border-radius: 50%; /* Ensures it's a perfect circle */
 }
+
+.profile-img-wrapper {
+  position: relative;
+  /* display: inline-block; */
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+/* .edit-icon {
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+  background-color: rgb(117, 115, 115);
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 14px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  right: 0;
+} */
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 200px;
+  cursor: pointer;
+  background-color: rgb(174, 173, 173);
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+}

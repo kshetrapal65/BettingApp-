@@ -14,21 +14,42 @@ const RecentNews = () => {
     getRecentNews();
   }, []);
 
+  // const getRecentNews = async () => {
+  //   try {
+  //     setLoad(true);
+  //     const response = await apiCallNew(
+  //       "get",
+  //       null,
+  //       "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239"
+  //     );
+  //     console.log("responsenewsresponse", response);
+  //     if (response) {
+  //       setNewsData(response.articles);
+  //       setLoad(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoad(false);
+  //   }
+  // };
+
   const getRecentNews = async () => {
     try {
       setLoad(true);
-      const response = await apiCallNew(
-        "get",
-        null,
+      const response = await fetch(
         "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239"
       );
-      console.log("responsenewsresponse", response);
-      if (response) {
-        setNewsData(response.articles);
-        setLoad(false);
+
+      if (response.ok) {
+        const data = await response.json();
+        setNewsData(data.articles);
+      } else {
+        console.log("Failed to fetch news:", response.statusText);
       }
+
+      setLoad(false);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching news:", error);
       setLoad(false);
     }
   };
@@ -89,7 +110,17 @@ const RecentNews = () => {
                   </div>
                   <div className="d-flex flex-column ms-3" style={{ flex: 1 }}>
                     <h5 className="fw-bold">{item.title}</h5>
-                    <p>{item.description}</p>
+                    <p
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.description}
+                    </p>
                     <p style={{ fontSize: "12px" }} className="text-muted">
                       {new Date(item.publishedAt).toLocaleDateString()}
                     </p>

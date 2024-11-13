@@ -25,6 +25,8 @@ import {
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import moment from "moment";
 import toast from "react-hot-toast";
+import { MdDelete } from "react-icons/md";
+
 const teamImages = {
   "Miami Dolphins":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s",
@@ -191,24 +193,29 @@ export const EventScore = React.memo(() => {
     const storedMarkets = localStorage.getItem("selectedMarkets");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
+  const [activeTabs, setActiveTabs] = useState("Straights");
+
   useEffect(() => {
-    // Update local storage whenever selectedMarkets changes
     localStorage.setItem("selectedMarkets", JSON.stringify(selectedMarkets));
   }, [selectedMarkets]);
+
   const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
   const event = location.state || {};
   const apikey = "0119dd31fef7c240837b6c47a04c03ee";
-  console.log("render main component");
+
   const handleMarketClick = (marketData) => {
     setSelectedMarkets((prev) => [...prev, marketData]);
   };
 
-  console.log("event>>>>", event);
   useEffect(() => {
     fetchScore();
     fetchEventOdds();
   }, [event]);
+
+  const handleSelect = (key) => {
+    setActiveTabs(key);
+  };
 
   const fetchScore = async () => {
     try {
@@ -413,6 +420,12 @@ export const EventScore = React.memo(() => {
       )
     );
   };
+
+  const handleRemoveMarket = (index) => {
+    const updatedMarkets = selectedMarkets.filter((_, i) => i !== index);
+    setSelectedMarkets(updatedMarkets);
+  };
+
   // const BetSlip = () => {
   //   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -806,7 +819,7 @@ export const EventScore = React.memo(() => {
                   })
                 }
               >
-                {spreadMarket?.outcomes[0].point} (
+                {spreadMarket?.outcomes[0].point} <br /> (
                 {spreadMarket?.outcomes[0].price})
               </Button>
             </Col>
@@ -944,7 +957,14 @@ export const EventScore = React.memo(() => {
         {/* Straights Section */}
         <Row className="d-flex justify-content-between align-items-center mb-2">
           <Col xs="auto">
-            <h6 className="text-uppercase mb-0">Straights</h6>
+            {/* <h6 className="text-uppercase mb-0">Straights</h6> */}
+            <Tabs
+              className="mb-2 odds-tab-bar-new border-bottom-0"
+              onSelect={handleSelect}
+            >
+              <Tab eventKey="Straights" title="Straights"></Tab>
+              <Tab eventKey="Parlay" title="Parlay"></Tab>
+            </Tabs>
           </Col>
           <Col xs="auto">
             <Button
@@ -967,10 +987,22 @@ export const EventScore = React.memo(() => {
           {selectedMarkets?.map((market, index) => (
             <Card key={index} className="mb-2">
               <Card.Body>
-                <Row className="d-flex justify-content-between align-items-center">
-                  <Col xs="auto">
-                    <Card.Title className="mb-0">{market?.team}</Card.Title>
-                  </Col>
+                <Row className="justify-content-between align-items-center">
+                  <Row className="d-flex ">
+                    <Col xs={10} md={10} className="">
+                      <Card.Title className="mb-0" style={{ fontSize: "22px" }}>
+                        {market?.team}
+                      </Card.Title>
+                    </Col>
+                    <Col xs={2} md={2} className="p-0 text-end">
+                      <MdDelete
+                        size={20}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveMarket(index)}
+                      />
+                    </Col>
+                  </Row>
+
                   <Col xs="auto" className=" ">
                     <span>{market?.name}</span>
                     <span className="fw-bold"> {market?.point}</span>
@@ -1054,7 +1086,6 @@ export const EventScore = React.memo(() => {
     const [activeTab, setActiveTab] = useState("game");
 
     const handleSelect = (key) => setActiveTab(key);
-    console.log("activeTab", activeTab);
 
     return (
       <Tabs

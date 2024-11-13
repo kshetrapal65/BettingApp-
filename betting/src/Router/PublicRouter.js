@@ -14,6 +14,7 @@ import ResetPassword from "../Screens/LoginFlow/ResetPassword/ResetPassword";
 import Profile from "../Screens/Profile/Profile";
 import RecentNews from "../Screens/RecentNews/RecentNews";
 import RecentNewsDetails from "../Screens/RecentNews/RecentNewsDetails";
+import ParlayCalculater from "../Screens/Parlay/ParlayCalculater";
 
 const PublicRouter = () => {
   return (
@@ -32,6 +33,7 @@ const PublicRouter = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/recent-news" element={<RecentNews />} />
         <Route path="/recent-news/:id" element={<RecentNewsDetails />} />
+        <Route path="/parlay-calculater" element={<ParlayCalculater />} />
       </Routes>
       <Footer />
     </>
