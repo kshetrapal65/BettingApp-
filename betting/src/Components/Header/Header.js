@@ -104,6 +104,26 @@ const Header = () => {
               )}
             </li>
             <li>
+              <a
+                href="#"
+                onClick={() => setShowHtmlCssSubMenu(!showHtmlCssSubMenu)}
+              >
+                Resources
+              </a>
+              <i
+                className="bx bxs-chevron-down htmlcss-arrow arrow"
+                onClick={() => setShowHtmlCssSubMenu(!showHtmlCssSubMenu)}
+              ></i>
+
+              {showHtmlCssSubMenu && (
+                <ul className="htmlCss-sub-menu sub-menu">
+                  <li onClick={() => navigate(`/parlay-calculater`)}>
+                    <a href="#">Parlay Calculator</a>
+                  </li>
+                </ul>
+              )}
+            </li>
+            <li>
               <a onClick={toggleDrawer} href="#">
                 ABOUT US
               </a>

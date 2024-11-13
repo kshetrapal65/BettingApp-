@@ -8,12 +8,15 @@ import {
   Form,
   Image,
   Row,
+  Tab,
+  Tabs,
 } from "react-bootstrap";
 import oddsData from "../../JSON/Odds";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import RecentStory from "../../Components/RecentStory";
+import { MdDelete } from "react-icons/md";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -24,15 +27,15 @@ export const OddsScreen = () => {
   const [region, setRegion] = React.useState("us");
   const [data, setData] = React.useState([]);
   const [cartData, setCartData] = React.useState([]);
+  const [activeTabs, setActiveTabs] = React.useState("Straights");
+
   useEffect(() => {
-    // Load cart data from local storage when component mounts
     const savedCartData = localStorage.getItem("cartData");
     if (savedCartData) {
       setCartData(JSON.parse(savedCartData));
     }
   }, []);
   useEffect(() => {
-    // Update local storage whenever cartData changes
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
 
@@ -1138,10 +1141,21 @@ export const OddsScreen = () => {
     fetchEvent();
   }, [sport]);
 
+  const handleSelect = (key) => {
+    console.log("Selected Tab:", key);
+    setActiveTabs(key); // Update state with the selected tab
+  };
+
   const handleSportClick = (prev) => {
     console.log("prev", prev);
     setCartData((currentCartData) => [...currentCartData, prev]);
   };
+
+  const handleRemoveMarket = (index) => {
+    const updatedMarkets = cartData.filter((_, i) => i !== index);
+    setCartData(updatedMarkets);
+  };
+
   const handleWagerChange = (index, wager) => {
     setCartData((prevMarkets) =>
       prevMarkets.map((market, i) =>
@@ -1191,7 +1205,14 @@ export const OddsScreen = () => {
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
           <Col xs="auto">
-            <h6 className="text-uppercase mb-0">Straights</h6>
+            {/* <h6 className="text-uppercase mb-0">Straights</h6> */}
+            <Tabs
+              className="mb-2 odds-tab-bar-new border-bottom-0"
+              onSelect={handleSelect}
+            >
+              <Tab eventKey="Straights" title="Straights"></Tab>
+              <Tab eventKey="Parlay" title="Parlay"></Tab>
+            </Tabs>
           </Col>
           <Col xs="auto">
             <Button
@@ -1206,88 +1227,206 @@ export const OddsScreen = () => {
         </Row>
 
         {/* Bet Item */}
-        <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
-          {cartData?.length === 0 && (
-            <p className="text-center">No bets added</p>
-          )}
+        {activeTabs === "Straights" ? (
+          <>
+            <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+              {cartData?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
 
-          {cartData?.map((market, index) => (
-            <Card key={index} className="mb-2">
-              <Card.Body>
-                <Row className="d-flex justify-content-between align-items-start">
-                  {/* <Col xs="auto">
-                    <Card.Title className="mb-0">{market?.team}</Card.Title>
-                  </Col> */}
-                  <Col xs="auto" className=" ">
-                    <span className="fw-bold">{market?.name}</span>
-                    <span className="fw-bold"> {market?.point}</span>
-                    <span className="text-muted "> ({market?.price})</span>
-                  </Col>
-                </Row>
-                <Card.Text className="fw-bold mb-1">
-                  {market?.market == "h2h" ? "Moneyline" : market?.market}
-                </Card.Text>
+              {cartData?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="d-flex justify-content-between align-items-start">
+                      <Col xs={12} md={12} className="p-0 text-end">
+                        <MdDelete
+                          size={20}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleRemoveMarket(index)}
+                        />
+                      </Col>
+                      <Col xs="auto" className=" ">
+                        <span className="fw-bold">{market?.name}</span>
+                        <span className="fw-bold"> {market?.point}</span>
+                        <span className="text-muted "> ({market?.price})</span>
+                      </Col>
+                    </Row>
+                    <Card.Text className="fw-bold mb-1">
+                      {market?.market == "h2h" ? "Moneyline" : market?.market}
+                    </Card.Text>
 
-                {/* Wager Section */}
-                <Row className="mt-2">
-                  <Col>
-                    <div className="d-flex flex-column">
-                      <span>Wager</span>
-                      <input
-                        type="text"
-                        placeholder="0.00"
-                        className="form-control"
-                        value={market.wager || ""}
-                        onChange={(e) =>
-                          handleWagerChange(
-                            index,
-                            parseFloat(e.target.value) || 0
-                          )
-                        }
-                      />
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="d-flex flex-column">
-                      <span>To Win</span>
-                      <input
-                        placeholder="0.00"
-                        className="form-control"
-                        value={market.winAmount || ""}
-                        readOnly
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
+                    {/* Wager Section */}
+                    <Row className="mt-2">
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>Wager</span>
+                          <input
+                            type="text"
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.wager || ""}
+                            onChange={(e) =>
+                              handleWagerChange(
+                                index,
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                          />
+                        </div>
+                      </Col>
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>To Win</span>
+                          <input
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.winAmount || ""}
+                            readOnly
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
 
-        {/* Cash Wager Section */}
-        <Row className="mt-2 mb-2">
-          <Col xs={6}>
-            <h6>Cash Wager:</h6>
-          </Col>
-          <Col xs={6} className="text-end">
-            <h6>${totalWager.toFixed(2)}</h6>
-          </Col>
-        </Row>
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalWager.toFixed(2)}</h6>
+              </Col>
+            </Row>
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>Pays:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalPays.toFixed(2)}</h6>
+              </Col>
+            </Row>
+            <Button variant="success" size="lg" className="w-100">
+              Bet Now
+            </Button>
+          </>
+        ) : (
+          <>
+            <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+              {cartData?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
+              <Row className="mt-2 mb-2">
+                <Col>
+                  <div className="d-flex flex-column">
+                    <span>Wager</span>
+                    <input
+                      type="text"
+                      placeholder="0.00"
+                      className="form-control"
+                      value={market.wager || ""}
+                      onChange={(e) =>
+                        handleWagerChange(parseFloat(e.target.value) || 0)
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col>
+                  <div className="d-flex flex-column">
+                    <span>To Win</span>
+                    <input
+                      placeholder="0.00"
+                      className="form-control"
+                      value={market.winAmount || ""}
+                      readOnly
+                    />
+                  </div>
+                </Col>
+              </Row>
+              {cartData?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="d-flex justify-content-between align-items-start">
+                      <Col xs={12} md={12} className="p-0 text-end">
+                        <MdDelete
+                          size={20}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleRemoveMarket(index)}
+                        />
+                      </Col>
+                      <Col xs="auto" className=" ">
+                        <span className="fw-bold">{market?.name}</span>
+                        <span className="fw-bold"> {market?.point}</span>
+                        <span className="text-muted "> ({market?.price})</span>
+                      </Col>
+                    </Row>
+                    <Card.Text className="fw-bold mb-1">
+                      {market?.market == "h2h" ? "Moneyline" : market?.market}
+                    </Card.Text>
 
-        {/* Total Pays Section */}
-        <Row className="mt-2 mb-4">
-          <Col xs={6}>
-            <h6>Pays:</h6>
-          </Col>
-          <Col xs={6} className="text-end">
-            <h6>${totalPays.toFixed(2)}</h6>
-          </Col>
-        </Row>
+                    {/* Wager Section */}
+                    <Row className="mt-2">
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>
+                            {" "}
+                            {market?.market == "h2h"
+                              ? "Moneyline"
+                              : market?.market}
+                          </span>
+                          <input
+                            type="text"
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.wager || ""}
+                            onChange={(e) =>
+                              handleWagerChange(
+                                index,
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                          />
+                        </div>
+                      </Col>
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>To Win</span>
+                          <input
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.winAmount || ""}
+                            readOnly
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
 
-        {/* Bet Now Button */}
-        <Button variant="success" size="lg" className="w-100">
-          Bet Now
-        </Button>
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalWager.toFixed(2)}</h6>
+              </Col>
+            </Row>
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>Pays:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalPays.toFixed(2)}</h6>
+              </Col>
+            </Row>
+            <Button variant="success" size="lg" className="w-100">
+              Bet Now
+            </Button>
+          </>
+        )}
       </Container>
     );
   };
@@ -1340,27 +1479,35 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          {/* <Col md={4}>
+          <Col md={4}>
             <Form.Group controlId="secondSelect">
               <Form.Select
                 className="fw-bold"
                 value={market}
                 onChange={(e) => setMarket(e.target.value)}
               >
-                <option value="">Select Markets</option>
-                <option className="fw-bold" value="spreads">
-                  spreads
+                <option className="fw-bold" value="h1">
+                  1H
                 </option>
-                <option className="fw-bold" value="totals">
-                  totals
+                <option className="fw-bold" value="h2">
+                  2H
                 </option>
-                <option className="fw-bold" value="h2h">
-                  moneyline
+                <option className="fw-bold" value="q1">
+                  1Q
+                </option>
+                <option className="fw-bold" value="q2">
+                  2Q
+                </option>
+                <option className="fw-bold" value="q3">
+                  3Q
+                </option>
+                <option className="fw-bold" value="q4">
+                  4Q
                 </option>
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col md={4}>
+          {/*<Col md={4}>
             <Form.Group controlId="secondSelect">
               <Form.Select
                 className="fw-bold"

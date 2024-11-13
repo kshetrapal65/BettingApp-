@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   Card,
   Col,
   Container,
   Form,
+  Image,
   Modal,
   Row,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./profile.css";
-import { FaPiggyBank, FaRegMehBlank, FaUsers } from "react-icons/fa";
-import { FaBaby } from "react-icons/fa6";
+import { FaEdit, FaPiggyBank, FaRegMehBlank, FaUsers } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 import { RiBankFill, RiLogoutBoxLine } from "react-icons/ri";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
@@ -34,9 +35,13 @@ const Profile = () => {
     account_number: "",
     account_name: "",
   });
-
+  const [file, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [load, setLoad] = useState(false);
+  const inputFile = useRef(null);
+
   console.log("bankData", bankData);
+
   React.useEffect(() => {
     getProfile();
     getBankInfo();
@@ -48,6 +53,7 @@ const Profile = () => {
         name: profileData.name || "",
         email: profileData.email || "",
       });
+      setImageUrl(profileData.profile_image || "");
     }
     if (bankData) {
       setBankForm({
@@ -78,6 +84,19 @@ const Profile = () => {
     });
   };
 
+  const handleChangess = async (event) => {
+    const { files } = event.target;
+    if (files.length > 0) {
+      const selectedFile = files[0];
+      setFile(selectedFile);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImageUrl(e.target.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
   const getProfile = async () => {
     try {
       const response = await apiCallNew("get", null, ApiEndPoints.ProfileGet);
@@ -93,6 +112,7 @@ const Profile = () => {
     try {
       const formData = new FormData();
       formData.append("name", formDatas.name);
+      formData.append("profile_image", file);
       setLoad(true);
       const response = await apiCallNew(
         "post",
@@ -104,6 +124,8 @@ const Profile = () => {
         handleClose();
         setLoad(false);
         toast.success(response.msg);
+      } else {
+        toast.error(response?.result?.profile_image[0]);
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -162,7 +184,7 @@ const Profile = () => {
           <Col xs={12} md={10} lg={8}>
             <Card className="profile-card mb-4">
               <Row className="align-items-center p-4">
-                <Col
+                {/* <Col
                   xs={4}
                   md={2}
                   className="d-flex justify-content-center"
@@ -186,8 +208,14 @@ const Profile = () => {
                   >
                     {formatCapital(profileData?.name?.slice(0, 1))}
                   </p>
+                </Col> */}
+                <Col xs={4} md={2} className="d-flex justify-content-center">
+                  <img
+                    src={profileData?.profile_image}
+                    alt="Profile"
+                    className="rounded-circle profile-imgss bg-light"
+                  />
                 </Col>
-
                 <Col xs={8} md={9}>
                   <h5 className="mb-0 fw-bold">
                     {formatCapital(profileData?.name)}
@@ -229,6 +257,21 @@ const Profile = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Row className="justify-content-center text-center    mb-4">
+              <div className="profile-img-wrapper">
+                <Image src={imageUrl} roundedCircle className="profile-img" />
+                <div className="edit-icon">
+                  <MdModeEdit onClick={() => inputFile.current.click()} />
+                </div>
+                <input
+                  type="file"
+                  onChange={handleChangess}
+                  ref={inputFile}
+                  hidden
+                />
+              </div>
+            </Row>
+
             <Row>
               <Col xs={12}>
                 <Form.Group controlId="formName">
