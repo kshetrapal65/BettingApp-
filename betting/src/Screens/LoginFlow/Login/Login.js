@@ -113,7 +113,8 @@ const Login = () => {
                     </Link>
                   </div>
                   <Button
-                    variant="primary"
+                    variant="#155239"
+                    style={{ backgroundColor: "#155239", color: "white" }}
                     type="submit"
                     className="w-100 custom-button"
                   >

@@ -15,6 +15,8 @@ import Profile from "../Screens/Profile/Profile";
 import RecentNews from "../Screens/RecentNews/RecentNews";
 import RecentNewsDetails from "../Screens/RecentNews/RecentNewsDetails";
 import ParlayCalculater from "../Screens/Parlay/ParlayCalculater";
+import OddsCalculater from "../Screens/Parlay/OddsCalculater";
+import BettingHistory from "../Screens/Betting/BettingHistory/BettingHistory";
 
 const PublicRouter = () => {
   return (
@@ -34,6 +36,8 @@ const PublicRouter = () => {
         <Route path="/recent-news" element={<RecentNews />} />
         <Route path="/recent-news/:id" element={<RecentNewsDetails />} />
         <Route path="/parlay-calculater" element={<ParlayCalculater />} />
+        <Route path="/odds-calculater" element={<OddsCalculater />} />
+        <Route path="/betting-history" element={<BettingHistory />} />
       </Routes>
       <Footer />
     </>

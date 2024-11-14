@@ -1388,7 +1388,8 @@ export const EventScore = React.memo(() => {
             {/* Bet Now Button */}
             <Button
               onClick={() => toast.success("Comming soon...")}
-              variant="success"
+              variant="#155239"
+              style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
             >
