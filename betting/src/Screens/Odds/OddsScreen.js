@@ -28,6 +28,8 @@ export const OddsScreen = () => {
   const [data, setData] = React.useState([]);
   const [cartData, setCartData] = React.useState([]);
   const [activeTabs, setActiveTabs] = React.useState("Straights");
+  const [parlayBet, setParlayBet] = React.useState();
+  const [parlayResult, setParlayResult] = React.useState(0);
 
   useEffect(() => {
     const savedCartData = localStorage.getItem("cartData");
@@ -39,7 +41,11 @@ export const OddsScreen = () => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
 
-  console.log("cartData", cartData);
+  useEffect(() => {
+    if (activeTabs === "Parlay") {
+      calculateParlay();
+    }
+  }, [activeTabs, parlayBet, cartData]);
 
   const SportList = [
     {
@@ -1147,7 +1153,6 @@ export const OddsScreen = () => {
   };
 
   const handleSportClick = (prev) => {
-    console.log("prev", prev);
     setCartData((currentCartData) => [...currentCartData, prev]);
   };
 
@@ -1171,6 +1176,38 @@ export const OddsScreen = () => {
           : market
       )
     );
+  };
+
+  const convertToDecimalOdds = (price) => {
+    if (price > 0) {
+      // For positive odds, calculate: 1 + (price / 100)
+      return price / 100 + 1;
+    } else if (price < 0) {
+      // For negative odds, calculate: 1 + (100 / |price|)
+      return 100 / Math.abs(price) + 1;
+    }
+    return 1; // Default if odds are zero or invalid
+  };
+
+  const calculateParlay = () => {
+    const wagerAmount = parseFloat(parlayBet) || 0;
+
+    // Calculate the total odds for the parlay by reducing the betData array
+    const totalOdds = cartData.reduce((acc, data) => {
+      let price = parseFloat(data?.price); // Parse the odds for each bet
+
+      if (price) {
+        price = convertToDecimalOdds(price); // Convert the odds to decimal format
+      }
+      console.log("Converted Price:", price);
+      return acc * (price || 1); // Multiply the accumulated odds with the current odds
+    }, 1);
+
+    // Calculate the total result by multiplying the wager amount with the total odds
+    const result = wagerAmount * totalOdds;
+    const result2 = result - parlayBet;
+    // Set the result to the state with 2 decimal points
+    setParlayResult(result2.toFixed(2));
   };
 
   const BetSlip = () => {
@@ -1317,33 +1354,34 @@ export const OddsScreen = () => {
               {cartData?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
-              <Row className="mt-2 mb-2">
-                <Col>
-                  <div className="d-flex flex-column">
-                    <span>Wager</span>
-                    <input
-                      type="text"
-                      placeholder="0.00"
-                      className="form-control"
-                      value={market.wager || ""}
-                      onChange={(e) =>
-                        handleWagerChange(parseFloat(e.target.value) || 0)
-                      }
-                    />
-                  </div>
-                </Col>
-                <Col>
-                  <div className="d-flex flex-column">
-                    <span>To Win</span>
-                    <input
-                      placeholder="0.00"
-                      className="form-control"
-                      value={market.winAmount || ""}
-                      readOnly
-                    />
-                  </div>
-                </Col>
-              </Row>
+              {cartData?.length > 0 && (
+                <Row className="mt-2 mb-2">
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>Wager</span>
+                      <input
+                        type="text"
+                        placeholder="0.00"
+                        className="form-control"
+                        value={parlayBet}
+                        onChange={(e) => setParlayBet(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  <Col>
+                    <div className="d-flex flex-column">
+                      <span>To Win</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={parlayResult}
+                        readOnly
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              )}
+
               {cartData?.map((market, index) => (
                 <Card key={index} className="mb-2">
                   <Card.Body>
@@ -1361,41 +1399,39 @@ export const OddsScreen = () => {
                         <span className="text-muted "> ({market?.price})</span>
                       </Col>
                     </Row>
-                    <Card.Text className="fw-bold mb-1">
+                    {/* <Card.Text className="fw-bold mb-1">
                       {market?.market == "h2h" ? "Moneyline" : market?.market}
-                    </Card.Text>
+                    </Card.Text> */}
 
                     {/* Wager Section */}
                     <Row className="mt-2">
+                      {market?.market !== "h2h" && (
+                        <Col>
+                          <div className="d-flex flex-column">
+                            <span>
+                              {" "}
+                              {market?.market == "h2h"
+                                ? "Moneyline"
+                                : market?.market}
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="0.00"
+                              className="form-control"
+                              value={market.point || ""}
+                              readOnly
+                            />
+                          </div>
+                        </Col>
+                      )}
+
                       <Col>
                         <div className="d-flex flex-column">
-                          <span>
-                            {" "}
-                            {market?.market == "h2h"
-                              ? "Moneyline"
-                              : market?.market}
-                          </span>
-                          <input
-                            type="text"
-                            placeholder="0.00"
-                            className="form-control"
-                            value={market.wager || ""}
-                            onChange={(e) =>
-                              handleWagerChange(
-                                index,
-                                parseFloat(e.target.value) || 0
-                              )
-                            }
-                          />
-                        </div>
-                      </Col>
-                      <Col>
-                        <div className="d-flex flex-column">
-                          <span>To Win</span>
+                          <span>Odds</span>
                           <input
                             placeholder="0.00"
                             className="form-control"
-                            value={market.winAmount || ""}
+                            value={market.price || ""}
                             readOnly
                           />
                         </div>
@@ -1411,15 +1447,15 @@ export const OddsScreen = () => {
                 <h6>Cash Wager:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${totalWager.toFixed(2)}</h6>
+                <h6>${parlayBet}</h6>
               </Col>
             </Row>
             <Row className="mt-2 mb-4">
               <Col xs={6}>
-                <h6>Pays:</h6>
+                <h6>To Win:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${totalPays.toFixed(2)}</h6>
+                <h6>${parlayResult}</h6>
               </Col>
             </Row>
             <Button variant="success" size="lg" className="w-100">
@@ -1549,6 +1585,12 @@ export const OddsScreen = () => {
               );
               const totalsMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "totals"
+              );
+              console.log(
+                "moneylineMarket",
+                moneylineMarket,
+                "///",
+                totalsMarket
               );
               if (!fanduelBookmaker) return null;
 
