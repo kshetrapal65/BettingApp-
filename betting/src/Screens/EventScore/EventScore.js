@@ -189,6 +189,98 @@ const teamImages = {
   "Brynäs IF":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
 };
+const sampleData = [
+  {
+    key: "fanduel",
+    title: "FanDuel",
+    markets: [
+      {
+        key: "player_pass_tds",
+        outcomes: [
+          // {
+          //   name: "Yes",
+          //   description: "Saquon Barkley",
+          //   price: -200,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jalen Hurts",
+          //   price: 100,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "AJ Brown",
+          //   price: 105,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Brian Robinson Jr.",
+          //   price: 110,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Terry McLaurin",
+          //   price: 100,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Austin Ekeler",
+          //   price: 115,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "DeVonta Smith",
+          //   price: 145,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Dallas Goedert",
+          //   price: 190,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jayden Daniels",
+          //   price: 210,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Zach Ertz",
+          //   price: 260,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jeremy McNichols",
+          //   price: 360,
+          // },
+          {
+            name: "Over",
+            description: "Jayden Daniels",
+            price: 136,
+            point: 1.5,
+          },
+          {
+            name: "Under",
+            description: "Jayden Daniels",
+            price: -178,
+            point: 1.5,
+          },
+          {
+            name: "Over",
+            description: "Jalen Hurts",
+            price: 126,
+            point: 1.5,
+          },
+          {
+            name: "Under",
+            description: "Jalen Hurts",
+            price: -165,
+            point: 1.5,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 export const EventScore = React.memo(() => {
   const [scoreData, setScoreData] = useState([]);
@@ -236,7 +328,7 @@ export const EventScore = React.memo(() => {
   }, [event]);
   useEffect(() => {
     fetchMarket();
-    // fetchProps();
+    fetchProps();
   }, [market]);
   const fetchMarket = async () => {
     try {
