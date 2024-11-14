@@ -12,6 +12,8 @@ import {
   Tabs,
   Image,
   Container,
+  Dropdown,
+  Form,
 } from "react-bootstrap";
 import { BsCalendar3 } from "react-icons/bs"; // Import from react-icons
 import {
@@ -187,9 +189,104 @@ const teamImages = {
   "Brynäs IF":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSorUs4k9sOAoyc1sdeXH9fI8XFLSdPqCXnbg&s",
 };
+const sampleData = [
+  {
+    key: "fanduel",
+    title: "FanDuel",
+    markets: [
+      {
+        key: "player_pass_tds",
+        outcomes: [
+          // {
+          //   name: "Yes",
+          //   description: "Saquon Barkley",
+          //   price: -200,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jalen Hurts",
+          //   price: 100,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "AJ Brown",
+          //   price: 105,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Brian Robinson Jr.",
+          //   price: 110,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Terry McLaurin",
+          //   price: 100,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Austin Ekeler",
+          //   price: 115,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "DeVonta Smith",
+          //   price: 145,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Dallas Goedert",
+          //   price: 190,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jayden Daniels",
+          //   price: 210,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Zach Ertz",
+          //   price: 260,
+          // },
+          // {
+          //   name: "Yes",
+          //   description: "Jeremy McNichols",
+          //   price: 360,
+          // },
+          {
+            name: "Over",
+            description: "Jayden Daniels",
+            price: 136,
+            point: 1.5,
+          },
+          {
+            name: "Under",
+            description: "Jayden Daniels",
+            price: -178,
+            point: 1.5,
+          },
+          {
+            name: "Over",
+            description: "Jalen Hurts",
+            price: 126,
+            point: 1.5,
+          },
+          {
+            name: "Under",
+            description: "Jalen Hurts",
+            price: -165,
+            point: 1.5,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 export const EventScore = React.memo(() => {
   const [scoreData, setScoreData] = useState([]);
+  const [marketkey, setMarketKey] = useState([]);
+  const [propData, setPropData] = useState([]);
+  const [market, setMarket] = useState();
   const [eventOdds, setEventOdds] = useState([]);
   const [selectedMarkets, setSelectedMarkets] = useState(() => {
     const storedMarkets = localStorage.getItem("selectedMarkets");
@@ -224,10 +321,38 @@ export const EventScore = React.memo(() => {
     setSelectedMarkets((prev) => [...prev, marketData]);
   };
 
+  console.log("propData>>>>", propData);
   useEffect(() => {
-    fetchScore();
-    fetchEventOdds();
+    // fetchScore();
+    // fetchEventOdds();
   }, [event]);
+  useEffect(() => {
+    fetchMarket();
+    fetchProps();
+  }, [market]);
+  const fetchMarket = async () => {
+    try {
+      const response = await fetch(
+        `${ApiEndPoints.Get_Market}${event?.sport_key}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("responseOFSCOREEEEEE", data);
+      setMarketKey(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (activeTabs === "Parlay") {
@@ -283,6 +408,30 @@ export const EventScore = React.memo(() => {
       const data = await response.json();
       console.log("responseOFODSSSSSS>>>>", data);
       setEventOdds(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchProps = async () => {
+    try {
+      const response = await fetch(
+        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${market}&oddsFormat=american`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("responseOFODSSSSSS>>>>", data);
+      setPropData(data);
     } catch (error) {
       console.log(error);
     }
@@ -894,7 +1043,7 @@ export const EventScore = React.memo(() => {
   };
   const BetSlip = () => {
     return (
-      <Container className="border mt-4 rounded p-4">
+      <Container className="border h-50  mt-4 rounded p-4">
         {/* Header */}
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
@@ -1219,6 +1368,154 @@ export const EventScore = React.memo(() => {
     );
   }
 
+  const PropOddsComparison = () => {
+    return (
+      <Container
+        className="p-4"
+        style={{ backgroundColor: "white", borderRadius: "10px" }}
+      >
+        <Card className="p-4 ">
+          <Row className="justify-content-between">
+            <Col lg={3} md={9}>
+              <h4 className="mb-4">Prop Odds</h4>
+            </Col>
+            <Col lg={3} md={3}>
+              <Form.Group controlId="formSelect " className="mb-3">
+                <Form.Select
+                  onChange={(e) => setMarket(e.target.value)}
+                  aria-label="Select option"
+                >
+                  {/* {sports.map((sport, index) => (
+                    <option key={index} value={sport.key}>
+                      {sport.title}
+                    </option>
+                  ))} */}
+                  {marketkey?.result?.map((market, index) => (
+                    <option key={index} value={market.market_key}>
+                      {market.market_name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <hr />
+          </Row>
+
+          {/* Filters */}
+
+          <Row className="mb-2 justify-content-around fw-bold text-muted">
+            <Col xs={3}>
+              <strong>PLAYER</strong>
+            </Col>
+            <Col className="text-center" xs={3}>
+              <strong>ODDS</strong>
+            </Col>
+          </Row>
+          <hr />
+
+          {/* {[
+            {
+              name: "J. Daniels",
+              bestOdds: { over: "o224.5", under: "u226.5", icon: true },
+              consensus: { over: "o226.5", under: "u226.5" },
+              image: "https://via.placeholder.com/30",
+            },
+            {
+              name: "J. Hurts",
+              bestOdds: { over: "o220.5", under: "u222.5" },
+              consensus: { over: "o223", under: "u223" },
+              image: "https://via.placeholder.com/30",
+            },
+          ].map((player, index) => (
+            <Row key={index} className="justify-content-around  ">
+              <Col xs={3} className="d-flex align-items-center">
+                <Image
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s"
+                  roundedCircle
+                  width="50"
+                  height="50"
+                  className="me-2"
+                />
+                <span className="fw-bold">{player.name}</span>
+              </Col>
+              <Col className="text-center" xs={3}>
+                
+                <Button
+                  className="shadow"
+                  variant="outline-secondary"
+                  style={{ minWidth: "80px" }}
+                >
+                  {player.bestOdds.under} (<span>-113</span>)
+                </Button>{" "}
+                <br />
+                <Button
+                  className="shadow mt-2"
+                  variant="outline-secondary"
+                  style={{ minWidth: "80px" }}
+                >
+                  {player.bestOdds.under} (<span>-113</span>)
+                </Button>
+              </Col>
+              <hr className="mt-2" />
+            </Row>
+          ))} */}
+          {sampleData.map((market, marketIndex) => (
+            <div key={marketIndex}>
+              {/* Group outcomes by description */}
+              {Object.values(
+                market.markets[0].outcomes.reduce((acc, outcome) => {
+                  if (!acc[outcome.description]) {
+                    acc[outcome.description] = {
+                      description: outcome.description,
+                      odds: [],
+                    };
+                  }
+                  acc[outcome.description].odds.push(outcome);
+                  return acc;
+                }, {})
+              ).map((group, index) => (
+                <Row
+                  key={index}
+                  className="justify-content-around align-items-center"
+                >
+                  <Col xs={3} className="d-flex align-items-center">
+                    <Image
+                      src="https://via.placeholder.com/50" // Replace with actual player image if available
+                      roundedCircle
+                      width="50"
+                      height="50"
+                      className="me-2"
+                    />
+                    <span className="fw-bold">{group.description}</span>
+                  </Col>
+
+                  {/* Odds Column with Over/Under Buttons */}
+                  <Col className="text-center" xs={3}>
+                    {group.odds.map((outcome, idx) => (
+                      <Button
+                        key={idx}
+                        className={`shadow ${idx === 0 ? "" : "mt-2"}`}
+                        variant="outline-secondary"
+                        style={{ minWidth: "80px", minHeight: "60px" }}
+                      >
+                        {outcome.name} {outcome.point || ""} (
+                        {outcome.price > 0
+                          ? `+${outcome.price}`
+                          : outcome.price}
+                        )
+                      </Button>
+                    ))}
+                  </Col>
+                  <hr className="mt-2" />
+                </Row>
+              ))}
+            </div>
+          ))}
+        </Card>
+      </Container>
+    );
+  };
+
   return (
     <Container className="">
       {load && (
@@ -1232,6 +1529,7 @@ export const EventScore = React.memo(() => {
           <GameScoreCard />
 
           <GameOdds1 data={Fandualodds} />
+          {PropOddsComparison()}
         </Col>
         <Col lg={4}>{BetSlip()}</Col>
       </Row>
