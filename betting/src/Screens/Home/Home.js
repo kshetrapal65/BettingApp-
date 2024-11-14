@@ -19,6 +19,7 @@ const Home = () => {
   useEffect(() => {
     fetchEvent();
   }, [sport]);
+
   const fetchEvent = async () => {
     try {
       const response = await fetch(

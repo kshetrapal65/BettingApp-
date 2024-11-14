@@ -26,6 +26,8 @@ import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import moment from "moment";
 import toast from "react-hot-toast";
 import { MdDelete } from "react-icons/md";
+import { apiCallNew } from "../../Network_Call/apiservices";
+import { PulseLoader } from "react-spinners";
 
 const teamImages = {
   "Miami Dolphins":
@@ -194,6 +196,9 @@ export const EventScore = React.memo(() => {
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
   const [activeTabs, setActiveTabs] = useState("Straights");
+  const [parlayBet, setParlayBet] = React.useState();
+  const [parlayResult, setParlayResult] = React.useState(0);
+  const [load, setLoad] = React.useState(false);
 
   useEffect(() => {
     localStorage.setItem("selectedMarkets", JSON.stringify(selectedMarkets));
@@ -204,6 +209,17 @@ export const EventScore = React.memo(() => {
   const event = location.state || {};
   const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
+  const totalWager = selectedMarkets.reduce(
+    (total, market) => total + (market.wager || 0),
+    0
+  );
+
+  const totalPays = selectedMarkets.reduce(
+    (total, market) => total + (market.winAmount || 0),
+    0
+  );
+
+  console.log("eventevent", event);
   const handleMarketClick = (marketData) => {
     setSelectedMarkets((prev) => [...prev, marketData]);
   };
@@ -212,6 +228,12 @@ export const EventScore = React.memo(() => {
     fetchScore();
     fetchEventOdds();
   }, [event]);
+
+  useEffect(() => {
+    if (activeTabs === "Parlay") {
+      calculateParlay();
+    }
+  }, [activeTabs, parlayBet, selectedMarkets]);
 
   const handleSelect = (key) => {
     setActiveTabs(key);
@@ -426,124 +448,70 @@ export const EventScore = React.memo(() => {
     setSelectedMarkets(updatedMarkets);
   };
 
-  // const BetSlip = () => {
-  //   const [isExpanded, setIsExpanded] = useState(false);
+  const convertToDecimalOdds = (price) => {
+    if (price > 0) {
+      return price / 100 + 1;
+    } else if (price < 0) {
+      return 100 / Math.abs(price) + 1;
+    }
+    return 1;
+  };
 
-  //   const toggleBetSlip = () => {
-  //     setIsExpanded(!isExpanded);
-  //   };
+  const calculateParlay = () => {
+    const wagerAmount = parseFloat(parlayBet) || 0;
 
-  //   const bets = [
-  //     {
-  //       team: "CIN",
-  //       opponent: "BAL",
-  //       spread: "+6",
-  //       odds: "-110",
-  //       risk: 1,
-  //       toWin: 0.91,
-  //     },
-  //   ];
+    const totalOdds = selectedMarkets.reduce((acc, data) => {
+      let price = parseFloat(data?.price);
 
-  //   return (
-  //     <Box
-  //       sx={{
-  //         position: "fixed",
-  //         bottom: 16,
-  //         right: 16,
-  //         width: isExpanded ? 300 : "auto",
-  //         zIndex: 1000,
-  //       }}
-  //     >
-  //       {!isExpanded ? (
-  //         <Button
-  //           variant="contained"
-  //           color="primary"
-  //           onClick={toggleBetSlip}
-  //           sx={{ width: "200px", padding: "8px", textAlign: "center" }}
-  //         >
-  //           Open BetSlip
-  //         </Button>
-  //       ) : (
-  //         <Paper elevation={3} sx={{ padding: 2 }}>
-  //           <Box
-  //             display="flex"
-  //             justifyContent="space-between"
-  //             alignItems="center"
-  //           >
-  //             <Typography variant="h6">BetSlip</Typography>
-  //             <Button size="small" color="primary" onClick={toggleBetSlip}>
-  //               Close
-  //             </Button>
-  //           </Box>
-  //           <Divider sx={{ my: 1 }} />
+      if (price) {
+        price = convertToDecimalOdds(price);
+      }
+      return acc * (price || 1);
+    }, 1);
 
-  //           {bets.map((bet, index) => (
-  //             <Box key={index} sx={{ mb: 2 }}>
-  //               <Typography variant="subtitle1">
-  //                 {bet.team} {bet.spread} {bet.odds}
-  //               </Typography>
-  //               <Typography variant="body2" color="textSecondary">
-  //                 {bet.team} @ {bet.opponent}
-  //               </Typography>
-  //               <Box
-  //                 display="flex"
-  //                 justifyContent="space-between"
-  //                 alignItems="center"
-  //                 mt={1}
-  //               >
-  //                 <TextField
-  //                   label="Risk"
-  //                   variant="outlined"
-  //                   size="small"
-  //                   // value={`$`}
-  //                   sx={{ width: "40%" }}
-  //                   InputProps={{
-  //                     readOnly: false,
-  //                   }}
-  //                 />
-  //                 <TextField
-  //                   label="To Win"
-  //                   variant="outlined"
-  //                   size="small"
-  //                   value={`$${bet.toWin}`}
-  //                   sx={{ width: "40%" }}
-  //                   InputProps={{
-  //                     readOnly: true,
-  //                   }}
-  //                 />
-  //               </Box>
-  //             </Box>
-  //           ))}
+    const result = wagerAmount * totalOdds;
+    const result2 = result - parlayBet;
+    setParlayResult(result2.toFixed(2));
+  };
 
-  //           <Divider sx={{ my: 1 }} />
-  //           <Box display="flex" justifyContent="space-between" mt={2}>
-  //             <Typography>Total Risk</Typography>
-  //             <Typography>
-  //               ${bets.reduce((sum, bet) => sum + bet.risk, 0).toFixed(2)}
-  //             </Typography>
-  //           </Box>
-  //           <Box display="flex" justifyContent="space-between" mt={1}>
-  //             <Typography>Total To Win</Typography>
-  //             <Typography>
-  //               ${bets.reduce((sum, bet) => sum + bet.toWin, 0).toFixed(2)}
-  //             </Typography>
-  //           </Box>
+  const SubmitPlaceBet = async () => {
+    const formData = new FormData();
+    selectedMarkets?.forEach((item, index) => {
+      formData.append(`odds[${index}][market_key]`, item.market);
+      formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
+      formData.append(`odds[${index}][sport_name]`, item.team);
+      formData.append(`odds[${index}][outcomes_odds_point1]`, item.point);
+      formData.append(`odds[${index}][amount]`, item.wager);
+      formData.append(`odds[${index}][win_amount]`, item.winAmount.toFixed(2));
+      formData.append(`odds[${index}][outcomes_odds_price2]`, 0);
+      formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
+      formData.append(`odds[${index}][sport_key]`, event?.sport_key);
+      formData.append(`odds[${index}][sport_id]`, event?.id);
+      formData.append(`odds[${index}][sport_name]`, event?.sport_title);
+      formData.append(`odds[${index}][loss_amount]`, 0);
+    });
 
-  //           <Button
-  //             variant="contained"
-  //             color="success"
-  //             fullWidth
-  //             sx={{ mt: 2 }}
-  //           >
-  //             Track Bets
-  //           </Button>
-  //         </Paper>
-  //       )}
-  //     </Box>
-  //   );
-  // };
+    try {
+      setLoad(true);
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.PlaceBet
+      );
+      if (response.success === true) {
+        toast.success(response.msg);
+        setLoad(false);
+        setSelectedMarkets([]);
+      } else {
+        toast.error(response.msg);
+        setLoad(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
 
-  // Sample usage with props from API data
   const gameData = {
     sport_key: "americanfootball_nfl",
     sport_title: "NFL",
@@ -698,6 +666,7 @@ export const EventScore = React.memo(() => {
     const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
     const totalsMarket = data?.markets?.find((m) => m.key === "totals");
 
+    console.log("totalsMarket", totalsMarket, moneylineMarket);
     return (
       <Container className="p-4 ">
         <Card className="p-4 text-start">
@@ -924,16 +893,6 @@ export const EventScore = React.memo(() => {
     ],
   };
   const BetSlip = () => {
-    const totalWager = selectedMarkets.reduce(
-      (total, market) => total + (market.wager || 0),
-      0
-    );
-
-    const totalPays = selectedMarkets.reduce(
-      (total, market) => total + (market.winAmount || 0),
-      0
-    );
-
     return (
       <Container className="border mt-4 rounded p-4">
         {/* Header */}
@@ -979,57 +938,131 @@ export const EventScore = React.memo(() => {
         </Row>
 
         {/* Bet Item */}
-        <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
-          {selectedMarkets?.length === 0 && (
-            <p className="text-center">No bets added</p>
-          )}
+        {activeTabs === "Straights" ? (
+          <>
+            <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+              {selectedMarkets?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
 
-          {selectedMarkets?.map((market, index) => (
-            <Card key={index} className="mb-2">
-              <Card.Body>
-                <Row className="justify-content-between align-items-center">
-                  <Row className="d-flex ">
-                    <Col xs={10} md={10} className="">
-                      <Card.Title className="mb-0" style={{ fontSize: "22px" }}>
-                        {market?.team}
-                      </Card.Title>
-                    </Col>
-                    <Col xs={2} md={2} className="p-0 text-end">
-                      <MdDelete
-                        size={20}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRemoveMarket(index)}
-                      />
-                    </Col>
-                  </Row>
+              {selectedMarkets?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "22px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
 
-                  <Col xs="auto" className=" ">
-                    <span>{market?.name}</span>
-                    <span className="fw-bold"> {market?.point}</span>
-                    <span className="text-muted"> {market?.price}</span>
-                  </Col>
-                </Row>
-                <Card.Text className="text-muted mb-1">
-                  {market?.market}
-                </Card.Text>
+                      <Col xs="auto" className=" ">
+                        <span className="fw-bold"> {market?.point}</span>
+                        <span className="text-muted"> {market?.price}</span>
+                      </Col>
+                    </Row>
 
-                {/* Wager Section */}
-                <Row className="mt-2">
+                    {/* Wager Section */}
+                    <Row className="mt-2">
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>
+                            {" "}
+                            {market?.market == "h2h"
+                              ? "Moneyline"
+                              : market?.market}
+                          </span>
+                          <input
+                            key={index}
+                            type="text"
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.wager || ""}
+                            onChange={(e) =>
+                              handleWagerChange(
+                                index,
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                          />
+                        </div>
+                      </Col>
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>To Win</span>
+                          <input
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.winAmount || ""}
+                            readOnly
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
+
+            {/* Cash Wager Section */}
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalWager.toFixed(2)}</h6>
+              </Col>
+            </Row>
+
+            {/* Total Pays Section */}
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>Pays:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${totalPays.toFixed(2)}</h6>
+              </Col>
+            </Row>
+
+            {/* Bet Now Button */}
+            <Button
+              // onClick={() => toast.success("Comming soon...")}
+              onClick={SubmitPlaceBet}
+              variant="success"
+              size="lg"
+              className="w-100"
+            >
+              Bet Now
+            </Button>
+          </>
+        ) : (
+          <>
+            <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+              {selectedMarkets?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
+              {selectedMarkets?.length > 0 && (
+                <Row className="mt-2 mb-2">
                   <Col>
                     <div className="d-flex flex-column">
                       <span>Wager</span>
                       <input
-                        key={index}
                         type="text"
                         placeholder="0.00"
                         className="form-control"
-                        value={market.wager || ""}
-                        onChange={(e) =>
-                          handleWagerChange(
-                            index,
-                            parseFloat(e.target.value) || 0
-                          )
-                        }
+                        value={parlayBet}
+                        onChange={(e) => setParlayBet(e.target.value)}
                       />
                     </div>
                   </Col>
@@ -1039,46 +1072,128 @@ export const EventScore = React.memo(() => {
                       <input
                         placeholder="0.00"
                         className="form-control"
-                        value={market.winAmount || ""}
+                        value={parlayResult}
                         readOnly
                       />
                     </div>
                   </Col>
                 </Row>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
+              )}
+              {selectedMarkets?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "22px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
 
-        {/* Cash Wager Section */}
-        <Row className="mt-2 mb-2">
-          <Col xs={6}>
-            <h6>Cash Wager:</h6>
-          </Col>
-          <Col xs={6} className="text-end">
-            <h6>${totalWager.toFixed(2)}</h6>
-          </Col>
-        </Row>
+                      <Col xs="auto" className=" ">
+                        <span className="fw-bold"> {market?.point}</span>
+                        <span className="text-muted"> {market?.price}</span>
+                      </Col>
+                    </Row>
 
-        {/* Total Pays Section */}
-        <Row className="mt-2 mb-4">
-          <Col xs={6}>
-            <h6>Pays:</h6>
-          </Col>
-          <Col xs={6} className="text-end">
-            <h6>${totalPays.toFixed(2)}</h6>
-          </Col>
-        </Row>
+                    {/* Wager Section */}
+                    <Row className="mt-2">
+                      {market?.market !== "h2h" && (
+                        <Col>
+                          <div className="d-flex flex-column">
+                            <span>
+                              {" "}
+                              {market?.market == "h2h"
+                                ? "Moneyline"
+                                : market?.market}
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="0.00"
+                              className="form-control"
+                              value={market.point || ""}
+                              readOnly
+                            />
+                          </div>
+                        </Col>
+                      )}
+                      {/* <Col>
+                        <div className="d-flex flex-column">
+                          <span>Wager</span>
+                          <input
+                            key={index}
+                            type="text"
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.wager || ""}
+                            onChange={(e) =>
+                              handleWagerChange(
+                                index,
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                          />
+                        </div>
+                      </Col> */}
+                      <Col>
+                        <div className="d-flex flex-column">
+                          <span>Odds</span>
+                          <input
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.price || ""}
+                            readOnly
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
 
-        {/* Bet Now Button */}
-        <Button
-          onClick={() => toast.success("Comming soon...")}
-          variant="success"
-          size="lg"
-          className="w-100"
-        >
-          Bet Now
-        </Button>
+            {/* Cash Wager Section */}
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${parlayBet}</h6>
+              </Col>
+            </Row>
+
+            {/* Total Pays Section */}
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>To Win:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${parlayResult}</h6>
+              </Col>
+            </Row>
+
+            {/* Bet Now Button */}
+            <Button
+              onClick={() => toast.success("Comming soon...")}
+              variant="success"
+              size="lg"
+              className="w-100"
+            >
+              Bet Now
+            </Button>
+          </>
+        )}
       </Container>
     );
   };
@@ -1106,6 +1221,11 @@ export const EventScore = React.memo(() => {
 
   return (
     <Container className="">
+      {load && (
+        <div>
+          <PulseLoader loading={load} color="#155239" style={styles.backdrop} />
+        </div>
+      )}
       <Row>
         <Col lg={8}>
           {/* <GameInfo game={gameData} /> */}
@@ -1118,3 +1238,19 @@ export const EventScore = React.memo(() => {
     </Container>
   );
 });
+
+const styles = {
+  backdrop: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#155239",
+  },
+};

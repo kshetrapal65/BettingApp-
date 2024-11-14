@@ -96,11 +96,10 @@ const ParlayCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold">Parlay Calculator</h3>
-          <p className="text-center text-muted fw-bold">
-            The parlay calculator allows you to input the odds for each leg of
-            your parlay to quickly calculate the payout of your bet.
-          </p>
+          <h3 className="text-center fw-bold mb-5">
+            {status === "parlay" ? "Parlay Calculator" : "Odds Calculator"}{" "}
+          </h3>
+
           {status === "parlay" ? (
             <Form>
               <Row>
@@ -244,7 +243,7 @@ const ParlayCalculater = () => {
 
               <Button
                 variant="secondary"
-                className="mt-4 w-100"
+                className="mt-4 w-100 mb-4"
                 onClick={handleResetSingle}
               >
                 RESET

@@ -14,6 +14,7 @@ const ApiEndPoints = {
   ProfileUpdate: `${APPConfig.API_URL}/update-profile`,
   BankUpdate: `${APPConfig.API_URL}/update-bank-info`,
   BankInfo: `${APPConfig.API_URL}/bank-info`,
+  PlaceBet: `${APPConfig.API_URL}/place-bet`,
 };
 
 export default ApiEndPoints;
