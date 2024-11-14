@@ -17,6 +17,8 @@ import { useParams } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import RecentStory from "../../Components/RecentStory";
 import { MdDelete } from "react-icons/md";
+import toast from "react-hot-toast";
+import { FaChampagneGlasses } from "react-icons/fa6";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -30,7 +32,18 @@ export const OddsScreen = () => {
   const [activeTabs, setActiveTabs] = React.useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
+  const [sportData, setSportData] = React.useState([
+    {
+      key: "americanfootball_nfl",
+      group: "American Football",
+      title: "NFL",
+      description: "US Football",
+      active: true,
+      has_outrights: false,
+    },
+  ]);
 
+  console.log("sportData", sportData);
   useEffect(() => {
     const savedCartData = localStorage.getItem("cartData");
     if (savedCartData) {
@@ -47,6 +60,9 @@ export const OddsScreen = () => {
     }
   }, [activeTabs, parlayBet, cartData]);
 
+  const handleSportData = (item) => {
+    setSportData((prev) => [...prev, item]);
+  };
   const SportList = [
     {
       key: "americanfootball_cfl",
@@ -1144,11 +1160,10 @@ export const OddsScreen = () => {
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rice_Owls_logo.svg/640px-Rice_Owls_logo.svg.png",
   };
   useEffect(() => {
-    fetchEvent();
+    // fetchEvent();
   }, [sport]);
 
   const handleSelect = (key) => {
-    console.log("Selected Tab:", key);
     setActiveTabs(key); // Update state with the selected tab
   };
 
@@ -1226,10 +1241,16 @@ export const OddsScreen = () => {
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip <Badge bg="success">{cartData.length}</Badge>
+              Betslip{" "}
+              <Badge
+                bg="success"
+                // style={{ backgroundColor: "#155236", color: "white" }}
+              >
+                {cartData.length}
+              </Badge>
             </h5>
           </Col>
-          <Col xs="auto">
+          {/* <Col xs="auto">
             <Button
               variant="link"
               size="sm"
@@ -1237,7 +1258,7 @@ export const OddsScreen = () => {
             >
               Settled
             </Button>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
@@ -1283,7 +1304,7 @@ export const OddsScreen = () => {
                         />
                       </Col>
                       <Col xs="auto" className=" ">
-                        <span className="fw-bold">{market?.name}</span>
+                        <span className="fw-bold">{market?.team}</span>
                         <span className="fw-bold"> {market?.point}</span>
                         <span className="text-muted "> ({market?.price})</span>
                       </Col>
@@ -1344,7 +1365,13 @@ export const OddsScreen = () => {
                 <h6>${totalPays.toFixed(2)}</h6>
               </Col>
             </Row>
-            <Button variant="success" size="lg" className="w-100">
+            <Button
+              variant="#155236"
+              style={{ backgroundColor: "#155236", color: "white" }}
+              size="lg"
+              className="w-100"
+              onClick={() => toast.success("comming soon...")}
+            >
               Bet Now
             </Button>
           </>
@@ -1394,7 +1421,7 @@ export const OddsScreen = () => {
                         />
                       </Col>
                       <Col xs="auto" className=" ">
-                        <span className="fw-bold">{market?.name}</span>
+                        <span className="fw-bold">{market?.team}</span>
                         <span className="fw-bold"> {market?.point}</span>
                         <span className="text-muted "> ({market?.price})</span>
                       </Col>
@@ -1458,7 +1485,13 @@ export const OddsScreen = () => {
                 <h6>${parlayResult}</h6>
               </Col>
             </Row>
-            <Button variant="success" size="lg" className="w-100">
+            <Button
+              variant="#155236"
+              style={{ backgroundColor: "#155236", color: "white" }}
+              size="lg"
+              className="w-100"
+              onClick={() => toast.success("comming soon...")}
+            >
               Bet Now
             </Button>
           </>
@@ -1495,7 +1528,7 @@ export const OddsScreen = () => {
     <Container className="mt-3">
       <Row>
         <Col lg={12}>
-          <h3 className="text-start fw-bold">Odds & Betting Lines</h3>
+          <h4 className="text-start fw-bold">Odds & Betting Lines</h4>
         </Col>
       </Row>
       <Form>
@@ -1504,7 +1537,13 @@ export const OddsScreen = () => {
             <Form.Group controlId="firstSelect">
               <Form.Select
                 value={sport}
-                onChange={(e) => setSport(e.target.value)}
+                onChange={(e) => {
+                  const selectedSport = SportList?.find(
+                    (s) => s.key === e.target.value
+                  );
+                  setSport(e.target.value);
+                  handleSportData(selectedSport);
+                }}
                 className="fw-bold"
               >
                 {SportList.map((sport, index) => (
@@ -1586,12 +1625,6 @@ export const OddsScreen = () => {
               const totalsMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "totals"
               );
-              console.log(
-                "moneylineMarket",
-                moneylineMarket,
-                "///",
-                totalsMarket
-              );
               if (!fanduelBookmaker) return null;
 
               return (
@@ -1638,15 +1671,11 @@ export const OddsScreen = () => {
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
-                                // handleSportClick({
-                                //   key: moneylineMarket.key,
-                                //   price: moneylineMarket.outcomes[0].price,
-                                //   name: moneylineMarket.outcomes[0].name,
-                                // })
                                 handleSportClick({
                                   market: moneylineMarket.key,
                                   price: moneylineMarket?.outcomes[0].price,
                                   name: moneylineMarket?.outcomes[0].name,
+                                  team: moneylineMarket?.outcomes[0].name,
                                   ...moneylineMarket?.outcomes[0],
                                 })
                               }
@@ -1668,6 +1697,7 @@ export const OddsScreen = () => {
                                   market: spreadMarket.key,
                                   price: spreadMarket?.outcomes[0].price,
                                   name: spreadMarket?.outcomes[0].name,
+                                  team: spreadMarket?.outcomes[0].name,
                                   ...spreadMarket?.outcomes[0],
                                 })
                               }
@@ -1694,6 +1724,7 @@ export const OddsScreen = () => {
                                   market: totalsMarket.key,
                                   price: totalsMarket?.outcomes[0].price,
                                   name: totalsMarket?.outcomes[0].name,
+                                  team: moneylineMarket?.outcomes[0].name,
                                   ...totalsMarket?.outcomes[0],
                                 })
                               }
@@ -1745,6 +1776,7 @@ export const OddsScreen = () => {
                                   market: moneylineMarket?.key,
                                   price: moneylineMarket?.outcomes[1].price,
                                   name: moneylineMarket?.outcomes[1].name,
+                                  team: moneylineMarket?.outcomes[1].name,
                                   ...moneylineMarket?.outcomes[1],
                                 })
                               }
@@ -1766,6 +1798,7 @@ export const OddsScreen = () => {
                                   market: spreadMarket?.key,
                                   price: spreadMarket?.outcomes[1].price,
                                   name: spreadMarket?.outcomes[1].name,
+                                  team: spreadMarket?.outcomes[1].name,
                                   ...spreadMarket?.outcomes[1],
                                 })
                               }
@@ -1791,6 +1824,7 @@ export const OddsScreen = () => {
                                   market: totalsMarket.key,
                                   price: totalsMarket?.outcomes[1].price,
                                   name: totalsMarket?.outcomes[1].name,
+                                  team: moneylineMarket?.outcomes[1].name,
                                   ...totalsMarket?.outcomes[1],
                                 })
                               }

@@ -16,6 +16,7 @@ const ApiEndPoints = {
   BankInfo: `${APPConfig.API_URL}/bank-info`,
   PlaceBet: `${APPConfig.API_URL}/place-bet`,
   Get_Market: `${APPConfig.API_URL}/markets-by-game/`,
+  BettingHistory: `${APPConfig.API_URL}/bet-history`,
 };
 
 export default ApiEndPoints;

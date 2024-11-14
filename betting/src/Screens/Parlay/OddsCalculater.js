@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { FaAd, FaPlus } from "react-icons/fa";
 
-const ParlayCalculater = () => {
+const OddsCalculater = () => {
   const [betAmount, setBetAmount] = useState(10);
   const [parlayOdds, setParlayOdds] = useState(100);
   const [toWin, setToWinValue] = useState(0);
@@ -19,12 +19,10 @@ const ParlayCalculater = () => {
     { id: 2, odds: "" },
     { id: 3, odds: "" },
   ]);
-  const [status, setStatus] = useState("parlay");
+  const [status, setStatus] = useState("single");
   const [winAmount, setWinAmount] = useState(0);
   const [wagerAmount, setWagerAmount] = useState(0);
   const [odds, setOdds] = useState(0);
-
-  console.log("status", status);
 
   useEffect(() => {
     if (bets.length > 0) {
@@ -96,8 +94,7 @@ const ParlayCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold mb-5">Parlay Calculator</h3>
-
+          <h3 className="text-center fw-bold mb-5">Odds Calculator</h3>
           {status === "parlay" ? (
             <Form>
               <Row>
@@ -123,8 +120,8 @@ const ParlayCalculater = () => {
                       as="select"
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="parlay">PARLAY</option>
                       <option value="single">SINGLE BET</option>
+                      <option value="parlay">PARLAY</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
@@ -200,8 +197,8 @@ const ParlayCalculater = () => {
                       as="select"
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="parlay">PARLAY</option>
                       <option value="single">SINGLE BET</option>
+                      <option value="parlay">PARLAY</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
@@ -257,4 +254,4 @@ const ParlayCalculater = () => {
   );
 };
 
-export default ParlayCalculater;
+export default OddsCalculater;

@@ -16,11 +16,11 @@
 }
 
 .reset-password-button {
-  background-color: #000 !important;
+  background-color: #155236 !important;
   border-radius: 30px !important;
   border: none !important;
 }
 
 .reset-password-button:hover {
-  background-color: #141414 !important;
+  background-color: #0e3726 !important;
 }

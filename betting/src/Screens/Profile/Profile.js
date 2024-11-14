@@ -11,7 +11,13 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./profile.css";
-import { FaEdit, FaPiggyBank, FaRegMehBlank, FaUsers } from "react-icons/fa";
+import {
+  FaEdit,
+  FaHistory,
+  FaPiggyBank,
+  FaRegMehBlank,
+  FaUsers,
+} from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { RiBankFill, RiLogoutBoxLine } from "react-icons/ri";
 import { apiCallNew } from "../../Network_Call/apiservices";
@@ -240,6 +246,14 @@ const Profile = () => {
                     </div>
                     <div className="option">
                       <span className="option-icon">
+                        <FaHistory />
+                      </span>
+                      <span onClick={() => navigate("/betting-history")}>
+                        Betting History
+                      </span>
+                    </div>
+                    <div className="option">
+                      <span className="option-icon">
                         <RiLogoutBoxLine />
                       </span>
                       <span onClick={logout}>LogOut</span>
@@ -306,7 +320,8 @@ const Profile = () => {
             Close
           </Button>
           <Button
-            variant="dark"
+            variant="#155239"
+            style={{ backgroundColor: "#155239", color: "white" }}
             size="sm"
             type="submit"
             onClick={updateProfile}
@@ -367,7 +382,8 @@ const Profile = () => {
             Close
           </Button>
           <Button
-            variant="dark"
+            variant="#155239"
+            style={{ backgroundColor: "#155239", color: "white" }}
             size="sm"
             type="submit"
             onClick={updateBankInfo}

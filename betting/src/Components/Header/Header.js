@@ -117,8 +117,11 @@ const Header = () => {
 
               {showHtmlCssSubMenu && (
                 <ul className="htmlCss-sub-menu sub-menu">
-                  <li onClick={() => navigate(`/parlay-calculater`)}>
+                  <li onClick={() => navigate(`/odds-calculater`)}>
                     <a href="#">Odds Calculator</a>
+                  </li>
+                  <li onClick={() => navigate(`/parlay-calculater`)}>
+                    <a href="#">Parlay Calculator</a>
                   </li>
                 </ul>
               )}

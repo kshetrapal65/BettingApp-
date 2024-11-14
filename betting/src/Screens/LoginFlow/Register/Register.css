@@ -17,7 +17,7 @@
 }
 
 .signup-custom-button {
-  background-color: #000 !important;
+  background-color: #155239 !important;
   border: none !important;
   border-radius: 30px !important;
   padding: 10px;
@@ -27,7 +27,7 @@
 }
 
 .signup-custom-button:hover {
-  background-color: #141414 !important;
+  background-color: #0e3726 !important;
 }
 
 .form-label {
