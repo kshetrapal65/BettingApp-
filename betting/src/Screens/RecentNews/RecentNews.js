@@ -36,8 +36,16 @@ const RecentNews = () => {
   const getRecentNews = async () => {
     try {
       setLoad(true);
+      const headers = {
+        Upgrade: "HTTP/2.0",
+        Connection: "Upgrade",
+      };
       const response = await fetch(
-        "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239"
+        "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
+        {
+          method: "GET",
+          headers: headers,
+        }
       );
 
       if (response.ok) {

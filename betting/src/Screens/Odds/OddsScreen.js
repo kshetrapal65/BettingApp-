@@ -1160,7 +1160,7 @@ export const OddsScreen = () => {
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rice_Owls_logo.svg/640px-Rice_Owls_logo.svg.png",
   };
   useEffect(() => {
-    // fetchEvent();
+    fetchEvent();
   }, [sport]);
 
   const handleSelect = (key) => {

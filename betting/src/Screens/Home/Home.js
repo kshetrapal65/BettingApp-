@@ -8,8 +8,8 @@ import moment from "moment";
 import Event from "../../JSON/event";
 import { useNavigate } from "react-router-dom";
 import RecentStory from "../../Components/RecentStory";
+import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 const sports = SportList;
-const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 const Home = () => {
   const [sport, setSport] = React.useState("americanfootball_cfl");
@@ -23,7 +23,7 @@ const Home = () => {
   const fetchEvent = async () => {
     try {
       const response = await fetch(
-        `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
+        `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
         {
           method: "GET",
           headers: {

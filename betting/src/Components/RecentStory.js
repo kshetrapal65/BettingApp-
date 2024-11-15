@@ -64,18 +64,21 @@ const RecentStory = () => {
   const getRecentNews = async () => {
     try {
       setLoad(true);
-
-      const response = await axios.get(
+      const headers = {
+        Upgrade: "HTTP/2.0",
+        Connection: "Upgrade",
+      };
+      const response = await fetch(
         "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          method: "GET",
+          headers: headers,
         }
       );
 
-      if (response.status === 200) {
-        setNewsData(response.data.articles);
+      if (response.ok) {
+        const data = await response.json();
+        setNewsData(data.articles);
       } else {
         console.log("Failed to fetch news:", response.statusText);
       }
@@ -116,7 +119,7 @@ const RecentStory = () => {
         </div>
       )}
 
-      <Row className="mt-5 justify-content-around  ">
+      {/* <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
@@ -206,7 +209,133 @@ const RecentStory = () => {
             />
           )}
         </Modal.Body>
-      </Modal>
+      </Modal> */}
+      <Row className="mt-5 justify-content-around  ">
+        <Col className="bg-light p-4 rounded-5" lg={12}>
+          <Row>
+            <Col>
+              <h5>Recent Stories</h5>
+            </Col>
+            <Col className="text-end">
+              <h5 className="text-primary">
+                <span style={{ cursor: "pointer" }}>See All</span>
+              </h5>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col lg={4} className="d-flex ">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/NFL-Pass-or-Play-Week-8.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/nfl-luck-rankings-picks.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/juan-soto-2.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+            <Col lg={4} className="d-flex">
+              <div className="me-3">
+                <Image
+                  style={{
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                    aspectRatio: "1",
+                    borderRadius: "18px",
+                  }}
+                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
+                />
+              </div>
+              <div className="d-flex-column">
+                <h5 className="">NFL</h5>
+                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
+                <p>Jacob Wayne • 4 hours ago</p>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col className="  text-end" lg={4}></Col>
+      </Row>
     </>
   );
 };
