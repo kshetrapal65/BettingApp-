@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -28,10 +28,14 @@ export const OddsScreen = () => {
   const [market, setMarket] = React.useState("h2h");
   const [region, setRegion] = React.useState("us");
   const [data, setData] = React.useState([]);
-  const [cartData, setCartData] = React.useState([]);
+  // const [cartData, setCartData] = React.useState([]);
   const [activeTabs, setActiveTabs] = React.useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
+  const [cartData, setCartData] = useState(() => {
+    const storedMarkets = localStorage.getItem("cartData");
+    return storedMarkets ? JSON.parse(storedMarkets) : [];
+  });
   const [sportData, setSportData] = React.useState([
     {
       key: "americanfootball_nfl",
@@ -43,16 +47,18 @@ export const OddsScreen = () => {
     },
   ]);
 
-  console.log("sportData", sportData);
-  useEffect(() => {
-    const savedCartData = localStorage.getItem("cartData");
-    if (savedCartData) {
-      setCartData(JSON.parse(savedCartData));
-    }
-  }, []);
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
+  // useEffect(() => {
+  //   const savedCartData = localStorage.getItem("cartData");
+  //   if (savedCartData) {
+  //     setCartData(JSON.parse(savedCartData));
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   localStorage.setItem("cartData", JSON.stringify(cartData));
+  // }, [cartData]);
 
   useEffect(() => {
     if (activeTabs === "Parlay") {
@@ -1225,6 +1231,272 @@ export const OddsScreen = () => {
     setParlayResult(result2.toFixed(2));
   };
 
+  // const BetSlip = () => {
+  //   const totalWager = cartData.reduce(
+  //     (total, market) => total + (market.wager || 0),
+  //     0
+  //   );
+
+  //   const totalPays = cartData.reduce(
+  //     (total, market) => total + (market.winAmount || 0),
+  //     0
+  //   );
+
+  //   return (
+  //     <Container className="border  rounded p-4">
+  //       <Row className="d-flex justify-content-between align-items-center mb-3">
+  //         <Col xs="auto">
+  //           <h5 className="mb-0">
+  //             Betslip{" "}
+  //             <Badge
+  //               bg="success"
+
+  //             >
+  //               {cartData.length}
+  //             </Badge>
+  //           </h5>
+  //         </Col>
+
+  //       </Row>
+
+  //       <Row className="d-flex justify-content-between align-items-center mb-2">
+  //         <Col xs="auto">
+
+  //           <Tabs
+  //             className="mb-2 odds-tab-bar-new border-bottom-0"
+  //             onSelect={handleSelect}
+  //           >
+  //             <Tab eventKey="Straights" title="Straights"></Tab>
+  //             <Tab eventKey="Parlay" title="Parlay"></Tab>
+  //           </Tabs>
+  //         </Col>
+  //         <Col xs="auto">
+  //           <Button
+  //             onClick={() => setCartData([])}
+  //             variant="link"
+  //             size="sm"
+  //             className="text-danger p-0"
+  //           >
+  //             Clear All
+  //           </Button>
+  //         </Col>
+  //       </Row>
+
+  //       {activeTabs === "Straights" ? (
+  //         <>
+  //           <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+  //             {cartData?.length === 0 && (
+  //               <p className="text-center">No bets added</p>
+  //             )}
+
+  //             {cartData?.map((market, index) => (
+  //               <Card key={index} className="mb-2">
+  //                 <Card.Body>
+  //                   <Row className="d-flex justify-content-between align-items-start">
+  //                     <Col xs={12} md={12} className="p-0 text-end">
+  //                       <MdDelete
+  //                         size={20}
+  //                         style={{ cursor: "pointer" }}
+  //                         onClick={() => handleRemoveMarket(index)}
+  //                       />
+  //                     </Col>
+  //                     <Col xs="auto" className=" ">
+  //                       <span className="fw-bold">{market?.team}</span>
+  //                       <span className="fw-bold"> {market?.point}</span>
+  //                       <span className="text-muted "> ({market?.price})</span>
+  //                     </Col>
+  //                   </Row>
+  //                   <Card.Text className="fw-bold mb-1">
+  //                     {market?.market == "h2h" ? "Moneyline" : market?.market}
+  //                   </Card.Text>
+
+  //                   {/* Wager Section */}
+  //                   <Row className="mt-2">
+  //                     <Col>
+  //                       <div className="d-flex flex-column">
+  //                         <span>Wager</span>
+  //                         <input
+  //                           type="text"
+  //                           placeholder="0.00"
+  //                           className="form-control"
+  //                           value={market.wager || ""}
+  //                           onChange={(e) =>
+  //                             handleWagerChange(
+  //                               index,
+  //                               parseFloat(e.target.value) || 0
+  //                             )
+  //                           }
+  //                         />
+  //                       </div>
+  //                     </Col>
+  //                     <Col>
+  //                       <div className="d-flex flex-column">
+  //                         <span>To Win</span>
+  //                         <input
+  //                           placeholder="0.00"
+  //                           className="form-control"
+  //                           value={market.winAmount || ""}
+  //                           readOnly
+  //                         />
+  //                       </div>
+  //                     </Col>
+  //                   </Row>
+  //                 </Card.Body>
+  //               </Card>
+  //             ))}
+  //           </div>
+
+  //           <Row className="mt-2 mb-2">
+  //             <Col xs={6}>
+  //               <h6>Cash Wager:</h6>
+  //             </Col>
+  //             <Col xs={6} className="text-end">
+  //               <h6>${totalWager.toFixed(2)}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Row className="mt-2 mb-4">
+  //             <Col xs={6}>
+  //               <h6>Pays:</h6>
+  //             </Col>
+  //             <Col xs={6} className="text-end">
+  //               <h6>${totalPays.toFixed(2)}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Button
+  //             variant="#155236"
+  //             style={{ backgroundColor: "#155236", color: "white" }}
+  //             size="lg"
+  //             className="w-100"
+  //             onClick={() => toast.success("comming soon...")}
+  //           >
+  //             Bet Now
+  //           </Button>
+  //         </>
+  //       ) : (
+  //         <>
+  //           <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+  //             {cartData?.length === 0 && (
+  //               <p className="text-center">No bets added</p>
+  //             )}
+  //             {cartData?.length > 0 && (
+  //               <Row className="mt-2 mb-2">
+  //                 <Col>
+  //                   <div className="d-flex flex-column">
+  //                     <span>Wager</span>
+  //                     <input
+  //                       type="text"
+  //                       placeholder="0.00"
+  //                       className="form-control"
+  //                       value={parlayBet}
+  //                       onChange={(e) => setParlayBet(e.target.value)}
+  //                     />
+  //                   </div>
+  //                 </Col>
+  //                 <Col>
+  //                   <div className="d-flex flex-column">
+  //                     <span>To Win</span>
+  //                     <input
+  //                       placeholder="0.00"
+  //                       className="form-control"
+  //                       value={parlayResult}
+  //                       readOnly
+  //                     />
+  //                   </div>
+  //                 </Col>
+  //               </Row>
+  //             )}
+
+  //             {cartData?.map((market, index) => (
+  //               <Card key={index} className="mb-2">
+  //                 <Card.Body>
+  //                   <Row className="d-flex justify-content-between align-items-start">
+  //                     <Col xs={12} md={12} className="p-0 text-end">
+  //                       <MdDelete
+  //                         size={20}
+  //                         style={{ cursor: "pointer" }}
+  //                         onClick={() => handleRemoveMarket(index)}
+  //                       />
+  //                     </Col>
+  //                     <Col xs="auto" className=" ">
+  //                       <span className="fw-bold">{market?.team}</span>
+  //                       <span className="fw-bold"> {market?.point}</span>
+  //                       <span className="text-muted "> ({market?.price})</span>
+  //                     </Col>
+  //                   </Row>
+  //                   {/* <Card.Text className="fw-bold mb-1">
+  //                     {market?.market == "h2h" ? "Moneyline" : market?.market}
+  //                   </Card.Text> */}
+
+  //                   {/* Wager Section */}
+  //                   <Row className="mt-2">
+  //                     {market?.market !== "h2h" && (
+  //                       <Col>
+  //                         <div className="d-flex flex-column">
+  //                           <span>
+  //                             {" "}
+  //                             {market?.market == "h2h"
+  //                               ? "Moneyline"
+  //                               : market?.market}
+  //                           </span>
+  //                           <input
+  //                             type="text"
+  //                             placeholder="0.00"
+  //                             className="form-control"
+  //                             value={market.point || ""}
+  //                             readOnly
+  //                           />
+  //                         </div>
+  //                       </Col>
+  //                     )}
+
+  //                     <Col>
+  //                       <div className="d-flex flex-column">
+  //                         <span>Odds</span>
+  //                         <input
+  //                           placeholder="0.00"
+  //                           className="form-control"
+  //                           value={market.price || ""}
+  //                           readOnly
+  //                         />
+  //                       </div>
+  //                     </Col>
+  //                   </Row>
+  //                 </Card.Body>
+  //               </Card>
+  //             ))}
+  //           </div>
+
+  //           <Row className="mt-2 mb-2">
+  //             <Col xs={6}>
+  //               <h6>Cash Wager:</h6>
+  //             </Col>
+  //             <Col xs={6} className="text-end">
+  //               <h6>${parlayBet}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Row className="mt-2 mb-4">
+  //             <Col xs={6}>
+  //               <h6>To Win:</h6>
+  //             </Col>
+  //             <Col xs={6} className="text-end">
+  //               <h6>${parlayResult}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Button
+  //             variant="#155236"
+  //             style={{ backgroundColor: "#155236", color: "white" }}
+  //             size="lg"
+  //             className="w-100"
+  //             onClick={() => toast.success("comming soon...")}
+  //           >
+  //             Bet Now
+  //           </Button>
+  //         </>
+  //       )}
+  //     </Container>
+  //   );
+  // };
+
   const BetSlip = () => {
     const totalWager = cartData.reduce(
       (total, market) => total + (market.wager || 0),
@@ -1235,22 +1507,15 @@ export const OddsScreen = () => {
       (total, market) => total + (market.winAmount || 0),
       0
     );
-
     return (
-      <Container className="border  rounded p-4">
+      <Container className="border mt-4 rounded p-4">
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip{" "}
-              <Badge
-                bg="success"
-                // style={{ backgroundColor: "#155236", color: "white" }}
-              >
-                {cartData.length}
-              </Badge>
+              Betslip <Badge bg="success">{cartData.length}</Badge>
             </h5>
           </Col>
-          {/* <Col xs="auto">
+          <Col xs="auto">
             <Button
               variant="link"
               size="sm"
@@ -1258,12 +1523,11 @@ export const OddsScreen = () => {
             >
               Settled
             </Button>
-          </Col> */}
+          </Col>
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
           <Col xs="auto">
-            {/* <h6 className="text-uppercase mb-0">Straights</h6> */}
             <Tabs
               className="mb-2 odds-tab-bar-new border-bottom-0"
               onSelect={handleSelect}
@@ -1284,7 +1548,6 @@ export const OddsScreen = () => {
           </Col>
         </Row>
 
-        {/* Bet Item */}
         {activeTabs === "Straights" ? (
           <>
             <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
@@ -1295,30 +1558,56 @@ export const OddsScreen = () => {
               {cartData?.map((market, index) => (
                 <Card key={index} className="mb-2">
                   <Card.Body>
-                    <Row className="d-flex justify-content-between align-items-start">
-                      <Col xs={12} md={12} className="p-0 text-end">
-                        <MdDelete
-                          size={20}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleRemoveMarket(index)}
-                        />
-                      </Col>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "16px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
+
                       <Col xs="auto" className=" ">
-                        <span className="fw-bold">{market?.team}</span>
-                        <span className="fw-bold"> {market?.point}</span>
-                        <span className="text-muted "> ({market?.price})</span>
+                        <span className="fw-bold">
+                          {market?.name === "Over"
+                            ? "Over"
+                            : market?.name === "Under"
+                            ? "Under"
+                            : ""}{" "}
+                          {market?.point}
+                        </span>
+                        <span className="text-muted">({market?.price})</span>
+                        <span className="text-muted small fw-bold   ms-1">
+                          {market?.home_team?.slice(0, 3).toUpperCase()}@
+                          {market?.away_team?.slice(0, 3).toUpperCase()}
+                        </span>
                       </Col>
                     </Row>
-                    <Card.Text className="fw-bold mb-1">
-                      {market?.market == "h2h" ? "Moneyline" : market?.market}
-                    </Card.Text>
 
-                    {/* Wager Section */}
                     <Row className="mt-2">
-                      <Col>
+                      <Col lg={12}>
                         <div className="d-flex flex-column">
+                          <span
+                            style={{ fontSize: "12px", marginBottom: "5px" }}
+                          >
+                            {" "}
+                            {market?.market == "h2h"
+                              ? "Moneyline"
+                              : market?.market}
+                          </span>
                           <span>Wager</span>
                           <input
+                            key={index}
                             type="text"
                             placeholder="0.00"
                             className="form-control"
@@ -1332,13 +1621,13 @@ export const OddsScreen = () => {
                           />
                         </div>
                       </Col>
-                      <Col>
+                      <Col lg={12}>
                         <div className="d-flex flex-column">
                           <span>To Win</span>
                           <input
                             placeholder="0.00"
                             className="form-control"
-                            value={market.winAmount || ""}
+                            value={market?.winAmount?.toFixed(2) || ""}
                             readOnly
                           />
                         </div>
@@ -1357,6 +1646,7 @@ export const OddsScreen = () => {
                 <h6>${totalWager.toFixed(2)}</h6>
               </Col>
             </Row>
+
             <Row className="mt-2 mb-4">
               <Col xs={6}>
                 <h6>Pays:</h6>
@@ -1365,25 +1655,30 @@ export const OddsScreen = () => {
                 <h6>${totalPays.toFixed(2)}</h6>
               </Col>
             </Row>
+
             <Button
-              variant="#155236"
-              style={{ backgroundColor: "#155236", color: "white" }}
+              // onClick={SubmitPlaceBet}
+              // disabled={!token}
+              variant="#155239"
+              style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
-              onClick={() => toast.success("comming soon...")}
             >
               Bet Now
             </Button>
           </>
         ) : (
           <>
-            <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
+            <div
+              style={{ maxHeight: "350px" }}
+              className="overflow-y-scroll overflow-x-hidden"
+            >
               {cartData?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
               {cartData?.length > 0 && (
                 <Row className="mt-2 mb-2">
-                  <Col>
+                  <Col lg={12}>
                     <div className="d-flex flex-column">
                       <span>Wager</span>
                       <input
@@ -1395,7 +1690,7 @@ export const OddsScreen = () => {
                       />
                     </div>
                   </Col>
-                  <Col>
+                  <Col lg={12}>
                     <div className="d-flex flex-column">
                       <span>To Win</span>
                       <input
@@ -1408,32 +1703,41 @@ export const OddsScreen = () => {
                   </Col>
                 </Row>
               )}
-
               {cartData?.map((market, index) => (
                 <Card key={index} className="mb-2">
                   <Card.Body>
-                    <Row className="d-flex justify-content-between align-items-start">
-                      <Col xs={12} md={12} className="p-0 text-end">
-                        <MdDelete
-                          size={20}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleRemoveMarket(index)}
-                        />
-                      </Col>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "16px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
+
                       <Col xs="auto" className=" ">
-                        <span className="fw-bold">{market?.team}</span>
                         <span className="fw-bold"> {market?.point}</span>
-                        <span className="text-muted "> ({market?.price})</span>
+                        <span className="text-muted"> ({market?.price})</span>
+                        <span className="text-muted small fw-bold   ms-1">
+                          {market?.home_team?.slice(0, 3).toUpperCase()}@
+                          {market?.away_team?.slice(0, 3).toUpperCase()}
+                        </span>
                       </Col>
                     </Row>
-                    {/* <Card.Text className="fw-bold mb-1">
-                      {market?.market == "h2h" ? "Moneyline" : market?.market}
-                    </Card.Text> */}
 
-                    {/* Wager Section */}
                     <Row className="mt-2">
                       {market?.market !== "h2h" && (
-                        <Col>
+                        <Col lg={12}>
                           <div className="d-flex flex-column">
                             <span>
                               {" "}
@@ -1452,7 +1756,7 @@ export const OddsScreen = () => {
                         </Col>
                       )}
 
-                      <Col>
+                      <Col lg={12}>
                         <div className="d-flex flex-column">
                           <span>Odds</span>
                           <input
@@ -1477,6 +1781,7 @@ export const OddsScreen = () => {
                 <h6>${parlayBet}</h6>
               </Col>
             </Row>
+
             <Row className="mt-2 mb-4">
               <Col xs={6}>
                 <h6>To Win:</h6>
@@ -1485,12 +1790,13 @@ export const OddsScreen = () => {
                 <h6>${parlayResult}</h6>
               </Col>
             </Row>
+
             <Button
-              variant="#155236"
-              style={{ backgroundColor: "#155236", color: "white" }}
+              onClick={() => toast.success("Comming soon...")}
+              variant="#155239"
+              style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
-              onClick={() => toast.success("comming soon...")}
             >
               Bet Now
             </Button>
@@ -1499,7 +1805,6 @@ export const OddsScreen = () => {
       </Container>
     );
   };
-
   const fetchEvent = async () => {
     try {
       const response = await fetch(
@@ -1676,6 +1981,8 @@ export const OddsScreen = () => {
                                   price: moneylineMarket?.outcomes[0].price,
                                   name: moneylineMarket?.outcomes[0].name,
                                   team: moneylineMarket?.outcomes[0].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...moneylineMarket?.outcomes[0],
                                 })
                               }
@@ -1698,6 +2005,8 @@ export const OddsScreen = () => {
                                   price: spreadMarket?.outcomes[0].price,
                                   name: spreadMarket?.outcomes[0].name,
                                   team: spreadMarket?.outcomes[0].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...spreadMarket?.outcomes[0],
                                 })
                               }
@@ -1725,6 +2034,8 @@ export const OddsScreen = () => {
                                   price: totalsMarket?.outcomes[0].price,
                                   name: totalsMarket?.outcomes[0].name,
                                   team: moneylineMarket?.outcomes[0].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...totalsMarket?.outcomes[0],
                                 })
                               }
@@ -1777,6 +2088,8 @@ export const OddsScreen = () => {
                                   price: moneylineMarket?.outcomes[1].price,
                                   name: moneylineMarket?.outcomes[1].name,
                                   team: moneylineMarket?.outcomes[1].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...moneylineMarket?.outcomes[1],
                                 })
                               }
@@ -1799,6 +2112,8 @@ export const OddsScreen = () => {
                                   price: spreadMarket?.outcomes[1].price,
                                   name: spreadMarket?.outcomes[1].name,
                                   team: spreadMarket?.outcomes[1].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...spreadMarket?.outcomes[1],
                                 })
                               }
@@ -1825,6 +2140,8 @@ export const OddsScreen = () => {
                                   price: totalsMarket?.outcomes[1].price,
                                   name: totalsMarket?.outcomes[1].name,
                                   team: moneylineMarket?.outcomes[1].name,
+                                  home_team: game?.home_team,
+                                  away_team: game?.away_team,
                                   ...totalsMarket?.outcomes[1],
                                 })
                               }

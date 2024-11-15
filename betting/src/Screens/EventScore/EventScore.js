@@ -291,7 +291,7 @@ export const EventScore = React.memo(() => {
   const [marketName, setMarketName] = useState("");
   const [eventOdds, setEventOdds] = useState([]);
   const [selectedMarkets, setSelectedMarkets] = useState(() => {
-    const storedMarkets = localStorage.getItem("selectedMarkets");
+    const storedMarkets = localStorage.getItem("cartData");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
   const [activeTabs, setActiveTabs] = useState("Straights");
@@ -299,15 +299,15 @@ export const EventScore = React.memo(() => {
   const [parlayResult, setParlayResult] = React.useState(0);
   const [load, setLoad] = React.useState(false);
   const token = getToken();
-  console.log("propData", propData);
 
   useEffect(() => {
-    localStorage.setItem("selectedMarkets", JSON.stringify(selectedMarkets));
+    localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
   }, [selectedMarkets]);
 
   const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
   const event = location.state || {};
+  console.log("event", event);
 
   const totalWager = selectedMarkets.reduce(
     (total, market) => total + (market.wager || 0),
@@ -369,11 +369,6 @@ export const EventScore = React.memo(() => {
   const handleSelect = (key) => {
     setActiveTabs(key);
   };
-  function transformText(text) {
-    return text
-      .replace(/_/g, " ") // Replace underscores with spaces
-      .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
-  }
 
   const fetchScore = async () => {
     try {
@@ -1073,7 +1068,6 @@ export const EventScore = React.memo(() => {
   const BetSlip = () => {
     return (
       <Container className="border mt-4 rounded p-4">
-        {/* Header */}
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
@@ -1091,10 +1085,8 @@ export const EventScore = React.memo(() => {
           </Col>
         </Row>
 
-        {/* Straights Section */}
         <Row className="d-flex justify-content-between align-items-center mb-2">
           <Col xs="auto">
-            {/* <h6 className="text-uppercase mb-0">Straights</h6> */}
             <Tabs
               className="mb-2 odds-tab-bar-new border-bottom-0"
               onSelect={handleSelect}
@@ -1115,7 +1107,6 @@ export const EventScore = React.memo(() => {
           </Col>
         </Row>
 
-        {/* Bet Item */}
         {activeTabs === "Straights" ? (
           <>
             <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
@@ -1162,7 +1153,6 @@ export const EventScore = React.memo(() => {
                       </Col>
                     </Row>
 
-                    {/* Wager Section */}
                     <Row className="mt-2">
                       <Col lg={12}>
                         <div className="d-flex flex-column">
@@ -1207,7 +1197,6 @@ export const EventScore = React.memo(() => {
               ))}
             </div>
 
-            {/* Cash Wager Section */}
             <Row className="mt-2 mb-2">
               <Col xs={6}>
                 <h6>Cash Wager:</h6>
@@ -1217,7 +1206,6 @@ export const EventScore = React.memo(() => {
               </Col>
             </Row>
 
-            {/* Total Pays Section */}
             <Row className="mt-2 mb-4">
               <Col xs={6}>
                 <h6>Pays:</h6>
@@ -1227,9 +1215,7 @@ export const EventScore = React.memo(() => {
               </Col>
             </Row>
 
-            {/* Bet Now Button */}
             <Button
-              // onClick={() => toast.success("Comming soon...")}
               onClick={SubmitPlaceBet}
               disabled={!token}
               variant="#155239"
@@ -1308,7 +1294,6 @@ export const EventScore = React.memo(() => {
                       </Col>
                     </Row>
 
-                    {/* Wager Section */}
                     <Row className="mt-2">
                       {market?.market !== "h2h" && (
                         <Col lg={12}>
@@ -1329,24 +1314,7 @@ export const EventScore = React.memo(() => {
                           </div>
                         </Col>
                       )}
-                      {/* <Col>
-                        <div className="d-flex flex-column">
-                          <span>Wager</span>
-                          <input
-                            key={index}
-                            type="text"
-                            placeholder="0.00"
-                            className="form-control"
-                            value={market.wager || ""}
-                            onChange={(e) =>
-                              handleWagerChange(
-                                index,
-                                parseFloat(e.target.value) || 0
-                              )
-                            }
-                          />
-                        </div>
-                      </Col> */}
+
                       <Col lg={12}>
                         <div className="d-flex flex-column">
                           <span>Odds</span>
@@ -1364,7 +1332,6 @@ export const EventScore = React.memo(() => {
               ))}
             </div>
 
-            {/* Cash Wager Section */}
             <Row className="mt-2 mb-2">
               <Col xs={6}>
                 <h6>Cash Wager:</h6>
@@ -1374,7 +1341,6 @@ export const EventScore = React.memo(() => {
               </Col>
             </Row>
 
-            {/* Total Pays Section */}
             <Row className="mt-2 mb-4">
               <Col xs={6}>
                 <h6>To Win:</h6>
@@ -1384,7 +1350,6 @@ export const EventScore = React.memo(() => {
               </Col>
             </Row>
 
-            {/* Bet Now Button */}
             <Button
               onClick={() => toast.success("Comming soon...")}
               variant="#155239"

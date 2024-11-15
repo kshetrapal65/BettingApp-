@@ -4,7 +4,7 @@ const APPConfig = {
 
 const ApiEndPoints = {
   // ApiKey: "5269f50f7cb93fcfadbc3b2e991d2477",
-  ApiKey: "7d4ded247e19c2d60f4ea10dcaed8374",
+  ApiKey: "19a581ceee3a8dc227f9f68bdfd5d769",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
   ForgotPassword: `${APPConfig.API_URL}/forgot-password`,
@@ -16,7 +16,6 @@ const ApiEndPoints = {
   BankInfo: `${APPConfig.API_URL}/bank-info`,
   PlaceBet: `${APPConfig.API_URL}/place-bet`,
   Get_Market: `${APPConfig.API_URL}/markets-by-game/`,
-  BettingHistory: `${APPConfig.API_URL}/bet-history`,
 };
 
 export default ApiEndPoints;
