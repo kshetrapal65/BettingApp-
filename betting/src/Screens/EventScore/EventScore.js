@@ -649,9 +649,9 @@ export const EventScore = React.memo(() => {
       formData.append(`odds[${index}][win_amount]`, item.winAmount.toFixed(2));
       formData.append(`odds[${index}][outcomes_odds_price2]`, 0);
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
-      formData.append(`odds[${index}][sport_key]`, event?.sport_key);
-      formData.append(`odds[${index}][sport_id]`, event?.id);
-      formData.append(`odds[${index}][sport_name]`, event?.sport_title);
+      formData.append(`odds[${index}][sport_key]`, item.key);
+      formData.append(`odds[${index}][sport_id]`, item?.id);
+      formData.append(`odds[${index}][sport_name]`, item?.title);
       formData.append(`odds[${index}][loss_amount]`, 0);
     });
 
@@ -843,16 +843,16 @@ export const EventScore = React.memo(() => {
           <OddsTabBar />
           <hr />
           <Row className="text-center font-weight-bold text-muted">
-            <Col className="fw-bold" xs={4}>
+            <Col className="fw-bold" xs={12} lg={4}>
               Matchup
             </Col>
-            <Col className="fw-bold" xs={2}>
+            <Col className="fw-bold" xs={4} lg={2}>
               Spread
             </Col>
-            <Col className="fw-bold" xs={2}>
+            <Col className="fw-bold" xs={4} lg={2}>
               Total
             </Col>
-            <Col className="fw-bold" xs={2}>
+            <Col className="fw-bold" xs={4} lg={2}>
               Moneyline
             </Col>
           </Row>
@@ -861,7 +861,8 @@ export const EventScore = React.memo(() => {
           {/* Away Team Row */}
           <Row className="align-items-center mt-3 text-center">
             <Col
-              xs={4}
+              xs={12}
+              lg={4}
               className="d-flex align-items-center justify-content-center"
             >
               <Image
@@ -872,7 +873,7 @@ export const EventScore = React.memo(() => {
               />
               <span className="fw-bold ms-2">{event?.away_team}</span>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 disabled={!spreadMarket?.outcomes[1].price}
@@ -887,6 +888,7 @@ export const EventScore = React.memo(() => {
                     ...spreadMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   });
                 }}
               >
@@ -894,7 +896,7 @@ export const EventScore = React.memo(() => {
                 {spreadMarket?.outcomes[1].price})
               </Button>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 disabled={!totalsMarket?.outcomes[0].price}
@@ -909,6 +911,7 @@ export const EventScore = React.memo(() => {
                     ...totalsMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   })
                 }
               >
@@ -916,7 +919,7 @@ export const EventScore = React.memo(() => {
                 {totalsMarket?.outcomes[0].price})
               </Button>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 disabled={!moneylineMarket?.outcomes[1].price}
@@ -931,6 +934,7 @@ export const EventScore = React.memo(() => {
                     ...moneylineMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   })
                 }
               >
@@ -942,7 +946,8 @@ export const EventScore = React.memo(() => {
           {/* Home Team Row */}
           <Row className="align-items-center mt-3 text-center">
             <Col
-              xs={4}
+              xs={12}
+              lg={4}
               className="d-flex align-items-center justify-content-center"
             >
               <Image
@@ -953,7 +958,7 @@ export const EventScore = React.memo(() => {
               />
               <span className="fw-bold ms-2">{event?.home_team}</span>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 variant="outline-secondary"
@@ -968,6 +973,7 @@ export const EventScore = React.memo(() => {
                     ...spreadMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   })
                 }
               >
@@ -975,7 +981,7 @@ export const EventScore = React.memo(() => {
                 {spreadMarket?.outcomes[0].price})
               </Button>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 variant="outline-secondary"
@@ -990,6 +996,7 @@ export const EventScore = React.memo(() => {
                     ...totalsMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   })
                 }
               >
@@ -997,7 +1004,7 @@ export const EventScore = React.memo(() => {
                 {totalsMarket?.outcomes[1].price})
               </Button>
             </Col>
-            <Col xs={2}>
+            <Col xs={4} lg={2}>
               <Button
                 className="shadow"
                 disabled={!moneylineMarket?.outcomes[0].price}
@@ -1012,6 +1019,7 @@ export const EventScore = React.memo(() => {
                     ...moneylineMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
+                    id: event?.id,
                   })
                 }
               >
