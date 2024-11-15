@@ -4,7 +4,7 @@ const APPConfig = {
 
 const ApiEndPoints = {
   // ApiKey: "5269f50f7cb93fcfadbc3b2e991d2477",
-  ApiKey: "68521aca907caa4c16690e913e82ede8",
+  ApiKey: "7d4ded247e19c2d60f4ea10dcaed8374",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
   ForgotPassword: `${APPConfig.API_URL}/forgot-password`,

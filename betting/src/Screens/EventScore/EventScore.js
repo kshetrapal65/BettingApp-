@@ -308,7 +308,6 @@ export const EventScore = React.memo(() => {
   const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
   const event = location.state || {};
-  const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
   const totalWager = selectedMarkets.reduce(
     (total, market) => total + (market.wager || 0),
@@ -1629,8 +1628,9 @@ export const EventScore = React.memo(() => {
                               })
                             }
                           >
-                            {outcome.name} {outcome.point || ""} (
-                            {outcome.price > 0
+                            {outcome?.name == "Yes" ? "" : outcome?.name}{" "}
+                            {outcome?.point || ""} (
+                            {outcome?.price > 0
                               ? `+${outcome.price}`
                               : outcome.price}
                             )
