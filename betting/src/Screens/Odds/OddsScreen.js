@@ -1533,7 +1533,7 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
       formData.append(`odds[${index}][loss_amount]`, 0);
       formData.append(`odds[${index}][sport_key]`, item.key);
-      formData.append(`odds[${index}][sport_id]`, item.key);
+      formData.append(`odds[${index}][sport_id]`, item.id);
       formData.append(`odds[${index}][sport_name]`, item.title);
     });
 
@@ -2041,6 +2041,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2067,6 +2068,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2098,6 +2100,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2157,6 +2160,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2183,6 +2187,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2213,6 +2218,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >

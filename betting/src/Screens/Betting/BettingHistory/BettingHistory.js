@@ -13,11 +13,14 @@ const BettingHistory = () => {
   }, []);
 
   const getBetHistory = async () => {
+    const payload = {
+      page: 2,
+    };
     try {
       setLoad(true);
       const response = await apiCallNew(
         "post",
-        null,
+        payload,
         ApiEndPoints.BettingHistory
       );
       if (response.success === true) {
