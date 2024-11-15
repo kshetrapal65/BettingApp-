@@ -300,14 +300,22 @@ export const EventScore = React.memo(() => {
   const [load, setLoad] = React.useState(false);
   const token = getToken();
 
+  const location = useLocation();
+  const event = location.state || {};
+  const [sportData, setSportData] = React.useState([]);
+
+  console.log("eventess", event);
+  // console.log("sportData", sportData);
+  // useEffect(() => {
+  //   if (Object.keys(event).length !== 0) {
+  //     setSportData((prev) => [...prev, event]);
+  //   }
+  // }, [event]);
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
   }, [selectedMarkets]);
 
-  const location = useLocation();
   const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === "fanduel");
-  const event = location.state || {};
-  console.log("event", event);
 
   const totalWager = selectedMarkets.reduce(
     (total, market) => total + (market.wager || 0),
@@ -336,6 +344,7 @@ export const EventScore = React.memo(() => {
     fetchMarket();
     fetchProps();
   }, [markets]);
+
   const fetchMarket = async () => {
     try {
       const response = await fetch(
@@ -821,7 +830,6 @@ export const EventScore = React.memo(() => {
     const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
     const totalsMarket = data?.markets?.find((m) => m.key === "totals");
 
-    console.log("spreadMarket>>>>", spreadMarket?.outcomes[1].price);
     return (
       <Container className="p-4 ">
         <Card className="p-4 text-start">
@@ -877,6 +885,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[1],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   });
                 }}
               >
@@ -897,6 +907,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[0],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   })
                 }
               >
@@ -917,6 +929,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...moneylineMarket?.outcomes[1],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   })
                 }
               >
@@ -952,6 +966,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[0],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   })
                 }
               >
@@ -972,6 +988,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[1],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   })
                 }
               >
@@ -992,6 +1010,8 @@ export const EventScore = React.memo(() => {
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...moneylineMarket?.outcomes[0],
+                    key: event?.sport_key,
+                    title: event?.sport_title,
                   })
                 }
               >

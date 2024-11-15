@@ -19,6 +19,7 @@ import RecentStory from "../../Components/RecentStory";
 import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaChampagneGlasses } from "react-icons/fa6";
+import { apiCallNew } from "../../Network_Call/apiservices";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -28,24 +29,32 @@ export const OddsScreen = () => {
   const [market, setMarket] = React.useState("h2h");
   const [region, setRegion] = React.useState("us");
   const [data, setData] = React.useState([]);
-  // const [cartData, setCartData] = React.useState([]);
-  const [activeTabs, setActiveTabs] = React.useState("Straights");
-  const [parlayBet, setParlayBet] = React.useState();
-  const [parlayResult, setParlayResult] = React.useState(0);
   const [cartData, setCartData] = useState(() => {
     const storedMarkets = localStorage.getItem("cartData");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
-  const [sportData, setSportData] = React.useState([
-    {
-      key: "americanfootball_nfl",
-      group: "American Football",
-      title: "NFL",
-      description: "US Football",
-      active: true,
-      has_outrights: false,
-    },
-  ]);
+  const [activeTabs, setActiveTabs] = React.useState("Straights");
+  const [parlayBet, setParlayBet] = React.useState();
+  const [parlayResult, setParlayResult] = React.useState(0);
+  const [load, setLoad] = React.useState(false);
+  const [sportData, setSportData] = React.useState({
+    key: "americanfootball_nfl",
+    group: "American Football",
+    title: "NFL",
+    description: "US Football",
+    active: true,
+    has_outrights: false,
+  });
+
+  const totalWager = cartData.reduce(
+    (total, market) => total + (market.wager || 0),
+    0
+  );
+
+  const totalPays = cartData.reduce(
+    (total, market) => total + (market.winAmount || 0),
+    0
+  );
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
@@ -67,8 +76,9 @@ export const OddsScreen = () => {
   }, [activeTabs, parlayBet, cartData]);
 
   const handleSportData = (item) => {
-    setSportData((prev) => [...prev, item]);
+    setSportData(item);
   };
+
   const SportList = [
     {
       key: "americanfootball_cfl",
@@ -1170,7 +1180,7 @@ export const OddsScreen = () => {
   }, [sport]);
 
   const handleSelect = (key) => {
-    setActiveTabs(key); // Update state with the selected tab
+    setActiveTabs(key);
   };
 
   const handleSportClick = (prev) => {
@@ -1497,16 +1507,58 @@ export const OddsScreen = () => {
   //   );
   // };
 
-  const BetSlip = () => {
-    const totalWager = cartData.reduce(
-      (total, market) => total + (market.wager || 0),
-      0
-    );
+  // const BetSlip = () => {
+  //   const totalWager = cartData.reduce(
+  //     (total, market) => total + (market.wager || 0),
+  //     0
+  //   );
 
-    const totalPays = cartData.reduce(
-      (total, market) => total + (market.winAmount || 0),
-      0
-    );
+  //   const totalPays = cartData.reduce(
+  //     (total, market) => total + (market.winAmount || 0),
+  //     0
+  //   );
+  const SubmitPlaceBet = async () => {
+    const formData = new FormData();
+    cartData?.forEach((item, index) => {
+      formData.append(`odds[${index}][market_key]`, item.market);
+      formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
+      formData.append(`odds[${index}][sport_name]`, item.team);
+      formData.append(`odds[${index}][outcomes_odds_point1]`, item.point);
+      formData.append(`odds[${index}][amount]`, item.wager);
+      formData.append(
+        `odds[${index}][win_amount]`,
+        item?.winAmount?.toFixed(2)
+      );
+      formData.append(`odds[${index}][outcomes_odds_price2]`, 0);
+      formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
+      formData.append(`odds[${index}][loss_amount]`, 0);
+      formData.append(`odds[${index}][sport_key]`, item.key);
+      formData.append(`odds[${index}][sport_id]`, item.key);
+      formData.append(`odds[${index}][sport_name]`, item.title);
+    });
+
+    try {
+      setLoad(true);
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.PlaceBet
+      );
+      if (response.success === true) {
+        toast.success(response.msg);
+        setLoad(false);
+        setCartData([]);
+      } else {
+        toast.error(response.msg);
+        setLoad(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
+
+  const BetSlip = () => {
     return (
       <Container className="border mt-4 rounded p-4">
         <Row className="d-flex justify-content-between align-items-center mb-3">
@@ -1663,6 +1715,7 @@ export const OddsScreen = () => {
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
+              onClick={SubmitPlaceBet}
             >
               Bet Now
             </Button>
@@ -1931,7 +1984,6 @@ export const OddsScreen = () => {
                 (market) => market.key === "totals"
               );
               if (!fanduelBookmaker) return null;
-
               return (
                 <div key={game.id} className="game-row">
                   <Row className="mb-4">
@@ -1977,13 +2029,18 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  market: moneylineMarket.key,
+                                  market:
+                                    moneylineMarket.key == "h2h"
+                                      ? "moneyline"
+                                      : moneylineMarket.key,
                                   price: moneylineMarket?.outcomes[0].price,
                                   name: moneylineMarket?.outcomes[0].name,
                                   team: moneylineMarket?.outcomes[0].name,
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...moneylineMarket?.outcomes[0],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
@@ -2008,6 +2065,8 @@ export const OddsScreen = () => {
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...spreadMarket?.outcomes[0],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
@@ -2037,6 +2096,8 @@ export const OddsScreen = () => {
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...totalsMarket?.outcomes[0],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
@@ -2084,13 +2145,18 @@ export const OddsScreen = () => {
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               onClick={() =>
                                 handleSportClick({
-                                  market: moneylineMarket?.key,
+                                  market:
+                                    moneylineMarket.key == "h2h"
+                                      ? "moneyline"
+                                      : moneylineMarket.key,
                                   price: moneylineMarket?.outcomes[1].price,
                                   name: moneylineMarket?.outcomes[1].name,
                                   team: moneylineMarket?.outcomes[1].name,
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...moneylineMarket?.outcomes[1],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
@@ -2115,6 +2181,8 @@ export const OddsScreen = () => {
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...spreadMarket?.outcomes[1],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
@@ -2143,6 +2211,8 @@ export const OddsScreen = () => {
                                   home_team: game?.home_team,
                                   away_team: game?.away_team,
                                   ...totalsMarket?.outcomes[1],
+                                  key: sportData?.key,
+                                  title: sportData?.title,
                                 })
                               }
                             >
