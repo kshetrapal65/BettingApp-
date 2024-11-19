@@ -16,33 +16,10 @@ const RecentNews = () => {
     getRecentNews();
   }, []);
 
-  // const getRecentNews = async () => {
-  //   try {
-  //     setLoad(true);
-  //     const response = await apiCallNew(
-  //       "get",
-  //       null,
-  //       "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239"
-  //     );
-  //     console.log("responsenewsresponse", response);
-  //     if (response) {
-  //       setNewsData(response.articles);
-  //       setLoad(false);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoad(false);
-  //   }
-  // };
-
   const getRecentNews = async () => {
     try {
       setLoad(true);
-
       const response = await axios.post(ApiEndPoints.GetNews);
-
-      console.log("response>>>>>", response);
-
       if (response?.data?.success == true) {
         setNewsData(response?.data?.result?.articles);
       } else {
@@ -56,11 +33,15 @@ const RecentNews = () => {
     }
   };
 
+  // const handleNewsClick = (url) => {
+  //   if (url) {
+  //     window.location.href = url;
+  //   }
+  // };
   const handleNewsClick = (url) => {
     if (url) {
-      window.location.href = url;
+      window.open(url, "_blank");
     }
-    // setShowModal(true);
   };
 
   const handleCloseModal = () => {

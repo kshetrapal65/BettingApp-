@@ -20,11 +20,13 @@ import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaChampagneGlasses } from "react-icons/fa6";
 import { apiCallNew } from "../../Network_Call/apiservices";
+import { getToken } from "../../Helper/Storage";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 export const OddsScreen = () => {
   const { key } = useParams();
+  const token = getToken();
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
   const [region, setRegion] = React.useState("us");
@@ -1517,8 +1519,17 @@ export const OddsScreen = () => {
   //     (total, market) => total + (market.winAmount || 0),
   //     0
   //   );
+
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
+
+    for (let item of cartData) {
+      if (!item.wager || item.wager <= 0) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+    }
+
     cartData?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
       formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
@@ -1709,8 +1720,7 @@ export const OddsScreen = () => {
             </Row>
 
             <Button
-              // onClick={SubmitPlaceBet}
-              // disabled={!token}
+              disabled={!token || cartData?.length === 0}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2028,6 +2038,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!moneylineMarket?.outcomes[0].price}
                               onClick={() =>
                                 handleSportClick({
                                   market:
@@ -2057,6 +2068,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!spreadMarket?.outcomes[0].price}
                               onClick={() =>
                                 handleSportClick({
                                   market: spreadMarket.key,
@@ -2088,6 +2100,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!totalsMarket?.outcomes[0].price}
                               onClick={() =>
                                 handleSportClick({
                                   market: totalsMarket.key,
@@ -2142,6 +2155,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!moneylineMarket?.outcomes[1].price}
                               onClick={() =>
                                 handleSportClick({
                                   market:
@@ -2171,6 +2185,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!spreadMarket?.outcomes[1].price}
                               onClick={() =>
                                 handleSportClick({
                                   market: spreadMarket?.key,
@@ -2201,6 +2216,7 @@ export const OddsScreen = () => {
                             <Button
                               variant="outline-secondary"
                               style={{ minWidth: "100px", minHeight: "62px" }}
+                              disabled={!totalsMarket?.outcomes[1].price}
                               onClick={() =>
                                 handleSportClick({
                                   market: totalsMarket.key,
@@ -2248,132 +2264,6 @@ export const OddsScreen = () => {
         </Col>
         <Col lg={4}>{BetSlip()}</Col>
       </Row>
-      {/* <Row className="mt-5 justify-content-around  ">
-        <Col className="bg-light p-4 rounded-5" lg={12}>
-          <Row>
-            <Col>
-              <h5>Recent Stories</h5>
-            </Col>
-            <Col className="text-end">
-              <h5 className="text-primary">
-                <span style={{ cursor: "pointer" }}>See All</span>
-              </h5>
-            </Col>
-          </Row>
-
-          <Row className="mt-3">
-            <Col lg={4} className="d-flex ">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/NFL-Pass-or-Play-Week-8.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-            <Col lg={4} className="d-flex">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/nfl-luck-rankings-picks.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-            <Col lg={4} className="d-flex">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/juan-soto-2.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-            <Col lg={4} className="d-flex">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-            <Col lg={4} className="d-flex">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-            <Col lg={4} className="d-flex">
-              <div className="me-3">
-                <Image
-                  style={{
-                    maxWidth: "100%",
-                    objectFit: "cover",
-                    aspectRatio: "1",
-                    borderRadius: "18px",
-                  }}
-                  src="https://images.actionnetwork.com/133x117/blog/2024/10/vikings-vs-rams-parlay.webp"
-                />
-              </div>
-              <div className="d-flex-column">
-                <h5 className="">NFL</h5>
-                <h6>NFL NFL Picks, Predictions Week 8: Expert</h6>
-                <p>Jacob Wayne • 4 hours ago</p>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col className="  text-end" lg={4}></Col>
-      </Row> */}
       <RecentStory />
     </Container>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import { apiCallNew } from "../../../Network_Call/apiservices";
 import ApiEndPoints from "../../../Network_Call/ApiEndPoints";
 import { PulseLoader } from "react-spinners";
@@ -7,24 +7,27 @@ import { PulseLoader } from "react-spinners";
 const BettingHistory = () => {
   const [betHistoryData, setBetHistoryData] = useState([]);
   const [load, setLoad] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemPerPage = 20;
 
   useEffect(() => {
-    getBetHistory();
-  }, []);
+    getBetHistory(page);
+  }, [page]);
 
-  const getBetHistory = async () => {
-    const payload = {
-      page: 2,
-    };
+  const getBetHistory = async (page) => {
+    const formData = new FormData();
+    formData.append("page", page - 1);
     try {
       setLoad(true);
       const response = await apiCallNew(
         "post",
-        payload,
+        formData,
         ApiEndPoints.BettingHistory
       );
       if (response.success === true) {
         setBetHistoryData(response.result);
+        setTotalCount(response.count);
         setLoad(false);
       } else {
         setLoad(false);
@@ -34,6 +37,11 @@ const BettingHistory = () => {
       setLoad(false);
     }
   };
+
+  const handlePageChange = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   return (
     <Container fluid className="p-4">
       {load && (
@@ -75,6 +83,36 @@ const BettingHistory = () => {
           ))}
         </tbody>
       </Table>
+      {/* Pagination Component */}
+      <Pagination className="mt-3 justify-content-center">
+        <Pagination.First
+          onClick={() => handlePageChange(1)}
+          disabled={page === 1}
+        />
+        <Pagination.Prev
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        />
+        {[...Array(Math.ceil(totalCount / itemPerPage)).keys()].map(
+          (pageIndex) => (
+            <Pagination.Item
+              key={pageIndex + 1}
+              active={pageIndex + 1 === page}
+              onClick={() => handlePageChange(pageIndex + 1)}
+            >
+              {pageIndex + 1}
+            </Pagination.Item>
+          )
+        )}
+        <Pagination.Next
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === Math.ceil(totalCount / itemPerPage)}
+        />
+        <Pagination.Last
+          onClick={() => handlePageChange(Math.ceil(totalCount / itemPerPage))}
+          disabled={page === Math.ceil(totalCount / itemPerPage)}
+        />
+      </Pagination>
     </Container>
   );
 };
