@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <BrowserRouter basename="/betting">
+      <BrowserRouter>
         <PublicRouter />
       </BrowserRouter>
     </>

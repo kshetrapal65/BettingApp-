@@ -1,7 +1,7 @@
 {
   "name": "betting",
   "version": "0.1.0",
-  "homepage": "http://173.212.250.62/betting",
+  "homepage": "https://betting.aercjbp.com/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",

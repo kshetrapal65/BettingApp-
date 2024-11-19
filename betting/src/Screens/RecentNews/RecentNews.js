@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Col, Image, Modal, Row } from "react-bootstrap";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import { PulseLoader } from "react-spinners";
+import axios from "axios";
+import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 
 const RecentNews = () => {
   const [newsData, setNewsData] = React.useState([]);
@@ -36,21 +38,13 @@ const RecentNews = () => {
   const getRecentNews = async () => {
     try {
       setLoad(true);
-      const headers = {
-        Upgrade: "HTTP/2.0",
-        Connection: "Upgrade",
-      };
-      const response = await fetch(
-        "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
 
-      if (response.ok) {
-        const data = await response.json();
-        setNewsData(data.articles);
+      const response = await axios.post(ApiEndPoints.GetNews);
+
+      console.log("response>>>>>", response);
+
+      if (response?.data?.success == true) {
+        setNewsData(response?.data?.result?.articles);
       } else {
         console.log("Failed to fetch news:", response.statusText);
       }
@@ -63,8 +57,10 @@ const RecentNews = () => {
   };
 
   const handleNewsClick = (url) => {
-    setSelectedUrl(url);
-    setShowModal(true);
+    if (url) {
+      window.location.href = url;
+    }
+    // setShowModal(true);
   };
 
   const handleCloseModal = () => {
