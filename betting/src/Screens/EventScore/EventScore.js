@@ -285,6 +285,7 @@ const sampleData = [
 
 export const EventScore = React.memo(() => {
   const [scoreData, setScoreData] = useState([]);
+  const [activeTab, setActiveTab] = useState("spreads,totals,h2h");
   const [marketkey, setMarketKey] = useState([]);
   const [propData, setPropData] = useState([]);
   const [markets, setMarket] = useState("player_assists");
@@ -304,7 +305,7 @@ export const EventScore = React.memo(() => {
   const event = location.state || {};
   const [sportData, setSportData] = React.useState([]);
 
-  console.log("eventess", event);
+  console.log("activeTab", activeTab);
   // console.log("sportData", sportData);
   // useEffect(() => {
   //   if (Object.keys(event).length !== 0) {
@@ -339,7 +340,7 @@ export const EventScore = React.memo(() => {
   useEffect(() => {
     fetchScore();
     fetchEventOdds();
-  }, [event]);
+  }, [event, activeTab]);
   useEffect(() => {
     fetchMarket();
     fetchProps();
@@ -350,7 +351,7 @@ export const EventScore = React.memo(() => {
       const response = await fetch(
         `${ApiEndPoints.Get_Market}${event?.sport_key}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -407,7 +408,7 @@ export const EventScore = React.memo(() => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=spreads,totals,h2h&oddsFormat=american`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${activeTab}&oddsFormat=american`,
         {
           method: "GET",
           headers: {
@@ -826,9 +827,43 @@ export const EventScore = React.memo(() => {
     );
   };
   const GameOdds1 = React.memo(({ data }) => {
-    const spreadMarket = data?.markets?.find((m) => m.key === "spreads");
-    const moneylineMarket = data?.markets?.find((m) => m.key === "h2h");
-    const totalsMarket = data?.markets?.find((m) => m.key === "totals");
+    const spreadMarket = data?.markets?.find(
+      // (m) => m.key === "spreads" || "spreads_h1"
+      (m) =>
+        [
+          "spreads",
+          "spreads_q1",
+          "spreads_q2",
+          "spreads_q3",
+          "spreads_q4",
+          "spreads_h1",
+          "spreads_h2",
+        ].includes(m.key)
+    );
+    const moneylineMarket = data?.markets?.find((m) =>
+      [
+        "h2h",
+        "h2h_h1",
+        "h2h_h2",
+        "h2h_q4",
+        "h2h_q3",
+        "h2h_q2",
+        "h2h_q1",
+      ].includes(m.key)
+    );
+    const totalsMarket = data?.markets?.find(
+      // (m) => m.key === "totals" || "totals_h1"
+      (m) =>
+        [
+          "totals_q1",
+          "totals_q2",
+          "totals_q3",
+          "totals_q4",
+          "totals_h1",
+          "totals_h2",
+          "totals",
+        ].includes(m.key)
+    );
 
     return (
       <Container className="p-4 ">
@@ -840,7 +875,7 @@ export const EventScore = React.memo(() => {
             Spread, Total, Moneyline
           </h7>
           <hr />
-          <OddsTabBar />
+          {OddsTabBar()}
           <hr />
           <Row className="text-center font-weight-bold text-muted">
             <Col className="fw-bold" xs={12} lg={4}>
@@ -1393,8 +1428,6 @@ export const EventScore = React.memo(() => {
     );
   };
   function OddsTabBar() {
-    const [activeTab, setActiveTab] = useState("game");
-
     const handleSelect = (key) => setActiveTab(key);
 
     return (
@@ -1403,13 +1436,13 @@ export const EventScore = React.memo(() => {
         onSelect={handleSelect}
         className="mb-2 odds-tab-bar border-bottom-0"
       >
-        <Tab eventKey="game" title="Game"></Tab>
-        <Tab eventKey="1h" title="1H"></Tab>
-        <Tab eventKey="2h" title="2H"></Tab>
-        <Tab eventKey="1q" title="1Q"></Tab>
-        <Tab eventKey="2q" title="2Q"></Tab>
-        <Tab eventKey="3q" title="3Q"></Tab>
-        <Tab eventKey="4q" title="4Q"></Tab>
+        <Tab eventKey="spreads,totals,h2h" title="Game"></Tab>
+        <Tab eventKey="h2h_h1,spreads_h1,totals_h1" title="1H"></Tab>
+        <Tab eventKey="h2h_h2,spreads_h2,totals_h2" title="2H"></Tab>
+        <Tab eventKey="h2h_q1,spreads_q1,totals_q1" title="1Q"></Tab>
+        <Tab eventKey="h2h_q2,totals_q2,spreads_q2" title="2Q"></Tab>
+        <Tab eventKey="h2h_q3,spreads_q3,totals_q3" title="3Q"></Tab>
+        <Tab eventKey="h2h_q4,spreads_q4,totals_q4" title="4Q"></Tab>
       </Tabs>
     );
   }
@@ -1715,12 +1748,17 @@ export const EventScore = React.memo(() => {
         <Col lg={8}>
           {/* <GameInfo game={gameData} /> */}
           <GameScoreCard />
-
           <GameOdds1 data={Fandualodds} />
           {PropOddsComparison()}
         </Col>
         <Col lg={4}>{BetSlip()}</Col>
       </Row>
+      {/* <Row>
+        <Col lg={8}>
+          
+        </Col>
+       
+      </Row> */}
     </Container>
   );
 });

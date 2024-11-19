@@ -4,6 +4,7 @@ import { apiCallNew } from "../Network_Call/apiservices";
 import { PulseLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ApiEndPoints from "../Network_Call/ApiEndPoints";
 
 const RecentStory = () => {
   const [newsData, setNewsData] = React.useState([]);
@@ -13,8 +14,11 @@ const RecentStory = () => {
   const [iframeError, setIframeError] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const league = "americanfootball_nfl_preseason";
+
   React.useEffect(() => {
     getRecentNews();
+    getTeams();
   }, []);
 
   // const getRecentNews = async () => {
@@ -61,24 +65,41 @@ const RecentStory = () => {
   //   }
   // };
 
+  // const getRecentNews = async () => {
+  //   try {
+  //     setLoad(true);
+
+  //     const response = await fetch(
+  //       "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setNewsData(data.articles);
+  //     } else {
+  //       console.log("Failed to fetch news:", response.statusText);
+  //     }
+
+  //     setLoad(false);
+  //   } catch (error) {
+  //     console.log("Error fetching news:", error);
+  //     setLoad(false);
+  //   }
+  // };
   const getRecentNews = async () => {
     try {
       setLoad(true);
-      const headers = {
-        Upgrade: "HTTP/2.0",
-        Connection: "Upgrade",
-      };
-      const response = await fetch(
-        "https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=d15e48e364304da9acd805c5c0a9a239",
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
 
-      if (response.ok) {
-        const data = await response.json();
-        setNewsData(data.articles);
+      const response = await axios.post(ApiEndPoints.GetNews);
+
+      if (response?.data?.success == true) {
+        setNewsData(response?.data?.result?.articles);
       } else {
         console.log("Failed to fetch news:", response.statusText);
       }
@@ -89,10 +110,33 @@ const RecentStory = () => {
       setLoad(false);
     }
   };
+  const getTeams = async () => {
+    try {
+      const response = await axios.get(
+        `https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?l=${league}`
+      );
+      console.log("Logo Response>>>>>", response);
+
+      if (response.data.teams) {
+        console.log(response.data.teams); // Array of team data
+        return response.data.teams.map((team) => ({
+          name: team.strTeam,
+          logo: team.strTeamBadge,
+        }));
+      } else {
+        console.log("No teams found");
+      }
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
 
   const handleNewsClick = (url) => {
-    setSelectedUrl(url);
-    setShowModal(true);
+    if (url) {
+      window.location.href = url;
+    }
+    // setSelectedUrl(url);
+    // setShowModal(true);
   };
 
   const handleCloseModal = () => {
@@ -119,7 +163,7 @@ const RecentStory = () => {
         </div>
       )}
 
-      {/* <Row className="mt-5 justify-content-around  ">
+      <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
@@ -209,8 +253,8 @@ const RecentStory = () => {
             />
           )}
         </Modal.Body>
-      </Modal> */}
-      <Row className="mt-5 justify-content-around  ">
+      </Modal>
+      {/* <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
@@ -335,7 +379,7 @@ const RecentStory = () => {
           </Row>
         </Col>
         <Col className="  text-end" lg={4}></Col>
-      </Row>
+      </Row> */}
     </>
   );
 };

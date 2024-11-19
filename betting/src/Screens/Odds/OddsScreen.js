@@ -1533,7 +1533,7 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
       formData.append(`odds[${index}][loss_amount]`, 0);
       formData.append(`odds[${index}][sport_key]`, item.key);
-      formData.append(`odds[${index}][sport_id]`, item.id);
+      formData.append(`odds[${index}][sport_id]`, item.key);
       formData.append(`odds[${index}][sport_name]`, item.title);
     });
 
@@ -1912,7 +1912,7 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col md={4}>
+          {/* <Col md={4}>
             <Form.Group controlId="secondSelect">
               <Form.Select
                 className="fw-bold"
@@ -1939,7 +1939,7 @@ export const OddsScreen = () => {
                 </option>
               </Form.Select>
             </Form.Group>
-          </Col>
+          </Col> */}
           {/*<Col md={4}>
             <Form.Group controlId="secondSelect">
               <Form.Select
@@ -1974,6 +1974,7 @@ export const OddsScreen = () => {
               const fanduelBookmaker = game?.bookmakers.find(
                 (bookmaker) => bookmaker.key === "fanduel"
               );
+
               const moneylineMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "h2h"
               );
@@ -2041,7 +2042,6 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
@@ -2068,7 +2068,6 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
@@ -2100,13 +2099,10 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
-                              {totalsMarket?.outcomes[0].point > 0
-                                ? `o${totalsMarket?.outcomes[0].point}`
-                                : `u${totalsMarket?.outcomes[0].point}`}
+                              o{totalsMarket?.outcomes[0].point}
                               <br />(
                               {totalsMarket?.outcomes[0].price > 0
                                 ? `+${totalsMarket?.outcomes[0].price}`
@@ -2160,7 +2156,6 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
@@ -2187,7 +2182,6 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
@@ -2218,13 +2212,10 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
                                 })
                               }
                             >
-                              {totalsMarket?.outcomes[1].point > 0
-                                ? `o${totalsMarket?.outcomes[1].point}`
-                                : `u${totalsMarket?.outcomes[1].point}`}
+                              u{totalsMarket?.outcomes[1].point}
                               <br />(
                               {totalsMarket?.outcomes[1].price > 0
                                 ? `+${totalsMarket?.outcomes[1].price}`
