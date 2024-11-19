@@ -641,13 +641,22 @@ export const EventScore = React.memo(() => {
 
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
+    for (let item of selectedMarkets) {
+      if (!item.wager || item.wager <= 0) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+    }
     selectedMarkets?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
       formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
       formData.append(`odds[${index}][sport_name]`, item.team);
       formData.append(`odds[${index}][outcomes_odds_point1]`, item.point);
       formData.append(`odds[${index}][amount]`, item.wager);
-      formData.append(`odds[${index}][win_amount]`, item.winAmount.toFixed(2));
+      formData.append(
+        `odds[${index}][win_amount]`,
+        item?.winAmount?.toFixed(2)
+      );
       formData.append(`odds[${index}][outcomes_odds_price2]`, 0);
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
       formData.append(`odds[${index}][sport_key]`, item.key);
@@ -1280,7 +1289,7 @@ export const EventScore = React.memo(() => {
 
             <Button
               onClick={SubmitPlaceBet}
-              disabled={!token}
+              disabled={!token || selectedMarkets?.length === 0}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
