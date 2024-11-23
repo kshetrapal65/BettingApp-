@@ -14,6 +14,7 @@ const sports = SportList;
 const Home = () => {
   const [sport, setSport] = React.useState("americanfootball_cfl");
   const [event, setEvent] = React.useState([]);
+  const [count, setCount] = React.useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +24,8 @@ const Home = () => {
   const fetchEvent = async () => {
     try {
       const response = await fetch(
-        `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
+        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
+        `https://api.the-odds-api.com/v4/sports/${sport}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}`,
         {
           method: "GET",
           headers: {
@@ -192,6 +194,7 @@ const Home = () => {
   const handleSport = (e) => {
     setSport(e.target.value);
   };
+
   const teamImages = {
     "Miami Dolphins":
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjkjtDn-Bjqfksx8JmTF4S6hTMo2pU3EpAOg&s",
@@ -822,6 +825,46 @@ const Home = () => {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3pRfVuTEKao7DsRFlN-e6W6FxU3rHBrSUuw&s",
     "UC Riverside Highlanders":
       "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/UC_Riverside_Highlanders_logo.svg/1200px-UC_Riverside_Highlanders_logo.svg.png",
+    "Chicago Bulls":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS671ygHQI-Podn72Qg7pLtY5BHTUzN28tdDA&s",
+    "Milwaukee Bucks":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Milwaukee_Bucks_logo.svg/640px-Milwaukee_Bucks_logo.svg.png",
+    "Hawaii Rainbow Warriors":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Hawaii_Warriors_logo.svg/800px-Hawaii_Warriors_logo.svg.png",
+    "New Mexico Lobos":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqG1U4rqKaY-V-n4OGx1h8Trw90zShFZ8z8w&s",
+    "Real Madrid":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/800px-Real_Madrid_CF.svg.png",
+    "Houston Rockets":
+      "https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Rockets.svg",
+    "Indiana Pacers":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKNdCf-DjicbfMMX_LW4yxqIS0UnC-BiaSfA&s",
+    "Portland Trail Blazers":
+      "https://wp.usatodaysports.com/wp-content/uploads/sites/90/2019/04/unknown-2.jpeg",
+    "Pittsburgh Penguins":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Pittsburgh_Penguins_logo_%282016%29.svg/800px-Pittsburgh_Penguins_logo_%282016%29.svg.png",
+    "Tampa Bay Lightning":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd-M5TVKRL8h9SaUuqTwyhnGzK8yfyaR10cQ&s",
+    "Ottawa Senators":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSYIZ8oEIJVBIrId4aMhWobNy8J8jWEVagQ&s",
+    "Edmonton Oilers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Logo_Edmonton_Oilers.svg/1200px-Logo_Edmonton_Oilers.svg.png",
+    "Florida Panthers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Florida_Panthers_2016_logo.svg/640px-Florida_Panthers_2016_logo.svg.png",
+    "St Louis Blues":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo5pJQj7sb6uXvfbis71NEOMfIzYEVWfAHGQ&s",
+    "Minnesota Wild":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfUGU5usevn3SatHJqqHug1_x68TIPBLUWKw&s",
+    "Chicago Blackhawks":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/Chicago_Blackhawks_logo.svg/1200px-Chicago_Blackhawks_logo.svg.png",
+    "Anaheim Ducks":
+      "https://upload.wikimedia.org/wikipedia/en/9/95/Anaheim_Ducks_logo_2024.svg",
+    "Calgary Flames":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaRJtw1XErBo2iQHfoiAy56khTHsPu712h0w&s",
+    "New York Islanders":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/4/42/Logo_New_York_Islanders.svg/1200px-Logo_New_York_Islanders.svg.png",
+    "Winnipeg Jets":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPLGb0qNd_PLRkUjugcqbQK743bBZk9xkXqA&s",
   };
   return (
     <>
@@ -1314,7 +1357,7 @@ const Home = () => {
               </div>
             </Col> */}
             <Col lg={10}>
-              {event.length > 0 ? (
+              {/* {event.length > 0 ? (
                 <div
                   style={{
                     height: "220px",
@@ -1343,7 +1386,7 @@ const Home = () => {
                       onClick={() => navigate("/event-score", { state: event })}
                     >
                       <div style={{ textAlign: "center" }}>
-                        {/* Home Team Image and Name */}
+                         
                         <div
                           style={{
                             display: "flex",
@@ -1354,11 +1397,12 @@ const Home = () => {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
+                            backgroundColor: "red",
                           }}
                         >
                           <img
                             src={teamImages[event.home_team]}
-                            // alt={`${event.home_team} logo`}
+                             
                             style={{
                               width: "30px",
                               height: "30px",
@@ -1378,20 +1422,28 @@ const Home = () => {
                               ? event.home_team
                               : "Not Available"}
                           </p>
+                          {event?.completed === true ? (
+                            <span className="text-muted fw-bold">
+                              {" "}
+                              ({event?.scores[0]?.score})
+                            </span>
+                          ) : (
+                            ""
+                          )}
                         </div>
 
                         <span style={{ fontSize: "12px", color: "white" }}>
                           vs
                         </span>
 
-                        {/* Away Team Image and Name */}
+                         
                         <div
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "start",
+                            justifyContent: "space-between",
                             gap: "8px",
-                            maxWidth: "180px",
+                            maxWidth: "300px",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
@@ -1399,7 +1451,7 @@ const Home = () => {
                         >
                           <img
                             src={teamImages[event.away_team]}
-                            // alt={`${event.away_team} logo`}
+                           
                             style={{
                               width: "30px",
                               height: "30px",
@@ -1419,10 +1471,19 @@ const Home = () => {
                               ? event.away_team
                               : "Not Available"}
                           </p>
+
+                          {event?.completed === true ? (
+                            <span className="text-muted fw-bold">
+                              {" "}
+                              ({event?.scores[1]?.score})
+                            </span>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       </div>
 
-                      {/* Event Time */}
+                      
                       <p
                         style={{
                           textAlign: "start",
@@ -1442,6 +1503,93 @@ const Home = () => {
                 <p style={{ textAlign: "center", color: "#666" }}>
                   No events available.
                 </p>
+              )} */}
+              {event.length > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    overflowX: "scroll",
+                    overflowY: "hidden",
+                    padding: "10px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {event.map((eventItem) => (
+                    <Card
+                      key={eventItem.id}
+                      className="shadow-sm"
+                      style={{
+                        minWidth: "300px",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        navigate("/event-score", { state: eventItem })
+                      }
+                    >
+                      <Card.Body>
+                        {/* Teams */}
+                        <div className="text-center">
+                          {/* Home Team */}
+                          <div className="d-flex align-items-center mb-2">
+                            <img
+                              src={teamImages[eventItem.home_team]}
+                              alt="Home Team Logo"
+                              className="rounded-circle"
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
+                              {eventItem.home_team || "Not Available"}
+                            </p>
+                            {eventItem?.completed && (
+                              <span className="text-muted fw-bold ms-2">
+                                ({eventItem?.scores[0]?.score})
+                              </span>
+                            )}
+                          </div>
+
+                          <span className="text-muted fs-6">vs</span>
+
+                          {/* Away Team */}
+                          <div className="d-flex align-items-center mt-2">
+                            <img
+                              src={teamImages[eventItem.away_team]}
+                              alt="Away Team Logo"
+                              className="rounded-circle"
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
+                              {eventItem.away_team || "Not Available"}
+                            </p>
+                            {eventItem?.completed && (
+                              <span className="text-muted fw-bold ms-2">
+                                ({eventItem?.scores[1]?.score})
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Event Time */}
+                        <p className="text-start text-muted small mt-3">
+                          {moment(eventItem.commence_time).format(
+                            "ddd MM/DD, h:mm A"
+                          )}
+                        </p>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-muted">No events available.</p>
               )}
             </Col>
           </Row>
