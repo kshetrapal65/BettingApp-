@@ -94,7 +94,10 @@ const Header = () => {
                 <ul className="htmlCss-sub-menu sub-menu">
                   {data?.map((group, index) => (
                     <li
-                      onClick={() => navigate(`/odds/${group.key}`)}
+                      onClick={() => {
+                        navigate(`/odds/${group.key}`);
+                        toggleDrawer();
+                      }}
                       key={index}
                     >
                       <a href="#">{group.title}</a>
@@ -117,14 +120,29 @@ const Header = () => {
 
               {showHtmlCssSubMenu && (
                 <ul className="htmlCss-sub-menu sub-menu">
-                  <li onClick={() => navigate(`/odds-calculater`)}>
+                  <li
+                    onClick={() => {
+                      navigate(`/odds-calculater`);
+                      toggleDrawer();
+                    }}
+                  >
                     <a href="#">Odds Calculator</a>
                   </li>
-                  <li onClick={() => navigate(`/parlay-calculater`)}>
+                  <li
+                    onClick={() => {
+                      navigate(`/parlay-calculater`);
+                      toggleDrawer();
+                    }}
+                  >
                     <a href="#">Parlay Calculator</a>
                   </li>
                 </ul>
               )}
+            </li>
+            <li onClick={() => navigate("/betting-history")}>
+              <a onClick={toggleDrawer} href="#">
+                Betting History
+              </a>
             </li>
             <li>
               <a onClick={toggleDrawer} href="#">
@@ -140,7 +158,10 @@ const Header = () => {
             {token ? (
               <li
                 className="username-main"
-                onClick={() => navigate("/profile")}
+                onClick={() => {
+                  navigate("/profile");
+                  toggleDrawer();
+                }}
               >
                 <span className="username">{formatCapital(userName)}</span>
               </li>

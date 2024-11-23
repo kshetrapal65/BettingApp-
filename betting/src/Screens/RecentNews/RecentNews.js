@@ -4,6 +4,7 @@ import { apiCallNew } from "../../Network_Call/apiservices";
 import { PulseLoader } from "react-spinners";
 import axios from "axios";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
+import "./recentnew.css";
 
 const RecentNews = () => {
   const [newsData, setNewsData] = React.useState([]);
@@ -65,7 +66,7 @@ const RecentNews = () => {
         </div>
       )}
 
-      <Row className="mt-2 justify-content-around  ">
+      <Row className="mt-2 justify-content-around pt-0 p-4">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
@@ -94,7 +95,9 @@ const RecentNews = () => {
                     />
                   </div>
                   <div className="d-flex flex-column ms-3" style={{ flex: 1 }}>
-                    <h5 className="fw-bold">{item.title}</h5>
+                    <div className="title-container">
+                      <h5 className="titless">{item.title}</h5>
+                    </div>
                     <p
                       style={{
                         display: "-webkit-box",
@@ -102,6 +105,9 @@ const RecentNews = () => {
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#6c757d",
                       }}
                     >
                       {item.description}

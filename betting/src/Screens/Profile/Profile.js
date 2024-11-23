@@ -242,14 +242,14 @@ const Profile = () => {
                       </span>
                       <span onClick={handleBankShow}>Bank Information</span>
                     </div>
-                    <div className="option">
+                    {/* <div className="option">
                       <span className="option-icon">
                         <FaHistory />
                       </span>
                       <span onClick={() => navigate("/betting-history")}>
                         Betting History
                       </span>
-                    </div>
+                    </div> */}
                     <div className="option">
                       <span className="option-icon">
                         <RiLogoutBoxLine />
