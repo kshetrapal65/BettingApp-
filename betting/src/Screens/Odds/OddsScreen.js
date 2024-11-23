@@ -1701,27 +1701,41 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col md={4}>
-            <Form.Group onChange={handleBookmaker} controlId="secondSelect">
-              <Form.Label className="fw-bold">Bookmakers</Form.Label>
-              <Form.Select
-                className=""
-                value={Bookmaker}
-                onChange={(e) => setMarket(e.target.value)}
-              >
-                {bookmakers?.map((bookmaker, index) => (
-                  <option className="fw-bold" key={index} value={bookmaker.key}>
-                    {bookmaker.title}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
+          {data.length > 0 && (
+            <Col md={4}>
+              <Form.Group onChange={handleBookmaker} controlId="secondSelect">
+                <Form.Label className="fw-bold">Bookmakers</Form.Label>
+                <Form.Select
+                  className=""
+                  value={Bookmaker}
+                  onChange={(e) => setMarket(e.target.value)}
+                >
+                  {bookmakers?.map((bookmaker, index) => (
+                    <option
+                      className="fw-bold"
+                      key={index}
+                      value={bookmaker.key}
+                    >
+                      {bookmaker.title}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          )}
         </Row>
       </Form>
       <Row className="mt-3">
         <Col className="text-start" lg={8}>
           <div className="odds-table">
+            {data.length === 0 && (
+              <div
+                className="text-center"
+                style={{ position: "relative", top: "30%" }}
+              >
+                <p className="text-muted">No events available.</p>
+              </div>
+            )}
             {data.map((game) => {
               const fanduelBookmaker = game?.bookmakers.find(
                 (bookmaker) => bookmaker.key === Bookmaker
