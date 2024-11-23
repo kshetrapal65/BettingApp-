@@ -865,6 +865,28 @@ const Home = () => {
       "https://upload.wikimedia.org/wikipedia/en/thumb/4/42/Logo_New_York_Islanders.svg/1200px-Logo_New_York_Islanders.svg.png",
     "Winnipeg Jets":
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPLGb0qNd_PLRkUjugcqbQK743bBZk9xkXqA&s",
+    "Hawaii Rainbow Warriors":
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Hawaii_Warriors_logo.svg/800px-Hawaii_Warriors_logo.svg.png",
+    "New Mexico Lobos":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqG1U4rqKaY-V-n4OGx1h8Trw90zShFZ8z8w&s",
+    "Washington Wizards":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Washington_Wizards_logo.svg/1200px-Washington_Wizards_logo.svg.png",
+    "Chicago Bulls":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/6/67/Chicago_Bulls_logo.svg/1200px-Chicago_Bulls_logo.svg.png",
+    "Atlanta Hawks":
+      "https://upload.wikimedia.org/wikipedia/en/2/24/Atlanta_Hawks_logo.svg",
+    "Houston Rockets":
+      "https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Rockets.svg",
+    "Portland Trail Blazers":
+      "https://upload.wikimedia.org/wikipedia/en/2/21/Portland_Trail_Blazers_logo.svg",
+    "Milwaukee Bucks":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Milwaukee_Bucks_logo.svg/640px-Milwaukee_Bucks_logo.svg.png",
+    "Indiana Pacers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Indiana_Pacers.svg/1200px-Indiana_Pacers.svg.png",
+    "Sacramento Kings":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/SacramentoKings.svg/800px-SacramentoKings.svg.png",
+    "Los Angeles Clippers":
+      "https://upload.wikimedia.org/wikipedia/en/thumb/e/ed/Los_Angeles_Clippers_%282024%29.svg/1200px-Los_Angeles_Clippers_%282024%29.svg.png",
   };
   return (
     <>

@@ -46,8 +46,6 @@ const Profile = () => {
   const [load, setLoad] = useState(false);
   const inputFile = useRef(null);
 
-  console.log("bankData", bankData);
-
   React.useEffect(() => {
     getProfile();
     getBankInfo();
