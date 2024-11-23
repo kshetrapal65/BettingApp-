@@ -47,7 +47,6 @@ export const OddsScreen = () => {
     active: true,
     has_outrights: false,
   });
-
   const totalWager = cartData.reduce(
     (total, market) => total + (market.wager || 0),
     0
@@ -1524,7 +1523,11 @@ export const OddsScreen = () => {
     const formData = new FormData();
 
     for (let item of cartData) {
-      if (!item.wager || item.wager <= 0) {
+      if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+      if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
         toast.error(`Please enter wager amount`);
         return;
       }
@@ -1544,9 +1547,19 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
       formData.append(`odds[${index}][loss_amount]`, 0);
       formData.append(`odds[${index}][sport_key]`, item.key);
-      formData.append(`odds[${index}][sport_id]`, item.key);
+      formData.append(`odds[${index}][sport_id]`, item.id);
       formData.append(`odds[${index}][sport_name]`, item.title);
     });
+    formData.append(`bet_type`, activeTabs);
+    formData.append(
+      `total_amount`,
+      activeTabs == "Straights" ? totalWager?.toFixed(2) : parlayBet
+    );
+    formData.append(
+      `bet_win_amount`,
+      activeTabs == "Straights" ? totalPays?.toFixed(2) : parlayResult
+    );
+    formData.append(`bet_loss_amount`, 0);
 
     try {
       setLoad(true);
@@ -1559,6 +1572,8 @@ export const OddsScreen = () => {
         toast.success(response.msg);
         setLoad(false);
         setCartData([]);
+        setParlayBet(0);
+        setParlayResult(0);
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -1590,15 +1605,17 @@ export const OddsScreen = () => {
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
-          <Col xs="auto">
-            <Tabs
-              className="mb-2 odds-tab-bar-new border-bottom-0"
-              onSelect={handleSelect}
-            >
-              <Tab eventKey="Straights" title="Straights"></Tab>
-              <Tab eventKey="Parlay" title="Parlay"></Tab>
-            </Tabs>
-          </Col>
+          {cartData?.length == 2 && (
+            <Col xs="auto">
+              <Tabs
+                className="mb-2 odds-tab-bar-new border-bottom-0"
+                onSelect={handleSelect}
+              >
+                <Tab eventKey="Straights" title="Straights"></Tab>
+                <Tab eventKey="Parlay" title="Parlay"></Tab>
+              </Tabs>
+            </Col>
+          )}
           <Col xs="auto">
             <Button
               onClick={() => setCartData([])}
@@ -1855,7 +1872,7 @@ export const OddsScreen = () => {
             </Row>
 
             <Button
-              onClick={() => toast.success("Comming soon...")}
+              onClick={SubmitPlaceBet}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -1997,6 +2014,7 @@ export const OddsScreen = () => {
               if (!fanduelBookmaker) return null;
               return (
                 <div key={game.id} className="game-row">
+                  {console.log("game", game.id)}
                   <Row className="mb-4">
                     <Col lg={5}>
                       <div className="team-info d-flex align-items-center">
@@ -2053,6 +2071,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2080,6 +2099,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2112,6 +2132,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2170,6 +2191,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2197,6 +2219,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >
@@ -2228,6 +2251,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
+                                  id: game?.id,
                                 })
                               }
                             >

@@ -1119,7 +1119,11 @@ export const EventScore = React.memo(() => {
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
     for (let item of selectedMarkets) {
-      if (!item.wager || item.wager <= 0) {
+      if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+      if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
         toast.error(`Please enter wager amount`);
         return;
       }
@@ -1141,6 +1145,16 @@ export const EventScore = React.memo(() => {
       formData.append(`odds[${index}][sport_name]`, item?.title);
       formData.append(`odds[${index}][loss_amount]`, 0);
     });
+    formData.append(`bet_type`, activeTabs);
+    formData.append(
+      `total_amount`,
+      activeTabs == "Straights" ? totalWager?.toFixed(2) : parlayBet
+    );
+    formData.append(
+      `bet_win_amount`,
+      activeTabs == "Straights" ? totalPays?.toFixed(2) : parlayResult
+    );
+    formData.append(`bet_loss_amount`, 0);
 
     try {
       setLoad(true);
@@ -1153,6 +1167,8 @@ export const EventScore = React.memo(() => {
         toast.success(response.msg);
         setLoad(false);
         setSelectedMarkets([]);
+        setParlayBet(0);
+        setParlayResult(0);
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -1672,15 +1688,17 @@ export const EventScore = React.memo(() => {
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
-          <Col xs="auto">
-            <Tabs
-              className="mb-2 odds-tab-bar-new border-bottom-0"
-              onSelect={handleSelect}
-            >
-              <Tab eventKey="Straights" title="Straights"></Tab>
-              <Tab eventKey="Parlay" title="Parlay"></Tab>
-            </Tabs>
-          </Col>
+          {selectedMarkets?.length == 2 && (
+            <Col xs="auto">
+              <Tabs
+                className="mb-2 odds-tab-bar-new border-bottom-0"
+                onSelect={handleSelect}
+              >
+                <Tab eventKey="Straights" title="Straights"></Tab>
+                <Tab eventKey="Parlay" title="Parlay"></Tab>
+              </Tabs>
+            </Col>
+          )}
           <Col xs="auto">
             <Button
               onClick={() => setSelectedMarkets([])}
@@ -1937,7 +1955,7 @@ export const EventScore = React.memo(() => {
             </Row>
 
             <Button
-              onClick={() => toast.success("Comming soon...")}
+              onClick={SubmitPlaceBet}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"

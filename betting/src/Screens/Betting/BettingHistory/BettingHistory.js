@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import { apiCallNew } from "../../../Network_Call/apiservices";
 import ApiEndPoints from "../../../Network_Call/ApiEndPoints";
@@ -50,7 +50,65 @@ const BettingHistory = () => {
         </div>
       )}
       <h4 className="fw-bold">Betting History</h4>
-      <Table striped bordered hover responsive className="mt-1 ">
+      <Table striped bordered hover responsive className="mt-1">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Bet Type</th> {/* New Column for Bet Type */}
+            <th>Sport</th>
+            <th>Market</th>
+            <th>Amount</th>
+            <th>Win Amount</th>
+            <th>Bet Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {betHistoryData?.length === 0 && (
+            <tr className="p-5">
+              <td colSpan={8} className="text-center">
+                No Data Found
+              </td>
+            </tr>
+          )}
+          {betHistoryData?.map((bet, index) => (
+            <React.Fragment key={bet.id}>
+              {bet.bet_detail?.map((detail, detailIndex) => (
+                <tr key={detail.id}>
+                  {detailIndex === 0 && (
+                    <>
+                      <td rowSpan={bet.bet_detail.length}>{index + 1}</td>
+                      <td rowSpan={bet.bet_detail.length}>{bet.bet_type}</td>
+                    </>
+                  )}
+                  <td>{detail.sport_name}</td>
+                  <td>{detail.market_key}</td>
+                  {bet.bet_type === "Parlay" && detailIndex === 0 ? (
+                    <>
+                      <td rowSpan={bet.bet_detail.length}>
+                        {bet.total_amount}
+                      </td>
+                      <td rowSpan={bet.bet_detail.length}>
+                        {bet.bet_win_amount}
+                      </td>
+                    </>
+                  ) : bet.bet_type !== "Parlay" ? (
+                    <>
+                      <td>{detail.amount}</td>
+                      <td>{detail.win_amount}</td>
+                    </>
+                  ) : null}
+
+                  <td>{detail.bet_status}</td>
+                  <td>{new Date(detail.created_at).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </Table>
+
+      {/* <Table striped bordered hover responsive className="mt-1 ">
         <thead>
           <tr>
             <th>No.</th>
@@ -82,7 +140,7 @@ const BettingHistory = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </Table> */}
       {/* Pagination Component */}
       <Pagination className="mt-3 justify-content-center">
         <Pagination.First
