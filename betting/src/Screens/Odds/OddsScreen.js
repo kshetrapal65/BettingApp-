@@ -29,7 +29,7 @@ export const OddsScreen = () => {
   const token = getToken();
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
-  const [region, setRegion] = React.useState("us");
+
   const [data, setData] = React.useState([]);
   const [cartData, setCartData] = useState(() => {
     const storedMarkets = localStorage.getItem("cartData");
@@ -38,6 +38,8 @@ export const OddsScreen = () => {
   const [activeTabs, setActiveTabs] = React.useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
+  const [bookmakers, setBookmakers] = React.useState([]);
+  const [Bookmaker, setBookmaker] = React.useState();
   const [load, setLoad] = React.useState(false);
   const [sportData, setSportData] = React.useState({
     key: "americanfootball_nfl",
@@ -56,19 +58,11 @@ export const OddsScreen = () => {
     (total, market) => total + (market.winAmount || 0),
     0
   );
+  console.log("BOOKMAKERS", bookmakers);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
-  // useEffect(() => {
-  //   const savedCartData = localStorage.getItem("cartData");
-  //   if (savedCartData) {
-  //     setCartData(JSON.parse(savedCartData));
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   localStorage.setItem("cartData", JSON.stringify(cartData));
-  // }, [cartData]);
 
   useEffect(() => {
     if (activeTabs === "Parlay") {
@@ -1179,7 +1173,18 @@ export const OddsScreen = () => {
   useEffect(() => {
     fetchEvent();
   }, [sport]);
-
+  useEffect(() => {
+    if (data?.[0]?.bookmakers) {
+      const bookmakerKeysAndTitles = data[0].bookmakers.map((bookmaker) => ({
+        key: bookmaker.key,
+        title: bookmaker.title,
+      }));
+      setBookmakers(bookmakerKeysAndTitles);
+    }
+  }, [data]);
+  const handleBookmaker = (e) => {
+    setBookmaker(e.target.value);
+  };
   const handleSelect = (key) => {
     setActiveTabs(key);
   };
@@ -1231,7 +1236,7 @@ export const OddsScreen = () => {
       if (price) {
         price = convertToDecimalOdds(price); // Convert the odds to decimal format
       }
-      console.log("Converted Price:", price);
+
       return acc * (price || 1); // Multiply the accumulated odds with the current odds
     }, 1);
 
@@ -1241,283 +1246,6 @@ export const OddsScreen = () => {
     // Set the result to the state with 2 decimal points
     setParlayResult(result2.toFixed(2));
   };
-
-  // const BetSlip = () => {
-  //   const totalWager = cartData.reduce(
-  //     (total, market) => total + (market.wager || 0),
-  //     0
-  //   );
-
-  //   const totalPays = cartData.reduce(
-  //     (total, market) => total + (market.winAmount || 0),
-  //     0
-  //   );
-
-  //   return (
-  //     <Container className="border  rounded p-4">
-  //       <Row className="d-flex justify-content-between align-items-center mb-3">
-  //         <Col xs="auto">
-  //           <h5 className="mb-0">
-  //             Betslip{" "}
-  //             <Badge
-  //               bg="success"
-
-  //             >
-  //               {cartData.length}
-  //             </Badge>
-  //           </h5>
-  //         </Col>
-
-  //       </Row>
-
-  //       <Row className="d-flex justify-content-between align-items-center mb-2">
-  //         <Col xs="auto">
-
-  //           <Tabs
-  //             className="mb-2 odds-tab-bar-new border-bottom-0"
-  //             onSelect={handleSelect}
-  //           >
-  //             <Tab eventKey="Straights" title="Straights"></Tab>
-  //             <Tab eventKey="Parlay" title="Parlay"></Tab>
-  //           </Tabs>
-  //         </Col>
-  //         <Col xs="auto">
-  //           <Button
-  //             onClick={() => setCartData([])}
-  //             variant="link"
-  //             size="sm"
-  //             className="text-danger p-0"
-  //           >
-  //             Clear All
-  //           </Button>
-  //         </Col>
-  //       </Row>
-
-  //       {activeTabs === "Straights" ? (
-  //         <>
-  //           <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
-  //             {cartData?.length === 0 && (
-  //               <p className="text-center">No bets added</p>
-  //             )}
-
-  //             {cartData?.map((market, index) => (
-  //               <Card key={index} className="mb-2">
-  //                 <Card.Body>
-  //                   <Row className="d-flex justify-content-between align-items-start">
-  //                     <Col xs={12} md={12} className="p-0 text-end">
-  //                       <MdDelete
-  //                         size={20}
-  //                         style={{ cursor: "pointer" }}
-  //                         onClick={() => handleRemoveMarket(index)}
-  //                       />
-  //                     </Col>
-  //                     <Col xs="auto" className=" ">
-  //                       <span className="fw-bold">{market?.team}</span>
-  //                       <span className="fw-bold"> {market?.point}</span>
-  //                       <span className="text-muted "> ({market?.price})</span>
-  //                     </Col>
-  //                   </Row>
-  //                   <Card.Text className="fw-bold mb-1">
-  //                     {market?.market == "h2h" ? "Moneyline" : market?.market}
-  //                   </Card.Text>
-
-  //                   {/* Wager Section */}
-  //                   <Row className="mt-2">
-  //                     <Col>
-  //                       <div className="d-flex flex-column">
-  //                         <span>Wager</span>
-  //                         <input
-  //                           type="text"
-  //                           placeholder="0.00"
-  //                           className="form-control"
-  //                           value={market.wager || ""}
-  //                           onChange={(e) =>
-  //                             handleWagerChange(
-  //                               index,
-  //                               parseFloat(e.target.value) || 0
-  //                             )
-  //                           }
-  //                         />
-  //                       </div>
-  //                     </Col>
-  //                     <Col>
-  //                       <div className="d-flex flex-column">
-  //                         <span>To Win</span>
-  //                         <input
-  //                           placeholder="0.00"
-  //                           className="form-control"
-  //                           value={market.winAmount || ""}
-  //                           readOnly
-  //                         />
-  //                       </div>
-  //                     </Col>
-  //                   </Row>
-  //                 </Card.Body>
-  //               </Card>
-  //             ))}
-  //           </div>
-
-  //           <Row className="mt-2 mb-2">
-  //             <Col xs={6}>
-  //               <h6>Cash Wager:</h6>
-  //             </Col>
-  //             <Col xs={6} className="text-end">
-  //               <h6>${totalWager.toFixed(2)}</h6>
-  //             </Col>
-  //           </Row>
-  //           <Row className="mt-2 mb-4">
-  //             <Col xs={6}>
-  //               <h6>Pays:</h6>
-  //             </Col>
-  //             <Col xs={6} className="text-end">
-  //               <h6>${totalPays.toFixed(2)}</h6>
-  //             </Col>
-  //           </Row>
-  //           <Button
-  //             variant="#155236"
-  //             style={{ backgroundColor: "#155236", color: "white" }}
-  //             size="lg"
-  //             className="w-100"
-  //             onClick={() => toast.success("comming soon...")}
-  //           >
-  //             Bet Now
-  //           </Button>
-  //         </>
-  //       ) : (
-  //         <>
-  //           <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
-  //             {cartData?.length === 0 && (
-  //               <p className="text-center">No bets added</p>
-  //             )}
-  //             {cartData?.length > 0 && (
-  //               <Row className="mt-2 mb-2">
-  //                 <Col>
-  //                   <div className="d-flex flex-column">
-  //                     <span>Wager</span>
-  //                     <input
-  //                       type="text"
-  //                       placeholder="0.00"
-  //                       className="form-control"
-  //                       value={parlayBet}
-  //                       onChange={(e) => setParlayBet(e.target.value)}
-  //                     />
-  //                   </div>
-  //                 </Col>
-  //                 <Col>
-  //                   <div className="d-flex flex-column">
-  //                     <span>To Win</span>
-  //                     <input
-  //                       placeholder="0.00"
-  //                       className="form-control"
-  //                       value={parlayResult}
-  //                       readOnly
-  //                     />
-  //                   </div>
-  //                 </Col>
-  //               </Row>
-  //             )}
-
-  //             {cartData?.map((market, index) => (
-  //               <Card key={index} className="mb-2">
-  //                 <Card.Body>
-  //                   <Row className="d-flex justify-content-between align-items-start">
-  //                     <Col xs={12} md={12} className="p-0 text-end">
-  //                       <MdDelete
-  //                         size={20}
-  //                         style={{ cursor: "pointer" }}
-  //                         onClick={() => handleRemoveMarket(index)}
-  //                       />
-  //                     </Col>
-  //                     <Col xs="auto" className=" ">
-  //                       <span className="fw-bold">{market?.team}</span>
-  //                       <span className="fw-bold"> {market?.point}</span>
-  //                       <span className="text-muted "> ({market?.price})</span>
-  //                     </Col>
-  //                   </Row>
-  //                   {/* <Card.Text className="fw-bold mb-1">
-  //                     {market?.market == "h2h" ? "Moneyline" : market?.market}
-  //                   </Card.Text> */}
-
-  //                   {/* Wager Section */}
-  //                   <Row className="mt-2">
-  //                     {market?.market !== "h2h" && (
-  //                       <Col>
-  //                         <div className="d-flex flex-column">
-  //                           <span>
-  //                             {" "}
-  //                             {market?.market == "h2h"
-  //                               ? "Moneyline"
-  //                               : market?.market}
-  //                           </span>
-  //                           <input
-  //                             type="text"
-  //                             placeholder="0.00"
-  //                             className="form-control"
-  //                             value={market.point || ""}
-  //                             readOnly
-  //                           />
-  //                         </div>
-  //                       </Col>
-  //                     )}
-
-  //                     <Col>
-  //                       <div className="d-flex flex-column">
-  //                         <span>Odds</span>
-  //                         <input
-  //                           placeholder="0.00"
-  //                           className="form-control"
-  //                           value={market.price || ""}
-  //                           readOnly
-  //                         />
-  //                       </div>
-  //                     </Col>
-  //                   </Row>
-  //                 </Card.Body>
-  //               </Card>
-  //             ))}
-  //           </div>
-
-  //           <Row className="mt-2 mb-2">
-  //             <Col xs={6}>
-  //               <h6>Cash Wager:</h6>
-  //             </Col>
-  //             <Col xs={6} className="text-end">
-  //               <h6>${parlayBet}</h6>
-  //             </Col>
-  //           </Row>
-  //           <Row className="mt-2 mb-4">
-  //             <Col xs={6}>
-  //               <h6>To Win:</h6>
-  //             </Col>
-  //             <Col xs={6} className="text-end">
-  //               <h6>${parlayResult}</h6>
-  //             </Col>
-  //           </Row>
-  //           <Button
-  //             variant="#155236"
-  //             style={{ backgroundColor: "#155236", color: "white" }}
-  //             size="lg"
-  //             className="w-100"
-  //             onClick={() => toast.success("comming soon...")}
-  //           >
-  //             Bet Now
-  //           </Button>
-  //         </>
-  //       )}
-  //     </Container>
-  //   );
-  // };
-
-  // const BetSlip = () => {
-  //   const totalWager = cartData.reduce(
-  //     (total, market) => total + (market.wager || 0),
-  //     0
-  //   );
-
-  //   const totalPays = cartData.reduce(
-  //     (total, market) => total + (market.winAmount || 0),
-  //     0
-  //   );
 
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
@@ -1586,7 +1314,7 @@ export const OddsScreen = () => {
 
   const BetSlip = () => {
     return (
-      <Container className="border mt-4 rounded p-4">
+      <Container className="border  rounded p-4">
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
@@ -1677,14 +1405,23 @@ export const OddsScreen = () => {
                     <Row className="mt-2">
                       <Col lg={12}>
                         <div className="d-flex flex-column">
-                          <span
-                            style={{ fontSize: "12px", marginBottom: "5px" }}
-                          >
-                            {" "}
-                            {market?.market == "h2h"
-                              ? "Moneyline"
-                              : market?.market}
-                          </span>
+                          <div>
+                            <span
+                              className="fw-bold"
+                              style={{ fontSize: "12px", marginBottom: "5px" }}
+                            >
+                              ({market?.bookmaker})
+                            </span>
+                            <span
+                              className="ms-2"
+                              style={{ fontSize: "12px", marginBottom: "5px" }}
+                            >
+                              {market?.market == "h2h"
+                                ? "Moneyline"
+                                : market?.market}
+                            </span>
+                          </div>
+
                           <span>Wager</span>
                           <input
                             key={index}
@@ -1819,12 +1556,28 @@ export const OddsScreen = () => {
                       {market?.market !== "h2h" && (
                         <Col lg={12}>
                           <div className="d-flex flex-column">
-                            <span>
-                              {" "}
-                              {market?.market == "h2h"
-                                ? "Moneyline"
-                                : market?.market}
-                            </span>
+                            <div>
+                              <span
+                                className="fw-bold"
+                                style={{
+                                  fontSize: "12px",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                ({market?.bookmaker})
+                              </span>
+                              <span
+                                className="ms-2"
+                                style={{
+                                  fontSize: "12px",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                {market?.market == "h2h"
+                                  ? "Moneyline"
+                                  : market?.market}
+                              </span>
+                            </div>
                             <input
                               type="text"
                               placeholder="0.00"
@@ -1917,9 +1670,10 @@ export const OddsScreen = () => {
         </Col>
       </Row>
       <Form>
-        <Row>
+        <Row className="mt-3">
           <Col md={4}>
             <Form.Group controlId="firstSelect">
+              <Form.Label className="fw-bold">Sports</Form.Label>
               <Form.Select
                 value={sport}
                 onChange={(e) => {
@@ -1929,7 +1683,7 @@ export const OddsScreen = () => {
                   setSport(e.target.value);
                   handleSportData(selectedSport);
                 }}
-                className="fw-bold"
+                className=""
               >
                 {SportList.map((sport, index) => (
                   <option className="fw-bold" key={index} value={sport.key}>
@@ -1939,59 +1693,22 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          {/* <Col md={4}>
-            <Form.Group controlId="secondSelect">
+          <Col md={4}>
+            <Form.Group onChange={handleBookmaker} controlId="secondSelect">
+              <Form.Label className="fw-bold">Bookmakers</Form.Label>
               <Form.Select
-                className="fw-bold"
-                value={market}
+                className=""
+                value={Bookmaker}
                 onChange={(e) => setMarket(e.target.value)}
               >
-                <option className="fw-bold" value="h1">
-                  1H
-                </option>
-                <option className="fw-bold" value="h2">
-                  2H
-                </option>
-                <option className="fw-bold" value="q1">
-                  1Q
-                </option>
-                <option className="fw-bold" value="q2">
-                  2Q
-                </option>
-                <option className="fw-bold" value="q3">
-                  3Q
-                </option>
-                <option className="fw-bold" value="q4">
-                  4Q
-                </option>
+                {bookmakers?.map((bookmaker, index) => (
+                  <option className="fw-bold" key={index} value={bookmaker.key}>
+                    {bookmaker.title}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
-          </Col> */}
-          {/*<Col md={4}>
-            <Form.Group controlId="secondSelect">
-              <Form.Select
-                className="fw-bold"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-              >
-                <option className="fw-bold" value="">
-                  Select Region
-                </option>
-                <option className="fw-bold" value="us">
-                  US
-                </option>
-                <option className="fw-bold" value="uk">
-                  UK
-                </option>
-                <option className="fw-bold" value="eu">
-                  EU
-                </option>
-                <option className="fw-bold" value="au">
-                  AU
-                </option>
-              </Form.Select>
-            </Form.Group>
-          </Col> */}
+          </Col>
         </Row>
       </Form>
       <Row className="mt-3">
@@ -1999,7 +1716,7 @@ export const OddsScreen = () => {
           <div className="odds-table">
             {data.map((game) => {
               const fanduelBookmaker = game?.bookmakers.find(
-                (bookmaker) => bookmaker.key === "fanduel"
+                (bookmaker) => bookmaker.key === Bookmaker
               );
 
               const moneylineMarket = fanduelBookmaker?.markets.find(
@@ -2014,7 +1731,6 @@ export const OddsScreen = () => {
               if (!fanduelBookmaker) return null;
               return (
                 <div key={game.id} className="game-row">
-                  {console.log("game", game.id)}
                   <Row className="mb-4">
                     <Col lg={5}>
                       <div className="team-info d-flex align-items-center">
@@ -2072,6 +1788,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
@@ -2100,6 +1817,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
@@ -2133,6 +1851,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
@@ -2192,6 +1911,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
@@ -2220,6 +1940,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
@@ -2252,6 +1973,7 @@ export const OddsScreen = () => {
                                   key: sportData?.key,
                                   title: sportData?.title,
                                   id: game?.id,
+                                  bookmaker: Bookmaker,
                                 })
                               }
                             >
