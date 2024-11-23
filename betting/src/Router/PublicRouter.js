@@ -13,7 +13,6 @@ import VerifyOtp from "../Screens/LoginFlow/VerifyOtp/VerifyOtp";
 import ResetPassword from "../Screens/LoginFlow/ResetPassword/ResetPassword";
 import Profile from "../Screens/Profile/Profile";
 import RecentNews from "../Screens/RecentNews/RecentNews";
-import RecentNewsDetails from "../Screens/RecentNews/RecentNewsDetails";
 import ParlayCalculater from "../Screens/Parlay/ParlayCalculater";
 import OddsCalculater from "../Screens/Parlay/OddsCalculater";
 import BettingHistory from "../Screens/Betting/BettingHistory/BettingHistory";
@@ -34,7 +33,6 @@ const PublicRouter = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/recent-news" element={<RecentNews />} />
-        <Route path="/recent-news/:id" element={<RecentNewsDetails />} />
         <Route path="/parlay-calculater" element={<ParlayCalculater />} />
         <Route path="/odds-calculater" element={<OddsCalculater />} />
         <Route path="/betting-history" element={<BettingHistory />} />

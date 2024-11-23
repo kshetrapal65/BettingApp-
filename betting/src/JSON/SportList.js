@@ -1,5 +1,13 @@
 const SportList = [
   {
+    key: "americanfootball_nfl",
+    group: "American Football",
+    title: "NFL",
+    description: "US Football",
+    active: true,
+    has_outrights: false,
+  },
+  {
     key: "americanfootball_cfl",
     group: "American Football",
     title: "CFL",
@@ -23,14 +31,7 @@ const SportList = [
     active: true,
     has_outrights: true,
   },
-  {
-    key: "americanfootball_nfl",
-    group: "American Football",
-    title: "NFL",
-    description: "US Football",
-    active: true,
-    has_outrights: false,
-  },
+
   {
     key: "americanfootball_nfl_preseason",
     group: "American Football",

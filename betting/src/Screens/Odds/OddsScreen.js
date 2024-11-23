@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import oddsData from "../../JSON/Odds";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import RecentStory from "../../Components/RecentStory";
 import { MdDelete } from "react-icons/md";
@@ -26,6 +26,7 @@ const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 export const OddsScreen = () => {
   const { key } = useParams();
+  const navigate = useNavigate();
   const token = getToken();
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
@@ -39,7 +40,7 @@ export const OddsScreen = () => {
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
-  const [Bookmaker, setBookmaker] = React.useState();
+  const [Bookmaker, setBookmaker] = React.useState("draftkings");
   const [load, setLoad] = React.useState(false);
   const [sportData, setSportData] = React.useState({
     key: "americanfootball_nfl",
@@ -1311,7 +1312,13 @@ export const OddsScreen = () => {
       setLoad(false);
     }
   };
-
+  const SubmitBet = () => {
+    if (token) {
+      SubmitPlaceBet();
+    } else {
+      navigate("/login");
+    }
+  };
   const BetSlip = () => {
     return (
       <Container className="border  rounded p-4">
@@ -1474,12 +1481,12 @@ export const OddsScreen = () => {
             </Row>
 
             <Button
-              disabled={!token || cartData?.length === 0}
+              disabled={cartData?.length === 0}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
-              onClick={SubmitPlaceBet}
+              onClick={SubmitBet}
             >
               Bet Now
             </Button>
@@ -1625,8 +1632,9 @@ export const OddsScreen = () => {
             </Row>
 
             <Button
-              onClick={SubmitPlaceBet}
+              onClick={SubmitBet}
               variant="#155239"
+              disabled={cartData?.length === 0}
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
@@ -1736,7 +1744,7 @@ export const OddsScreen = () => {
                       <div className="team-info d-flex align-items-center">
                         <img
                           src={
-                            teamImages[moneylineMarket?.outcomes[0].name] ||
+                            teamImages[spreadMarket?.outcomes[0].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.home_team}
@@ -1748,7 +1756,7 @@ export const OddsScreen = () => {
                           }}
                         />
                         <span className="team-name">
-                          {moneylineMarket?.outcomes[0].name}
+                          {spreadMarket?.outcomes[0].name}
                         </span>
                       </div>
                     </Col>
@@ -1766,7 +1774,10 @@ export const OddsScreen = () => {
                         </Col>
                       </Row>
 
-                      <Row className="justify-content-evenly text-center mt-2">
+                      <Row
+                        className="justify-content-evenly text-center mt-2"
+                        style={{ marginRight: "0" }}
+                      >
                         <Col xs={2}>
                           {moneylineMarket?.outcomes[0] && (
                             <Button
@@ -1871,7 +1882,7 @@ export const OddsScreen = () => {
                       <div className="team-info d-flex align-items-center mt-1">
                         <img
                           src={
-                            teamImages[moneylineMarket?.outcomes[1].name] ||
+                            teamImages[spreadMarket?.outcomes[1].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.away_team}
@@ -1883,13 +1894,16 @@ export const OddsScreen = () => {
                           }}
                         />
                         <span className="team-name">
-                          {moneylineMarket?.outcomes[1].name}
+                          {spreadMarket?.outcomes[1].name}
                         </span>
                       </div>
                     </Col>
 
                     <Col lg={7} sm={12} md={12}>
-                      <Row className="justify-content-evenly text-center mt-2">
+                      <Row
+                        className="justify-content-evenly text-center mt-2"
+                        style={{ marginRight: "0" }}
+                      >
                         <Col xs={2}>
                           {moneylineMarket?.outcomes[1] && (
                             <Button

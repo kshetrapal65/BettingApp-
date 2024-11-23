@@ -92,12 +92,14 @@ const RecentStory = () => {
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>
             <Col>
-              <h5>Recent Stories</h5>
+              <h5 className="fw-bold">Recent Stories</h5>
             </Col>
             <Col className="text-end">
               <h5 className="text-primary">
                 <Link to="/recent-news">
-                  <span style={{ cursor: "pointer" }}>See All</span>
+                  <span style={{ cursor: "pointer", fontSize: "15px" }}>
+                    See All
+                  </span>
                 </Link>
               </h5>
             </Col>
@@ -124,7 +126,9 @@ const RecentStory = () => {
                     />
                   </div>
                   <div className="d-flex flex-column ms-3" style={{ flex: 1 }}>
-                    <h5 className="fw-bold">{item.title}</h5>
+                    <div className="title-container">
+                      <h5 className="titless">{item.title}</h5>
+                    </div>
                     <p
                       style={{
                         display: "-webkit-box",
@@ -132,6 +136,9 @@ const RecentStory = () => {
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#6c757d",
                       }}
                     >
                       {item.description}
@@ -147,7 +154,7 @@ const RecentStory = () => {
         </Col>
         <Col className="  text-end" lg={4}></Col>
       </Row>
-      <Modal
+      {/* <Modal
         show={showModal}
         onHide={handleCloseModal}
         size="lg"
@@ -178,7 +185,7 @@ const RecentStory = () => {
             />
           )}
         </Modal.Body>
-      </Modal>
+      </Modal> */}
       {/* <Row className="mt-5 justify-content-around  ">
         <Col className="bg-light p-4 rounded-5" lg={12}>
           <Row>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./EventScore.css";
 
 import {
@@ -668,6 +668,7 @@ const teamImages = {
 };
 
 export const EventScore = React.memo(() => {
+  const navigate = useNavigate();
   const [scoreData, setScoreData] = useState([]);
   const [activeTab, setActiveTab] = useState("spreads,totals,h2h");
   const [marketkey, setMarketKey] = useState([]);
@@ -683,7 +684,7 @@ export const EventScore = React.memo(() => {
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
-  const [bookmaker, setBookmaker] = React.useState();
+  const [bookmaker, setBookmaker] = React.useState("draftkings");
   const [load, setLoad] = React.useState(false);
   const token = getToken();
 
@@ -1015,6 +1016,13 @@ export const EventScore = React.memo(() => {
     }
   };
 
+  const SubmitBet = () => {
+    if (token) {
+      SubmitPlaceBet();
+    } else {
+      navigate("/login");
+    }
+  };
   const GameOdds1 = React.memo(({ data }) => {
     const spreadMarket = data?.markets?.find(
       // (m) => m.key === "spreads" || "spreads_h1"
@@ -1116,7 +1124,7 @@ export const EventScore = React.memo(() => {
                 className="mr-2"
               />
               <span className="fw-bold ms-2">
-                {event?.away_team.slice(0, 15) + "..."}
+                {event?.away_team?.slice(0, 15) + "..."}
               </span>
             </Col>
             <Col xs={4} lg={2}>
@@ -1220,7 +1228,7 @@ export const EventScore = React.memo(() => {
                 className="mr-2"
               />
               <span className="fw-bold ms-2">
-                {event?.home_team.slice(0, 15) + ".."}
+                {event?.home_team?.slice(0, 15) + ".."}
               </span>
             </Col>
             <Col xs={4} lg={2}>
@@ -1507,8 +1515,8 @@ export const EventScore = React.memo(() => {
             </Row>
 
             <Button
-              onClick={SubmitPlaceBet}
-              disabled={!token || selectedMarkets?.length === 0}
+              onClick={SubmitBet}
+              disabled={selectedMarkets.length === 0}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -1658,7 +1666,8 @@ export const EventScore = React.memo(() => {
             </Row>
 
             <Button
-              onClick={SubmitPlaceBet}
+              onClick={SubmitBet}
+              disabled={selectedMarkets.length === 0}
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -1722,7 +1731,7 @@ export const EventScore = React.memo(() => {
           {/* Filters */}
 
           <Row className="mb-2 justify-content-around fw-bold text-muted">
-            <Col xs={3} lg={4}>
+            <Col xs={4} lg={4}>
               <strong>PLAYER</strong>
             </Col>
             <Col className="" lg={8} xs={3}>
@@ -1767,33 +1776,37 @@ export const EventScore = React.memo(() => {
                       </Col>
 
                       <Col xs={12} lg={8}>
-                        {group.odds.map((outcome, idx) => (
-                          <Button
-                            key={idx}
-                            className={`shadow ${idx === 0 ? "" : "ms-1"}`}
-                            variant="outline-secondary"
-                            style={{ minWidth: "80px", minHeight: "60px" }}
-                            onClick={() =>
-                              handleMarketClick({
-                                team: outcome?.description,
-                                market: marketName,
-                                name: outcome?.name,
-                                point: outcome?.point,
-                                price: outcome?.price,
-                                home_team: propData?.home_team,
-                                away_team: propData?.away_team,
-                                bookmaker: bookmaker,
-                              })
-                            }
-                          >
-                            {outcome?.name == "Yes" ? "" : outcome?.name}{" "}
-                            {outcome?.point || ""} (
-                            {outcome?.price > 0
-                              ? `+${outcome.price}`
-                              : outcome.price}
-                            )
-                          </Button>
-                        ))}
+                        <Row>
+                          {group.odds.map((outcome, idx) => (
+                            <Col xs={6}>
+                              <Button
+                                key={idx}
+                                className={`shadow ${idx === 0 ? "" : "ms-1"}`}
+                                variant="outline-secondary"
+                                style={{ minWidth: "80px", minHeight: "60px" }}
+                                onClick={() =>
+                                  handleMarketClick({
+                                    team: outcome?.description,
+                                    market: marketName,
+                                    name: outcome?.name,
+                                    point: outcome?.point,
+                                    price: outcome?.price,
+                                    home_team: propData?.home_team,
+                                    away_team: propData?.away_team,
+                                    bookmaker: bookmaker,
+                                  })
+                                }
+                              >
+                                {outcome?.name == "Yes" ? "" : outcome?.name}{" "}
+                                {outcome?.point || ""} (
+                                {outcome?.price > 0
+                                  ? `+${outcome.price}`
+                                  : outcome.price}
+                                )
+                              </Button>
+                            </Col>
+                          ))}
+                        </Row>
                       </Col>
                       <hr className="mt-2" />
                     </Row>
