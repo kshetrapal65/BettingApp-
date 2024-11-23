@@ -1701,7 +1701,7 @@ export const OddsScreen = () => {
               </Form.Select>
             </Form.Group>
           </Col>
-          {data.length > 0 && (
+          {data?.length > 0 && (
             <Col md={4}>
               <Form.Group onChange={handleBookmaker} controlId="secondSelect">
                 <Form.Label className="fw-bold">Bookmakers</Form.Label>
@@ -2017,7 +2017,7 @@ export const OddsScreen = () => {
                       </Row>
                     </Col>
 
-                    <Col lg={12} className="text-start mt-3">
+                    <Col lg={5} className="text-center  ms-1 mt-3">
                       <p
                         style={{
                           fontSize: "13px",

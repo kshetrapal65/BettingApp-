@@ -1075,19 +1075,21 @@ export const EventScore = React.memo(() => {
               </h7>
             </Col>
             <Col>
-              <Form.Group
-                onChange={handleBookmaker}
-                controlId="formSelect "
-                className="mb-3"
-              >
-                <Form.Select value={bookmaker} aria-label="Select option">
-                  {bookmakers?.map((sport, index) => (
-                    <option key={index} value={sport.key}>
-                      {sport.title}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+              {bookmakers?.length > 0 && (
+                <Form.Group
+                  onChange={handleBookmaker}
+                  controlId="formSelect "
+                  className="mb-3"
+                >
+                  <Form.Select value={bookmaker} aria-label="Select option">
+                    {bookmakers?.map((sport, index) => (
+                      <option key={index} value={sport.key}>
+                        {sport.title}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              )}
             </Col>
           </Row>
 
