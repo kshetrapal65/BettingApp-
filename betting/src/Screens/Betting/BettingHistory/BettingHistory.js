@@ -60,6 +60,7 @@ const BettingHistory = () => {
             <th>Amount</th>
             <th>Win Amount</th>
             <th>Bet Status</th>
+            <th>Bookmaker</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -100,6 +101,7 @@ const BettingHistory = () => {
                   ) : null}
 
                   <td>{detail.bet_status}</td>
+                  <td>{detail.bookmaker_name}</td>
                   <td>{new Date(detail.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
