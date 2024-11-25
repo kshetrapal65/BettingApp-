@@ -665,6 +665,219 @@ const teamImages = {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS671ygHQI-Podn72Qg7pLtY5BHTUzN28tdDA&s",
   "Milwaukee Bucks":
     "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Milwaukee_Bucks_logo.svg/640px-Milwaukee_Bucks_logo.svg.png",
+  "Hawaii Rainbow Warriors":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Hawaii_Warriors_logo.svg/800px-Hawaii_Warriors_logo.svg.png",
+  "New Mexico Lobos":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqG1U4rqKaY-V-n4OGx1h8Trw90zShFZ8z8w&s",
+  "Real Madrid":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/800px-Real_Madrid_CF.svg.png",
+  "Houston Rockets":
+    "https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Rockets.svg",
+  "Indiana Pacers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKNdCf-DjicbfMMX_LW4yxqIS0UnC-BiaSfA&s",
+  "Portland Trail Blazers":
+    "https://wp.usatodaysports.com/wp-content/uploads/sites/90/2019/04/unknown-2.jpeg",
+  "Pittsburgh Penguins":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Pittsburgh_Penguins_logo_%282016%29.svg/800px-Pittsburgh_Penguins_logo_%282016%29.svg.png",
+  "Tampa Bay Lightning":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd-M5TVKRL8h9SaUuqTwyhnGzK8yfyaR10cQ&s",
+  "Ottawa Senators":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJSYIZ8oEIJVBIrId4aMhWobNy8J8jWEVagQ&s",
+  "Edmonton Oilers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Logo_Edmonton_Oilers.svg/1200px-Logo_Edmonton_Oilers.svg.png",
+  "Florida Panthers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Florida_Panthers_2016_logo.svg/640px-Florida_Panthers_2016_logo.svg.png",
+  "St Louis Blues":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo5pJQj7sb6uXvfbis71NEOMfIzYEVWfAHGQ&s",
+  "Minnesota Wild":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfUGU5usevn3SatHJqqHug1_x68TIPBLUWKw&s",
+  "Chicago Blackhawks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/Chicago_Blackhawks_logo.svg/1200px-Chicago_Blackhawks_logo.svg.png",
+  "Anaheim Ducks":
+    "https://upload.wikimedia.org/wikipedia/en/9/95/Anaheim_Ducks_logo_2024.svg",
+  "Calgary Flames":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaRJtw1XErBo2iQHfoiAy56khTHsPu712h0w&s",
+  "New York Islanders":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/42/Logo_New_York_Islanders.svg/1200px-Logo_New_York_Islanders.svg.png",
+  "Winnipeg Jets":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPLGb0qNd_PLRkUjugcqbQK743bBZk9xkXqA&s",
+  "Hawaii Rainbow Warriors":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Hawaii_Warriors_logo.svg/800px-Hawaii_Warriors_logo.svg.png",
+  "New Mexico Lobos":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqG1U4rqKaY-V-n4OGx1h8Trw90zShFZ8z8w&s",
+  "Washington Wizards":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Washington_Wizards_logo.svg/1200px-Washington_Wizards_logo.svg.png",
+  "Chicago Bulls":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/6/67/Chicago_Bulls_logo.svg/1200px-Chicago_Bulls_logo.svg.png",
+  "Atlanta Hawks":
+    "https://upload.wikimedia.org/wikipedia/en/2/24/Atlanta_Hawks_logo.svg",
+  "Houston Rockets":
+    "https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Rockets.svg",
+  "Portland Trail Blazers":
+    "https://upload.wikimedia.org/wikipedia/en/2/21/Portland_Trail_Blazers_logo.svg",
+  "Milwaukee Bucks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Milwaukee_Bucks_logo.svg/640px-Milwaukee_Bucks_logo.svg.png",
+  "Indiana Pacers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Indiana_Pacers.svg/1200px-Indiana_Pacers.svg.png",
+  "Sacramento Kings":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/SacramentoKings.svg/800px-SacramentoKings.svg.png",
+  "Los Angeles Clippers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/e/ed/Los_Angeles_Clippers_%282024%29.svg/1200px-Los_Angeles_Clippers_%282024%29.svg.png",
+  //new image ncaa
+  "Portland Pilots":
+    "https://upload.wikimedia.org/wikipedia/commons/a/a8/Portland_pilots_logo.png",
+  "Princeton Tigers":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Princeton_Tigers_logo.svg/1200px-Princeton_Tigers_logo.svg.png",
+  "St. John's Red Storm":
+    "https://i.pinimg.com/736x/7d/14/f9/7d14f91691ee94e633fca49fd8b3a1d6.jpg",
+  "Howard Bison":
+    "https://upload.wikimedia.org/wikipedia/en/b/b4/Howard_Bison_logo.svg",
+  "Holy Cross Crusaders":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Holy_Cross_Crusaders_logo.svg/800px-Holy_Cross_Crusaders_logo.svg.png",
+  "Maine Black Bears":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Maine_Black_Bears_logo.svg/800px-Maine_Black_Bears_logo.svg.png",
+  "American Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQCbH5T7D2LhJJpVTwXDCWve4Kgie2ZlPQIftAjlV_MpdoQoac4hiijBs&s",
+  "Albany Great Danes":
+    "https://i.pinimg.com/736x/86/e7/5e/86e75e51b822d86e86ba5a498fca5abd.jpg",
+  "Lamar Cardinals":
+    "https://loodibee.com/wp-content/uploads/Lamar-Cardinals-logo.png",
+  "Omaha Mavericks":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYooWCKIti07HG14HbncrflYfWySuuVhNkaOBcVcAx3rJLixFpxJscERX8oQmAXYCONq8&usqp=CAU",
+  "Northeastern Huskies":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgM0S5dBRGz6MnmonN2eMxIAJlAR40TMXAaA&s",
+  "CSU Bakersfield Roadrunners":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Cal_State_Bakersfield_Roadrunners_logo.svg/640px-Cal_State_Bakersfield_Roadrunners_logo.svg.png",
+  "Charleston Cougars":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/College_of_Charleston_Cougars_logo.svg/1760px-College_of_Charleston_Cougars_logo.svg.png",
+  "Rhode Island Rams":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Rhode_Island_Rams_logo.svg/800px-Rhode_Island_Rams_logo.svg.png",
+  "Portland St Vikings":
+    "https://upload.wikimedia.org/wikipedia/commons/4/48/Portland_State_Vikings_logo.svg",
+  "VCU Rams":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/18/VCU_Athletics_Logo.svg/800px-VCU_Athletics_Logo.svg.png",
+  "Central Connecticut St Blue Devils":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Central_Connecticut_Blue_Devils_logo.svg/800px-Central_Connecticut_Blue_Devils_logo.svg.png",
+  "Wright St Raiders":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Wright_State_Raiders_logo.svg/1200px-Wright_State_Raiders_logo.svg.png",
+  "William & Mary Tribe":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVrQs6i8yVfU7wkNthsKyBfMHNljNeYaiDww&s",
+  "Kennesaw St Owls":
+    "https://content.sportslogos.net/logos/32/4949/full/kennesaw_state_owls_logo_secondary_20205230.png",
+  "South Dakota St Jackrabbits":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/2/25/South_Dakota_State_Jackrabbits_logo.svg/1200px-South_Dakota_State_Jackrabbits_logo.svg.png",
+  "Bryant Bulldogs":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/ca/Bryant_Bulldogs_logo.svg/800px-Bryant_Bulldogs_logo.svg.png",
+  "St. Bonaventure Bonnies":
+    "https://gobonnies.com/images/2024/7/15/Primary_white_wide.jpg?width=2000",
+  "UNC Asheville Bulldogs":
+    "https://1000logos.net/wp-content/uploads/2019/12/North-Carolina-Asheville-Bulldogs-Logo-1998.png",
+  "Central Arkansas Bears":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLcDri4o87xDsNOszU7CIzLsJtxJO_oNHirw&s",
+  "Valparaiso Beacons":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGCGqM7BS-AGPVLjjGF0r4sVTcPBymyI1xcg&s",
+  "St. Thomas (MN) Tommies":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/St._Thomas_Tommies_primary_logo.svg/1200px-St._Thomas_Tommies_primary_logo.svg.png",
+  "Oklahoma St Cowboys":
+    "https://brand.okstate.edu/site-files/images/brand-guide/primary-brand.png",
+  "North Alabama Lions":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4t34BdqzHCu6AiTEbrHJureOGi1RekDimvw&s",
+  "Northwestern St Demons":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6GjHRprVbQZAcRWlTQhVsmnASQ5Fb7QOuoQ&s",
+  "Alabama St Hornets":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHoV6MAnzIDTtvKddcON-_SlGZM4xPqnltLQ&s",
+  "Florida Int'l Golden Panthers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSRjXRPnMaCtp4ifWmJMwI-BObBCxwzPqLLg&s",
+  "Florida Gulf Coast Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpuwh8WOkKMiJxeRdyz4GKrsSSMNMsE7H_1A&s",
+  "Massachusetts Minutemen":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/UMass_Amherst_athletics_logo.svg/1200px-UMass_Amherst_athletics_logo.svg.png",
+  "Sacramento St Hornets":
+    "https://1000logos.net/wp-content/uploads/2022/04/Sacramento-State-Hornets-Logo-2004.png",
+  "Towson Tigers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Towson_Tigers_logo.svg/800px-Towson_Tigers_logo.svg.png",
+  "Morgan St Bears":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Morgan_State_Bears_logo.svg/250px-Morgan_State_Bears_logo.svg.png",
+  "Utah Tech Trailblazers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Utah_Tech_Trailblazers_logo_2022.svg/1200px-Utah_Tech_Trailblazers_logo_2022.svg.png",
+  "CSU Northridge Matadors":
+    "https://upload.wikimedia.org/wikipedia/en/5/51/CSUN_Matadors_logo.svg",
+  "Campbell Fighting Camels":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/8/84/Campbell_Fighting_Camels_logo.svg/800px-Campbell_Fighting_Camels_logo.svg.png",
+  "Mercyhurst Lakers":
+    "https://1000logos.net/wp-content/uploads/2019/09/Mercyhurst-Lakers-Logo.jpg",
+  "Arkansas-Pine Bluff Golden Lions":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/a/a6/Arkansas%E2%80%93Pine_Bluff_Golden_Lions_logo.svg/1200px-Arkansas%E2%80%93Pine_Bluff_Golden_Lions_logo.svg.png",
+  "Idaho Vandals":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Idaho_Vandals_logo.svg/1200px-Idaho_Vandals_logo.svg.png",
+  "San Diego Toreros":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/San_Diego_Toreros_logo.svg/1200px-San_Diego_Toreros_logo.svg.png",
+  "Jackson St Tigers":
+    "https://i.pinimg.com/originals/25/74/ed/2574edb6c3a0fb858e587048b6d7b71a.png",
+  "High Point Panthers":
+    "https://i.pinimg.com/originals/0b/dd/ac/0bddaca0992abbb380112a4c1048c5f2.png",
+  "Bradley Braves":
+    "https://upload.wikimedia.org/wikipedia/commons/1/17/Bradley_Braves_2012_New_Logo.png",
+  "McNeese Cowboys":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYwW3TTGQ9SF65LKTYEjzumo607yG9dYO4og&s",
+  "Seton Hall Pirates":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdqZmsAkUSOVsm0sREqbxWmjHcTXa-y4Y_ug&s",
+  "Yale Bulldogs": "https://cdn.worldvectorlogo.com/logos/yale-bulldogs-1.svg",
+  "Delaware Blue Hens":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF493kLxU1gpfUAtv8x9Ms1ZOkMeIZa8kyrA&s",
+  "Denver Pioneers":
+    "https://1000logos.net/wp-content/uploads/2019/12/Denver-Pioneers-Logo.jpg",
+  "Montana Grizzlies":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMYwTsEZB6EGXlTV3nBhAwAcZTyxQVhH__Tw&s",
+  "Grambling St Tigers":
+    "https://www.kroger.com/product/images/large/front/0030820320907",
+  "Texas Southern Tigers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgTOSQhOinEDFA2sgux8zjsVW6xY9N_0hFHw&s",
+  "Southern Miss Golden Eagles":
+    "https://lh3.googleusercontent.com/proxy/KBwx5fKMVNEFD5lO7XhaG9WmRXXPc6StEp2-Sljj02jOGqkqGdYLYDtWzkOQeHe7Xn9LUG2lxBXPWMyBbmJyyymUSZAHeNgb4UdgTwIWi7R5mUdC0xrJJngsiC8KcUTfDSA-UMgvSl29TdIGP6dlQshLd6U",
+  "Drake Bulldogs":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/f/fc/Drake_Bulldogs_logo.svg/640px-Drake_Bulldogs_logo.svg.png",
+  "Radford Highlanders":
+    "https://images.sidearmdev.com/convert?url=https%3A%2F%2Fdxbhsrqyrr690.cloudfront.net%2Fsidearm.nextgen.sites%2Fruhighlanders.com%2Fimages%2F2016%2F10%2F13%2FLOGORELEASE_GRAPHIC_jpg.jpeg&type=webp",
+  "Siena Saints":
+    "https://npr.brightspotcdn.com/dims4/default/df00da1/2147483647/strip/true/crop/3507x2160+333+0/resize/880x542!/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Ffd%2Fa3%2F7493d58f4173bc946997506041bb%2Fsiena-saints-logo.png",
+  "Fort Wayne Mastodons":
+    "https://1000logos.net/wp-content/uploads/2019/10/Purdue-Fort-Wayne-Mastodons-Logo-2016.png",
+  "Jacksonville Dolphins":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Jacksonville_Dolphins_logo_2018.svg/1200px-Jacksonville_Dolphins_logo_2018.svg.png",
+  "Mercer Bears":
+    "https://www.mercer.edu/wp-content/uploads/2019/04/Spirit-mercer-spirit-mark-01.png",
+  "IUPUI Jaguars":
+    "https://1000logos.net/wp-content/uploads/2022/02/IUPUI-Jaguars-logo.png",
+  "Illinois St Redbirds":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Illinois_State_Athletics_logo.svg/800px-Illinois_State_Athletics_logo.svg.png",
+  "GW Revolutionaries":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/George_Washington_Athletics_logo.svg/1200px-George_Washington_Athletics_logo.svg.png",
+  "Southern Illinois Salukis":
+    "https://images.sidearmdev.com/resize?url=https%3A%2F%2Fsiusalukis.com%2Fimages%2F2019%2F2%2F28%2FSalukiLogo_PressRelease_2000x1000.jpg&width=1600",
+  "CSU Northridge Matadors":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEaAef0OYcOSsQjevP8AEA2fpOWPkcfdDP0Q&s",
+  "Fordham Rams":
+    "https://logowik.com/content/uploads/images/fordham-rams6755.logowik.com.webp",
+  "Merrimack Warriors": "https://pbs.twimg.com/media/EtYzBHJXEAQQ3gi.jpg",
+  "UMass Lowell River Hawks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/43/UMass_Lowell_River_Hawks_logo.svg/640px-UMass_Lowell_River_Hawks_logo.svg.png",
+  "San Francisco Dons":
+    "https://upload.wikimedia.org/wikipedia/commons/a/af/San_Francisco_Dons_logo.svg",
+  "North Carolina A&T Aggies":
+    "https://fathead.com/cdn/shop/products/nnveii0dddhixol9wsto.jpg?v=1663312456",
+  "LIU Sharks":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7PDPGAIMF6g_957trU31M5t73hZqyBtKV6A&s",
+  "Winthrop Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ92f5hJo6fomyd0no_3bp90XOZLw7kvTLsOg&s",
+  "Tennessee St Tigers":
+    "https://upload.wikimedia.org/wikipedia/en/d/d3/Tennessee_State_Athletics_logo.svg",
+  "Chattanooga Mocs":
+    "https://i.pinimg.com/564x/5f/a6/fe/5fa6fea978cb9ab8aa0e43906cd2fc54.jpg",
+  "New Hampshire Wildcats":
+    "https://1000logos.net/wp-content/uploads/2021/07/New-Hampshire-Wildcats-logo.png",
+  "Columbia Lions":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdddWisfeALqKNEGLsQPDuPBD9FyM9k93S2g&s",
 };
 
 export const EventScore = React.memo(() => {
@@ -680,17 +893,19 @@ export const EventScore = React.memo(() => {
     const storedMarkets = localStorage.getItem("cartData");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
+
   const [activeTabs, setActiveTabs] = useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
   const [bookmaker, setBookmaker] = React.useState("draftkings");
+  const [bookmakerName, setBookmakername] = React.useState("DraftKings");
   const [load, setLoad] = React.useState(false);
   const token = getToken();
 
   const location = useLocation();
   const event = location.state || {};
-  console.log("BOOKMAKER", bookmaker);
+  console.log("BOOKMAKER", bookmaker, "bookmakerName", bookmakerName);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
@@ -704,6 +919,7 @@ export const EventScore = React.memo(() => {
   );
   const handleBookmaker = (e) => {
     setBookmaker(e.target.value);
+    setBookmakername(e.target.options[e.target.selectedIndex].text);
   };
   useEffect(() => {
     fetchScore();
@@ -981,6 +1197,8 @@ export const EventScore = React.memo(() => {
       formData.append(`odds[${index}][sport_id]`, item?.id);
       formData.append(`odds[${index}][sport_name]`, item?.title);
       formData.append(`odds[${index}][loss_amount]`, 0);
+      formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
+      formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
     });
     formData.append(`bet_type`, activeTabs);
     formData.append(
@@ -1146,6 +1364,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   });
                 }}
               >
@@ -1176,6 +1395,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   })
                 }
               >
@@ -1206,6 +1426,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   })
                 }
               >
@@ -1250,6 +1471,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   })
                 }
               >
@@ -1282,6 +1504,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   })
                 }
               >
@@ -1314,6 +1537,7 @@ export const EventScore = React.memo(() => {
                     title: event?.sport_title,
                     id: event?.id,
                     bookmaker: bookmaker,
+                    bookmakerName: bookmakerName,
                   })
                 }
               >
@@ -1796,6 +2020,7 @@ export const EventScore = React.memo(() => {
                                     home_team: propData?.home_team,
                                     away_team: propData?.away_team,
                                     bookmaker: bookmaker,
+                                    bookmakerName: bookmakerName,
                                   })
                                 }
                               >
