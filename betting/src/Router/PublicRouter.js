@@ -16,6 +16,8 @@ import RecentNews from "../Screens/RecentNews/RecentNews";
 import ParlayCalculater from "../Screens/Parlay/ParlayCalculater";
 import OddsCalculater from "../Screens/Parlay/OddsCalculater";
 import BettingHistory from "../Screens/Betting/BettingHistory/BettingHistory";
+import LeaguesList from "../Screens/Leagues/LeaguesList";
+import CreateLeagues from "../Screens/Leagues/CreateLeagues.js";
 
 const PublicRouter = () => {
   return (
@@ -36,6 +38,8 @@ const PublicRouter = () => {
         <Route path="/parlay-calculater" element={<ParlayCalculater />} />
         <Route path="/odds-calculater" element={<OddsCalculater />} />
         <Route path="/betting-history" element={<BettingHistory />} />
+        <Route path="/leagues-list" element={<LeaguesList />} />
+        <Route path="/create-leagues" element={<CreateLeagues />} />
       </Routes>
       <Footer />
     </>

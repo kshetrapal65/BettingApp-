@@ -38,7 +38,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar p-0">
       <div className="navbar">
         <i className="bx bx-menu" onClick={toggleDrawer}></i>
         <div className="logo">
@@ -139,9 +139,14 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            <li onClick={() => navigate("/betting-history")}>
+            {/* <li onClick={() => navigate("/betting-history")}>
               <a onClick={toggleDrawer} href="#">
                 Betting History
+              </a>
+            </li> */}
+            <li onClick={() => navigate("/leagues-list")}>
+              <a onClick={toggleDrawer} href="#">
+                Leagues
               </a>
             </li>
             <li>

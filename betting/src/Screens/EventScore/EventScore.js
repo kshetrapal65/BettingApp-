@@ -878,6 +878,199 @@ const teamImages = {
     "https://1000logos.net/wp-content/uploads/2021/07/New-Hampshire-Wildcats-logo.png",
   "Columbia Lions":
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdddWisfeALqKNEGLsQPDuPBD9FyM9k93S2g&s",
+  "Cornell Big Red":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/Cornell_Big_Red_logo.svg/1200px-Cornell_Big_Red_logo.svg.png",
+  "Iona Gaels":
+    "https://www.iona.edu/sites/default/files/2020-08/ancillary-images/iona-gaels.jpg",
+  "Stonehill Skyhawks":
+    "https://content.sportslogos.net/logos/34/6861/full/stonehill_skyhawks_logo_primary_2012_sportslogosnet-9830.png",
+  "Le Moyne Dolphins":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Le_Moyne_Dolphins_logo.svg/1200px-Le_Moyne_Dolphins_logo.svg.png",
+  "UT Rio Grande Valley Vaqueros":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/UTRGV_Athletics_logo.svg/1200px-UTRGV_Athletics_logo.svg.png",
+  "Maryland-Eastern Shore Hawks":
+    "https://1000logos.net/wp-content/uploads/2021/06/Maryland-Eastern-Shore-Hawks-logo.png",
+  "Oregon St Beavers":
+    "https://i.pinimg.com/originals/78/88/91/788891e826b1db28de6e9648b2c6d273.png",
+  "Houston Christian Huskies":
+    "https://hc.edu/wp-content-uploads/marketing/athletic-logos/png-logos/HCU-Husky-Full-Color.png",
+  "Incarnate Word Cardinals":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyJfnkAq-6s4v5z6kNaK2rS1ataQEqMqHnIw&s",
+  "Indiana St Sycamores":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Indiana_State_Sycamores_logo.svg/1200px-Indiana_State_Sycamores_logo.svg.png",
+  "Southern Indiana Screaming Eagles":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Southern_Indiana_Screaming_Eagles_logo.svg/1200px-Southern_Indiana_Screaming_Eagles_logo.svg.png",
+  "Saint Louis Billikens":
+    "https://slubillikens.com/images/2020/6/1/Logo_without_lense_flare.jpg",
+  "San José St Spartans":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcvBZB5ZHt4tic3HAhBCPU4UMbWM2thAkQkw&s",
+  "Xavier Musketeers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKJhIlc0vesjuvTEfNKCanI9e4UtZibpnyEA&s",
+  "Abilene Christian Wildcats":
+    "https://upload.wikimedia.org/wikipedia/en/6/6c/Abilene_Christian_Wildcats_logo.svg",
+  "Southern Miss Golden Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSILDO8X72yIcV5bZw-auqTKxqvNODvqony9A&s",
+  "Norfolk St Spartans":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/78/Norfork_State_Spartans_logo.svg/1200px-Norfork_State_Spartans_logo.svg.png",
+  "UC Davis Aggies":
+    "https://logos-world.net/wp-content/uploads/2020/06/California-Davis-Aggies-Logo.png",
+  "Arkansas-Little Rock Trojans":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs6cXcdYq-v__-jP-yhcWkL-sSMc1XROcxrQ&s",
+  "Long Beach St 49ers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvQgT_Br2sMGkGcaH7rqx3PTpeyLULOm-iMg&s",
+  "UNC Greensboro Spartans":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/70/UNCG_Spartans_logo.svg/800px-UNCG_Spartans_logo.svg.png",
+  "Dayton Flyers":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Dayton_Flyers_logo.svg/2560px-Dayton_Flyers_logo.svg.png",
+  "Detroit Mercy Titans":
+    "https://upload.wikimedia.org/wikipedia/en/a/a6/Detroit_Titans_logo.svg",
+  "SE Louisiana Lions":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8TkSiwCyQFLylUmvggvi1CgITIvPqf-n3Dw&s",
+  "San Diego St Aztecs":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIpcUVh2cQX8NH7w6ZweDC9dZQEtNa0jklAQ&s",
+  "Creighton Bluejays":
+    "https://content.sportslogos.net/logos/30/652/full/3707_creighton_blue_jays-alternate-2013.png",
+  "Austin Peay Governors":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAf5IQFq9oscZu_oj8sFx4u2IWiLnxZplbmQ&s",
+  "Georgia St Panthers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLqmV738GS_WX8lLifd3HfzF84pCR4gt_UmQ&s",
+  "Richmond Spiders":
+    "https://content.sportslogos.net/logos/33/814/full/richmond_spiders_logo_alternate_20022544.png",
+  "Murray St Racers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9ouv6d4LD0Kgd66Ft553397Vb_Y_Xoog-MA&s",
+  "Utah Valley Wolverines":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVi-BPv5TsCclk0alyL0zMdoyQ3ry-TRFyTg&s",
+  "NJIT Highlanders":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/3/30/NJIT_Highlanders_logo.svg/1200px-NJIT_Highlanders_logo.svg.png",
+  "Coppin St Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv9kU3VJfrNgTMt132VGPtHNclpd4XhzWuKQ&s",
+  "Saint Joseph's Hawks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Saint_Joseph%27s_Hawks_logo.svg/1200px-Saint_Joseph%27s_Hawks_logo.svg.png",
+  "Saint Peter's Peacocks":
+    "https://content.sportslogos.net/logos/34/853/full/saint_peters_peacocks_logo_primary_20124558.png",
+  "Fairleigh Dickinson Knights":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiq2NgZW1mwMxHUeJu2VzcKlnPY9mgkPSAzA&s",
+  "Georgetown Hoyas":
+    "https://i.pinimg.com/originals/1e/e3/f2/1ee3f2de9c22a3eeab525420ce4de473.png",
+  "Grand Canyon Antelopes":
+    "https://1000logos.net/wp-content/uploads/2019/11/Grand-Canyon-Antelopes-Logo-2013.png",
+  "Lehigh Mountain Hawks":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/6/65/LehighMountainHawks.svg/1200px-LehighMountainHawks.svg.png",
+  "St. Francis (PA) Red Flash":
+    "https://a.espncdn.com/combiner/i?img=/i/teamlogos/ncaa/500/2598.png",
+  "VMI Keydets":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/VMI_Keydets_logo.svg/1200px-VMI_Keydets_logo.svg.png",
+  "Manhattan Jaspers":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbMjdWwbl4M9R_8fyqFWFbffXUnh4ujWB8CQ&s",
+  "North Dakota St Bison":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/74/North_Dakota_State_Bison_logo.svg/1200px-North_Dakota_State_Bison_logo.svg.png",
+  "South Carolina Upstate Spartans":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/USC_Upstate_Spartans_logo.svg/800px-USC_Upstate_Spartans_logo.svg.png",
+  "Loyola Marymount Lions":
+    "https://1000logos.net/wp-content/uploads/2019/09/LMU_Loyola-Marymount-Lions-logo.png",
+  "CSU Fullerton Titans":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/CSUF_Titans_Logo.svg/2058px-CSUF_Titans_Logo.svg.png",
+  "Pepperdine Waves":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-JCmChMGZKIYwAs6QafizxCcjJyCAvPobcA&s",
+  "Cal Baptist Lancers":
+    "https://content.sportslogos.net/logos/30/6812/full/california_baptist_lancers_logo_primary_2017_sportslogosnet-5309.png",
+  "Cal Poly Mustangs":
+    "https://logos-world.net/wp-content/uploads/2020/06/Cal-Poly-Mustangs-Logo.png",
+  "Eastern Washington Eagles":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ13FF4Y-ezs2gLr7VAAQ9dZtbPurmTm7FtAQ&s",
+  "UC Santa Barbara Gauchos":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/a/a8/UC_Santa_Barbara_Gauchos_logo.svg/1200px-UC_Santa_Barbara_Gauchos_logo.svg.png",
+  "Furman Paladins":
+    "https://www.furman.edu/wp-content/uploads/2019/01/paladins-logo/PNG/Paladins-Logo-RGB.png",
+  "Seattle Redhawks":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeOsnTUlgpNxRHSA5u9Q5KxGONxcWIgw-ThQ&s",
+  "Fresno St Bulldogs":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN6xD0n1YUKBOsu2Fnds8BK9m7sQnBuj2riQ&s",
+  "Washington St Cougars":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvSBJJ9fR-u-snnjkioSDhXwRfRvvtiAml8A&s",
+  "Perth Glory":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSRPM2-OnyfMRXo9PXGs-Hht2bNo9CPW9vAg&s",
+  "Adelaide United":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcHpDugZU4kYt3X3H-nHUmVD36gs3yRNolnw&s",
+  "Newcastle Jets FC":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/d/d5/Newcastle_United_Jets_Logo.svg/1200px-Newcastle_United_Jets_Logo.svg.png",
+  "Auckland FC":
+    "https://upload.wikimedia.org/wikipedia/en/8/8c/Auckland_FC_crest.svg",
+  "Western Sydney Wanderers":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Logo_of_Western_Sydney_Wanderers_FC.svg/1200px-Logo_of_Western_Sydney_Wanderers_FC.svg.png",
+  "Melbourne City":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7q14P-ZZo1qYi59ecZ0NpVxPbdBEyRagGAw&s",
+  "Macarthur FC":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Macarthur_FC_logo.svg/1200px-Macarthur_FC_logo.svg.png",
+  "Melbourne Victory":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTM0AyDroCyJ-EEZ-7cqvgH4FpfTDzOIGHXg&s",
+  "Western United FC":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qmrVRzE5XkwXbt_FqvMJW_8Hfo63T0Dc_w&s",
+  "Wellington Phoenix FC":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/d/de/Wellington_Phoenix_FC_logo.svg/1200px-Wellington_Phoenix_FC_logo.svg.png",
+  "Central Coast Mariners":
+    "https://e7.pngegg.com/pngimages/493/458/png-clipart-central-coast-mariners-fc-north-shore-mariners-fc-a-league-melbourne-city-fc-ffa-cup-football-text-sport-thumbnail.png",
+  "Wolfsberger AC":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Wolfsberger_AC_logo.svg/1200px-Wolfsberger_AC_logo.svg.png",
+  "Grazer AK":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThc9VxoPPz4olYXhohBxOe4dBjC-2erGOAKA&s",
+  "RB Salzburg":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/77/FC_Red_Bull_Salzburg_logo.svg/1200px-FC_Red_Bull_Salzburg_logo.svg.png",
+  Hartberg:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdLSwSnR3zsRwLPBi3_g_SUzeD9K2b3PRRcA&s",
+  "Sturm Graz":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThyimx9fnFwa5YJ-dQIoNA6JS7bSxzVMMVJQ&s",
+  "Rheindorf Altach":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/7/78/SC_Rheindorf_Altach_logo.svg/1200px-SC_Rheindorf_Altach_logo.svg.png",
+  "WSG Tirol":
+    "https://upload.wikimedia.org/wikipedia/en/3/33/WSG_Tirol_logo.png",
+  "Austria Klagenfurt":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/SK_Austria_Klagenfurt_2007_Logo.svg/1200px-SK_Austria_Klagenfurt_2007_Logo.svg.png",
+  "FC Blau-Weiß Linz":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/8/8a/FC_Blau-Wei%C3%9F_Linz_logo.svg/1200px-FC_Blau-Wei%C3%9F_Linz_logo.svg.png",
+  "Rapid Wien":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/SK_Rapid_Wien_Logo.svg/815px-SK_Rapid_Wien_Logo.svg.png",
+  "Austria Wien":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTm4Z4PGkVOrCkGgw38PT-lhs-KFWkWiZgKUQ&s",
+  LASK: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/LASK-Logo_2023.svg/1621px-LASK-Logo_2023.svg.png",
+  "KV Mechelen":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLL0TyzP_Z-Z4bIX02v1zUa2ezguxexneh7w&s",
+  "KV Kortrijk":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq-9xkVtnBkDc5HJ-UaCoib4Duj-xbcLhfqQ&s",
+  Dender:
+    "https://seeklogo.com/images/F/fc-verbroedering-dender-eh-logo-45F2E5CB64-seeklogo.com.png",
+  "Club Brugge":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Club_Brugge_KV_logo.svg/1200px-Club_Brugge_KV_logo.svg.png",
+  "Standard Liege":
+    "https://upload.wikimedia.org/wikipedia/en/b/bd/Standard_Li%C3%A8ge_BC_logo.png",
+  Charleroi:
+    "https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/Royal_Charleroi_Sporting_Club_logo.svg/1200px-Royal_Charleroi_Sporting_Club_logo.svg.png",
+  Genk: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/KRC_Genk_Logo_2016.svg/1633px-KRC_Genk_Logo_2016.svg.png",
+  "Sint Truiden":
+    "https://upload.wikimedia.org/wikipedia/en/f/f1/K._Sint-Truidense_V.V._logo.png",
+  Anderlecht:
+    "https://logos-world.net/wp-content/uploads/2020/11/Anderlecht-Logo.png",
+  Leuven:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQFY0EjjKkg1s8S8zsB7tKfPHrDCIAmfvLXg&s",
+  "Cercle Brugge KSV":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzOvhNaoNPJdZlgJGuTKlELdBxiAb2fR4GHw&s",
+  "Beerschot Wilrijk":
+    "https://upload.wikimedia.org/wikipedia/en/thumb/2/27/Koninklijke_Beerschot_Voetbalclub_Antwerpen_logo.svg/1200px-Koninklijke_Beerschot_Voetbalclub_Antwerpen_logo.svg.png",
+  "Royal Antwerp":
+    "https://logowik.com/content/uploads/images/royal-antwerp-fc2501.jpg",
+  "Union Saint-Gilloise":
+    "https://w7.pngwing.com/pngs/908/790/png-transparent-union-saint-gilloise-logo-football-belgian-football-clubs-logos.png",
+  Gent: "https://banner2.cleanpng.com/20180627/owk/aay0k7sq0.webp",
+  Westerlo:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8jnyft9TYy52UZayQY6fEDXEKPZ2TEHhhbw&s",
+  Criciuma:
+    "https://upload.wikimedia.org/wikipedia/commons/6/6a/EscudoCriciumaEC.svg",
+  Fluminense:
+    "https://upload.wikimedia.org/wikipedia/commons/6/6a/EscudoCriciumaEC.svg",
+  Flamengo:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_braz_logo.svg/1200px-Flamengo_braz_logo.svg.png",
+  Fortaleza:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRayCOHSg5DkLr6sa59uyPoMcVjtiY6cuqIeg&s",
 };
 
 export const EventScore = React.memo(() => {
@@ -945,9 +1138,29 @@ export const EventScore = React.memo(() => {
     0
   );
 
-  const handleMarketClick = (marketData) => {
-    setSelectedMarkets((prev) => [...prev, marketData]);
+  // const handleMarketClick = (marketData) => {
+  //   setSelectedMarkets((prev) => [...prev, marketData]);
+  // };
+  const handleMarketClick = (newItem) => {
+    setSelectedMarkets((currentCartData) => {
+      const exists = currentCartData.some(
+        (item) =>
+          item.id === newItem.id &&
+          item.market === newItem.market &&
+          item.team === newItem.team &&
+          item?.point === newItem?.point &&
+          item?.bookmaker === newItem?.bookmaker
+      );
+      if (exists) {
+        toast.error(`Item already exists in the BetSlip`);
+        return currentCartData;
+      }
+      const updatedCart = [...currentCartData, newItem];
+      localStorage.setItem("cartData", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
+
   const handleSelectChange = (e) => {
     const selectedIndex = e.target.selectedIndex;
     setMarket(e.target.value); // Set market_key
