@@ -19,6 +19,9 @@ const ApiEndPoints = {
   Get_Market: `${APPConfig.API_URL}/markets-by-game/`,
   BettingHistory: `${APPConfig.API_URL}/bet-history`,
   GetNews: `${APPConfig.API_URL}/news`,
+  LeagueList: `${APPConfig.API_URL}/leagues`,
+  CreateLeague: `${APPConfig.API_URL}/create-league`,
+  LeagueDetail: `${APPConfig.API_URL}/league/`,
 };
 
 export default ApiEndPoints;
