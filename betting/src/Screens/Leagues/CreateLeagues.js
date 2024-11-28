@@ -7,6 +7,7 @@ import {
   Button,
   Form,
   InputGroup,
+  Modal,
 } from "react-bootstrap";
 import {
   FaClipboardList,
@@ -15,6 +16,8 @@ import {
   FaLink,
   FaCalendarAlt,
   FaRegClipboard,
+  FaCopy,
+  FaRegCopy,
 } from "react-icons/fa";
 import SportList from "../../JSON/SportList";
 import "./createlegue.css";
@@ -23,6 +26,8 @@ import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
+import ShareableLink from "../../Components/ShareableLink ";
+import { FaUber } from "react-icons/fa6";
 
 const sportsLeagues = SportList;
 const CreateLeagues = () => {
@@ -36,10 +41,17 @@ const CreateLeagues = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [load, setLoad] = useState(false);
-
+  const [linkData, setLinkData] = useState(null);
+  const [copy, setCopy] = useState(false);
+  const [show, setShow] = useState(false);
+  const shareUrl = ShareableLink(linkData?.id, linkData?.invite_code);
+  console.log("linkData", linkData);
+  console.log("shareUrl", shareUrl);
   const leaguesToShow = showAll ? sportsLeagues : sportsLeagues.slice(0, 10);
+  setTimeout(() => {
+    setCopy(false);
+  }, 2000);
 
-  console.log("gameType", selectedLeagues);
   const handleGameTypeChange = (type) => {
     setGameType(type);
   };
@@ -54,6 +66,19 @@ const CreateLeagues = () => {
     }
   };
 
+  /*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Handles the form submission for creating a league.
+   * Prevents the default form submission behavior and constructs a FormData object
+   * with league details such as name, game type, units issued, match length,
+   * season start date, season end date, and selected leagues.
+   * Sends a POST request to create a league using the constructed FormData.
+   * Displays success or error messages based on the response.
+   * Manages loading state and error message timing for better user experience.
+   *
+   * @param {Event} e - The form submission event.
+   */
+  /******  46081327-6cfe-4475-ae18-4bac6d2c46cb  *******/
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -78,8 +103,11 @@ const CreateLeagues = () => {
       if (response.success === true) {
         console.log("response", response);
         toast.success(response.msg);
+        setLinkData(response.result);
+        setShow(true);
+
         setLoad(false);
-        navigate("/leagues-list");
+        // navigate("/leagues-list");
       } else {
         setLoad(false);
         if (response.result) {
@@ -252,10 +280,18 @@ const CreateLeagues = () => {
                     onChange={(e) => setUnit(e.target.value)}
                   />
                 </Form.Group>
+                <Button
+                  variant="#155239"
+                  style={{ backgroundColor: "#155239", color: "white" }}
+                  className="mt-4"
+                  onClick={handleSubmit}
+                >
+                  Create League
+                </Button>
               </Form>
             </Card.Body>
           </Card>
-          <h5 className="fw-bold">Invite Friends</h5>
+          {/* <h5 className="fw-bold">Invite Friends</h5>
           <Card className="mb-4">
             <Card.Body>
               <Form>
@@ -275,18 +311,19 @@ const CreateLeagues = () => {
 
                     <InputGroup.Text
                       style={{ cursor: "pointer" }}
-                      onClick={() =>
+                      onClick={() => {
                         navigator.clipboard.writeText(
                           "joingroup.com/abcdefg/invite"
-                        )
-                      }
+                        );
+                        setCopy(true);
+                      }}
                     >
-                      <FaRegClipboard />
+                      {copy ? <FaCopy /> : <FaRegCopy />}
                     </InputGroup.Text>
                   </InputGroup>
                 </Form.Group>
 
-                {/* Contacts */}
+                 
                 <Form.Group controlId="inviteContacts" className="mt-4">
                   <Form.Label className="fw-bold">Contacts</Form.Label>
                   <div className="d-flex justify-content-between align-items-center mb-2">
@@ -313,19 +350,49 @@ const CreateLeagues = () => {
                   </div>
                 </Form.Group>
 
-                <Button
-                  variant="#155239"
-                  style={{ backgroundColor: "#155239", color: "white" }}
-                  className="mt-4"
-                  onClick={handleSubmit}
-                >
-                  Create League
-                </Button>
+               
               </Form>
             </Card.Body>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
+      <Modal
+        show={show}
+        onHide={() => {
+          setShow(false);
+          navigate("/leagues-list");
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Share Link</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="inviteLink">
+            <Form.Label className="fw-bold">Share Link</Form.Label>
+            <InputGroup>
+              <InputGroup.Text>
+                <FaLink />
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                readOnly
+                value={shareUrl}
+                style={{ color: "#007bff", cursor: "pointer" }}
+              />
+              <InputGroup.Text
+                onClick={() => {
+                  navigator.clipboard.writeText(shareUrl);
+                  setCopy(true);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                {copy ? <FaCopy /> : <FaRegCopy />}
+              </InputGroup.Text>
+            </InputGroup>
+          </Form.Group>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

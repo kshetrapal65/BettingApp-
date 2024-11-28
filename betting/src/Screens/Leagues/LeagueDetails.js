@@ -7,14 +7,15 @@ import { PulseLoader } from "react-spinners";
 import { FaArrowLeft, FaBackward } from "react-icons/fa";
 
 const LeagueDetails = () => {
-  const { id } = useParams();
+  const { id, code } = useParams();
   const navigate = useNavigate();
   const [league, setLeague] = React.useState([]);
   const [load, setLoad] = React.useState(true);
+  console.log("LeagueID:", id, "CODE", code);
 
   useEffect(() => {
     getLeagueDetails();
-  }, [id]);
+  }, [id, code]);
 
   const getLeagueDetails = async () => {
     try {

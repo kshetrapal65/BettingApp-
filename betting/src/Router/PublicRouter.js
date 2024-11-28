@@ -41,7 +41,11 @@ const PublicRouter = () => {
         <Route path="/betting-history" element={<BettingHistory />} />
         <Route path="/leagues-list" element={<LeaguesList />} />
         <Route path="/create-leagues" element={<CreateLeagues />} />
-        <Route path="/league-details/:id" element={<LeagueDetails />} />
+        {/* <Route path="/league-details/:id" element={<LeagueDetails />} /> */}
+        <Route
+          path="/league-details/:id/invite/:code"
+          element={<LeagueDetails />}
+        />
       </Routes>
       <Footer />
     </>
