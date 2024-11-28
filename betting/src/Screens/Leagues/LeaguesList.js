@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Badge,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import moment from "moment";
 import { PulseLoader } from "react-spinners";
+import { FaChevronRight } from "react-icons/fa";
+import "./createlegue.css";
 
 const LeaguesList = () => {
   const navigate = useNavigate();
@@ -52,35 +62,49 @@ const LeaguesList = () => {
           <Form.Control type="search" placeholder="Search..." />
         </Col>
       </Row>
+      {leagues.length === 0 && (
+        <div className="d-flex justify-content-center align-items-center">
+          <h4 className="fw-bold text-muted m-5">No Leagues Found</h4>
+        </div>
+      )}
       {leagues.map((league, index) => (
-        <Row key={index} className="mb-3">
+        <Row key={index} className="mb-4">
           <Col>
-            <Card>
-              <Card.Body>
-                <Row className="justify-content-between">
+            <Card className="league-card h-100 shadow-sm">
+              <Card.Body className="p-4">
+                <Row className="justify-content-between align-items-center">
                   <Col xs={8}>
                     <Card.Title
-                      style={{ fontSize: "1.2rem", color: "#343434" }}
+                      style={{
+                        fontSize: "1.3rem",
+                        color: "#2c3e50",
+                        fontWeight: "bold",
+                      }}
                     >
                       {league.name}
                     </Card.Title>
-                    {/* <Card.Text>{league.members}</Card.Text> */}
                   </Col>
-                  <Col xs="auto" className="text-end">
+                  <Col xs="auto">
                     <Button
-                      variant="link"
-                      className="text-primary"
-                      onClick={() => navigate(`/league-details/${league.id}`)}
+                      variant="#155239"
+                      size="sm"
+                      className="custom-btns d-flex align-items-center"
+                      onClick={() =>
+                        navigate(
+                          `/league-details/${league?.id}/invite/${league?.invite_code}`
+                        )
+                      }
                     >
-                      View League
+                      View League <FaChevronRight className="ms-2" />
                     </Button>
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row className="mt-4">
                   <Col>
-                    <small className="">
-                      Ends {moment(league.season_end_date).format("l")}{" "}
-                    </small>
+                    <p className="text-muted mb-0">
+                      <strong>Ends: </strong>{" "}
+                      {moment(league.season_end_date).format("l")}
+                    </p>
                   </Col>
                 </Row>
               </Card.Body>

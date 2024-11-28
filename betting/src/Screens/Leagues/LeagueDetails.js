@@ -44,7 +44,11 @@ const LeagueDetails = () => {
       )}
       {/* League Overview */}
       <Card className="mb-4">
-        <Card.Header as="h5" className="fw-bold">
+        <Card.Header
+          as="h5"
+          className="fw-bold text-white"
+          style={{ backgroundColor: "#155239" }}
+        >
           {" "}
           <FaArrowLeft
             onClick={() => navigate(-1)}
@@ -83,7 +87,13 @@ const LeagueDetails = () => {
 
       {/* League Sports */}
       <Card className="mb-4">
-        <Card.Header as="h5">Sports in League</Card.Header>
+        <Card.Header
+          as="h5"
+          className="text-white"
+          style={{ backgroundColor: "#155239" }}
+        >
+          Sports in League
+        </Card.Header>
         <Card.Body>
           {league?.league_sports?.length > 0 ? (
             <div className="table-responsive">
@@ -114,7 +124,13 @@ const LeagueDetails = () => {
 
       {/* League Members */}
       <Card className="mb-4">
-        <Card.Header as="h5">League Members</Card.Header>
+        <Card.Header
+          as="h5"
+          className="text-white"
+          style={{ backgroundColor: "#155239" }}
+        >
+          League Members
+        </Card.Header>
         <Card.Body>
           {league?.league_members?.length > 0 ? (
             <Table striped bordered hover>
@@ -141,7 +157,13 @@ const LeagueDetails = () => {
 
       {/* League Invites */}
       <Card className="mb-4">
-        <Card.Header as="h5">League Invites</Card.Header>
+        <Card.Header
+          as="h5"
+          className="text-white"
+          style={{ backgroundColor: "#155239" }}
+        >
+          League Invites
+        </Card.Header>
         <Card.Body>
           {league?.league_invites?.length > 0 ? (
             <Table striped bordered hover>

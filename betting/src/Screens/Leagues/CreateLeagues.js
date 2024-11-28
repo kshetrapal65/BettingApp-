@@ -36,7 +36,7 @@ const CreateLeagues = () => {
   const [selectedLeagues, setSelectedLeagues] = useState([]);
   const [gameType, setGameType] = useState(null);
   const [leagueName, setLeagueName] = useState("");
-  const [unit, setUnit] = useState(0);
+  const [unit, setUnit] = useState("");
   const [matchLength, setMatchLength] = useState(0);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -45,8 +45,6 @@ const CreateLeagues = () => {
   const [copy, setCopy] = useState(false);
   const [show, setShow] = useState(false);
   const shareUrl = ShareableLink(linkData?.id, linkData?.invite_code);
-  console.log("linkData", linkData);
-  console.log("shareUrl", shareUrl);
   const leaguesToShow = showAll ? sportsLeagues : sportsLeagues.slice(0, 10);
   setTimeout(() => {
     setCopy(false);
@@ -66,19 +64,6 @@ const CreateLeagues = () => {
     }
   };
 
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Handles the form submission for creating a league.
-   * Prevents the default form submission behavior and constructs a FormData object
-   * with league details such as name, game type, units issued, match length,
-   * season start date, season end date, and selected leagues.
-   * Sends a POST request to create a league using the constructed FormData.
-   * Displays success or error messages based on the response.
-   * Manages loading state and error message timing for better user experience.
-   *
-   * @param {Event} e - The form submission event.
-   */
-  /******  46081327-6cfe-4475-ae18-4bac6d2c46cb  *******/
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -113,10 +98,9 @@ const CreateLeagues = () => {
         if (response.result) {
           Object.keys(response.result).forEach((field, index) => {
             response.result[field].forEach((errorMsg, errorIndex) => {
-              // Delay each toast by multiplying index and errorIndex (to space out the messages)
               setTimeout(() => {
                 toast.error(`${errorMsg}`);
-              }, (index + errorIndex) * 500); // Adjust delay timing (e.g., 500ms) as needed
+              }, (index + errorIndex) * 500);
             });
           });
         }
