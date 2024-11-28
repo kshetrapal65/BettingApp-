@@ -16,11 +16,16 @@ const sports = SportList;
 const Home = () => {
   const [sport, setSport] = React.useState("americanfootball_nfl");
   const [event, setEvent] = React.useState([]);
+  const [league, setLeague] = React.useState([]);
   const navigate = useNavigate();
+  console.log("league", league);
 
   useEffect(() => {
     fetchEvent();
   }, [sport]);
+  useEffect(() => {
+    getLeagues();
+  }, []);
 
   const fetchEvent = async () => {
     try {
@@ -172,6 +177,17 @@ const Home = () => {
   ];
   const handleSport = (e) => {
     setSport(e.target.value);
+  };
+
+  const getLeagues = async () => {
+    try {
+      const response = await apiCallNew("post", null, ApiEndPoints.LeagueList);
+      if (response.success === true) {
+        setLeague(response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
   };
 
   const teamImages = {
@@ -1325,6 +1341,50 @@ const Home = () => {
               )}
             </Col>
           </Row>
+          <h5 className="fw-bold mt-3">Leagues</h5>
+          <Row className="mt-1  bg-light rounded-2">
+            <Col lg={12}>
+              {league?.length > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    overflowX: "scroll",
+                    overflowY: "hidden",
+                    padding: "10px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {league?.map((league) => (
+                    <Col md={3} key={league.id}>
+                      <Card
+                        onClick={() =>
+                          navigate(
+                            `/league-details/${league.id}/invite/${league.invite_code}`
+                          )
+                        }
+                        className="shadow"
+                        style={{ cursor: "pointer" }}
+                      >
+                        <Card.Body>
+                          <h6 className="fw-bold">{league?.name}</h6>
+
+                          <Card.Text className="text-muted">
+                            End Date: <strong>{league?.season_end_date}</strong>
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-muted p-5">
+                  No events available.
+                </p>
+              )}
+            </Col>
+          </Row>
+
           {/* <Row className="mt-5 justify-content-around  ">
             <Col className="bg-light p-4 rounded-5" lg={12}>
               <Row>
