@@ -18,23 +18,94 @@ import {
 } from "react-icons/fa";
 import SportList from "../../JSON/SportList";
 import "./createlegue.css";
+import { apiCallNew } from "../../Network_Call/apiservices";
+import ApiEndPoints from "../../Network_Call/ApiEndPoints";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { PulseLoader } from "react-spinners";
 
 const sportsLeagues = SportList;
 const CreateLeagues = () => {
+  const navigate = useNavigate();
   const [showAll, setShowAll] = useState(false);
   const [selectedLeagues, setSelectedLeagues] = useState([]);
+  const [gameType, setGameType] = useState(null);
+  const [leagueName, setLeagueName] = useState("");
+  const [unit, setUnit] = useState(0);
+  const [matchLength, setMatchLength] = useState(0);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [load, setLoad] = useState(false);
+
   const leaguesToShow = showAll ? sportsLeagues : sportsLeagues.slice(0, 10);
 
+  console.log("gameType", selectedLeagues);
+  const handleGameTypeChange = (type) => {
+    setGameType(type);
+  };
+
   const handleLeagueChange = (league) => {
-    if (selectedLeagues.includes(league)) {
-      setSelectedLeagues(selectedLeagues.filter((item) => item !== league));
+    if (selectedLeagues.some((item) => item.title === league.title)) {
+      setSelectedLeagues(
+        selectedLeagues.filter((item) => item.title !== league.title)
+      );
     } else {
       setSelectedLeagues([...selectedLeagues, league]);
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", leagueName);
+    formData.append("is_paid", gameType);
+    formData.append("units_issued", unit);
+    formData.append("match_length", matchLength);
+    formData.append("season_start_date", startDate);
+    formData.append("season_end_date", endDate);
+    selectedLeagues.forEach((item, index) => {
+      formData.append(`sports[${index}][sport_key]`, item.key);
+      formData.append(`sports[${index}][sport_name]`, item.title);
+      formData.append(`sports[${index}][sport_id]`, item.key);
+    });
+    try {
+      setLoad(true);
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.CreateLeague
+      );
+      if (response.success === true) {
+        console.log("response", response);
+        toast.success(response.msg);
+        setLoad(false);
+        navigate("/leagues-list");
+      } else {
+        setLoad(false);
+        if (response.result) {
+          Object.keys(response.result).forEach((field, index) => {
+            response.result[field].forEach((errorMsg, errorIndex) => {
+              // Delay each toast by multiplying index and errorIndex (to space out the messages)
+              setTimeout(() => {
+                toast.error(`${errorMsg}`);
+              }, (index + errorIndex) * 500); // Adjust delay timing (e.g., 500ms) as needed
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
+
   return (
     <Container className="mt-4">
+      {load && (
+        <div>
+          <PulseLoader loading={load} color="#155239" style={styles.backdrop} />
+        </div>
+      )}
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={12}>
           <h5 className="fw-bold">Create League</h5>
@@ -43,28 +114,40 @@ const CreateLeagues = () => {
               <Form>
                 <Form.Group controlId="leagueName">
                   <Form.Label className="fw-bold">League Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter League Name" />
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter League Name"
+                    value={leagueName}
+                    onChange={(e) => setLeagueName(e.target.value)}
+                  />
                 </Form.Group>
-
                 <Form.Group className="mt-4">
                   <Form.Label className="fw-bold">Select Game Type</Form.Label>
+
+                  {/* Free For All Option */}
                   <div className="mb-2 mt-2">
                     <Form.Check
                       type="switch"
                       label={<span className="fw-bold ms-3">Free For All</span>}
                       id="freeForAll"
                       className="custom-switch"
+                      checked={gameType === 0}
+                      onChange={() => handleGameTypeChange(0)}
                     />
                     <Form.Text className="text-muted">
                       Player with the most units wins the week.
                     </Form.Text>
                   </div>
+
+                  {/* Match Play Option */}
                   <div>
                     <Form.Check
                       type="switch"
                       label={<span className="fw-bold ms-3">Match Play</span>}
                       id="matchPlay"
                       className="custom-switch"
+                      checked={gameType === 1}
+                      onChange={() => handleGameTypeChange(1)}
                     />
                     <Form.Text className="text-muted">
                       1v1 weekly matches. Player with the most wins at the end
@@ -99,8 +182,10 @@ const CreateLeagues = () => {
                           label={league.title}
                           name="league"
                           id={league?.title?.toLowerCase()}
-                          checked={selectedLeagues.includes(league.title)}
-                          onChange={() => handleLeagueChange(league.title)}
+                          checked={selectedLeagues.some(
+                            (item) => item.title === league.title
+                          )}
+                          onChange={() => handleLeagueChange(league)}
                           className="custom-checkbox"
                         />
                       </Col>
@@ -114,18 +199,16 @@ const CreateLeagues = () => {
                   >
                     {showAll ? "Show Less" : "Show All"}
                   </Button>
-                  <div className="mt-3">
-                    <strong>Selected Leagues: </strong>
-                    {selectedLeagues.join(", ")}
-                  </div>
                 </Form.Group>
 
                 <Form.Group controlId="matchLength" className="mt-4">
                   <Form.Label className="fw-bold">Match Length</Form.Label>
-                  <Form.Control as="select">
-                    <option>7 Days</option>
-                    <option>14 Days</option>
-                  </Form.Control>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter match length"
+                    value={matchLength}
+                    onChange={(e) => setMatchLength(e.target.value)}
+                  />
                 </Form.Group>
 
                 <Form.Group controlId="seasonLength" className="mt-4">
@@ -136,7 +219,12 @@ const CreateLeagues = () => {
                         <InputGroup.Text>
                           <FaCalendarAlt />
                         </InputGroup.Text>
-                        <Form.Control type="date" placeholder="Start Date" />
+                        <Form.Control
+                          type="date"
+                          placeholder="Start Date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                        />
                       </InputGroup>
                     </Col>
                     <Col>
@@ -144,7 +232,12 @@ const CreateLeagues = () => {
                         <InputGroup.Text>
                           <FaCalendarAlt />
                         </InputGroup.Text>
-                        <Form.Control type="date" placeholder="End Date" />
+                        <Form.Control
+                          type="date"
+                          placeholder="End Date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                        />
                       </InputGroup>
                     </Col>
                   </Row>
@@ -152,10 +245,12 @@ const CreateLeagues = () => {
 
                 <Form.Group controlId="unitsIssued" className="mt-4">
                   <Form.Label className="fw-bold">Units Issued</Form.Label>
-                  <Form.Control as="select">
-                    <option>100 Units</option>
-                    <option>200 Units</option>
-                  </Form.Control>
+                  <Form.Control
+                    type="number"
+                    placeholder="Units Issued"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                  />
                 </Form.Group>
               </Form>
             </Card.Body>
@@ -222,6 +317,7 @@ const CreateLeagues = () => {
                   variant="#155239"
                   style={{ backgroundColor: "#155239", color: "white" }}
                   className="mt-4"
+                  onClick={handleSubmit}
                 >
                   Create League
                 </Button>
@@ -232,6 +328,22 @@ const CreateLeagues = () => {
       </Row>
     </Container>
   );
+};
+
+const styles = {
+  backdrop: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#155239",
+  },
 };
 
 export default CreateLeagues;
