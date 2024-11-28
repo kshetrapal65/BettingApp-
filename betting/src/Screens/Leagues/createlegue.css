@@ -34,3 +34,15 @@
 .custom-switch .form-check-input:focus {
   box-shadow: none;
 }
+
+.custom-btns {
+  background-color: "white" !important;
+  color: #155239;
+  border: 1px solid #155239;
+}
+
+.custom-btns:hover {
+  background-color: #155239;
+  border-color: #155239;
+  color: white;
+}
