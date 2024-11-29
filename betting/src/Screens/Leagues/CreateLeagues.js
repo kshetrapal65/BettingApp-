@@ -76,7 +76,7 @@ const CreateLeagues = () => {
     selectedLeagues.forEach((item, index) => {
       formData.append(`sports[${index}][sport_key]`, item.key);
       formData.append(`sports[${index}][sport_name]`, item.title);
-      formData.append(`sports[${index}][sport_id]`, item.key);
+      formData.append(`sports[${index}][sport_id]`, item.group);
     });
     try {
       setLoad(true);

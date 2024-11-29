@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Login.css";
 import * as Yup from "yup";
 import { apiCallNew } from "../../../Network_Call/apiservices";
@@ -18,10 +18,13 @@ const validationSchema = Yup.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [load, setLoad] = useState(false);
+
+  const redirectUrl = new URLSearchParams(location.search).get("redirect");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +47,10 @@ const Login = () => {
         setToken(response.result.api_token);
         setUserData(response?.result);
         setLoad(false);
-        navigate("/");
+        const redirectUrl =
+          new URLSearchParams(location.search).get("redirect") || "/";
+
+        navigate(redirectUrl);
         window.location.reload();
       } else {
         setLoad(false);
@@ -123,7 +129,13 @@ const Login = () => {
                 </Form>
 
                 <div className="text-center mt-4">
-                  <Link to="/register">
+                  <Link
+                    to={`/register${
+                      redirectUrl
+                        ? `?redirect=${encodeURIComponent(redirectUrl)}`
+                        : ""
+                    }`}
+                  >
                     <a className="small">Don't have an account? Sign up</a>
                   </Link>
                 </div>

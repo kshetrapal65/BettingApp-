@@ -19,6 +19,7 @@ import BettingHistory from "../Screens/Betting/BettingHistory/BettingHistory";
 import LeaguesList from "../Screens/Leagues/LeaguesList";
 import CreateLeagues from "../Screens/Leagues/CreateLeagues.js";
 import LeagueDetails from "../Screens/Leagues/LeagueDetails.js";
+import PrivateRoute from "../Components/PrivateRoute.js";
 
 const PublicRouter = () => {
   return (
@@ -44,8 +45,16 @@ const PublicRouter = () => {
         {/* <Route path="/league-details/:id" element={<LeagueDetails />} /> */}
         <Route
           path="/league-details/:id/invite/:code"
-          element={<LeagueDetails />}
+          element={
+            <PrivateRoute>
+              <LeagueDetails />
+            </PrivateRoute>
+          }
         />
+        {/* <Route
+          path="/league-details/:id/invite/:code"
+          element={<LeagueDetails />}
+        /> */}
       </Routes>
       <Footer />
     </>

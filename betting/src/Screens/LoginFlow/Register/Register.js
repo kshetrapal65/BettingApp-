@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import "./Register.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import ApiEndPoints from "../../../Network_Call/ApiEndPoints";
 import { apiCallNew } from "../../../Network_Call/apiservices";
@@ -12,6 +12,7 @@ import { setToken, setUserData } from "../../../Helper/Storage";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
+  userName: Yup.string().required("User Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -23,12 +24,22 @@ const validationSchema = Yup.object({
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [load, setLoad] = useState(false);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    const regex = /^[A-Za-z0-9_]*$/;
+    if (regex.test(value)) {
+      setUserName(value);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,11 +47,13 @@ const Register = () => {
       const valid = {
         name: name,
         email: email,
+        userName: userName,
         password: password,
         confirmPassword: confirmPassword,
       };
       const formData = new FormData();
       formData.append("name", name);
+      formData.append("usename", userName);
       formData.append("email", email);
       formData.append("password", password);
       await validationSchema.validate(valid, {
@@ -57,7 +70,9 @@ const Register = () => {
         setToken(response.result.api_token);
         setUserData(response?.result);
         setLoad(false);
-        navigate("/");
+        const redirectUrl =
+          new URLSearchParams(location.search).get("redirect") || "/";
+        navigate(redirectUrl);
         window.location.reload();
       } else {
         setLoad(false);
@@ -102,6 +117,19 @@ const Register = () => {
                     />
                     {errors.name && (
                       <div className="text-danger small">{errors.name}</div>
+                    )}
+                  </Form.Group>
+                  <Form.Group controlId="formBasicName" className="mb-3">
+                    <Form.Label>User Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter your user name"
+                      value={userName}
+                      onChange={handleInputChange}
+                      className="signup-input"
+                    />
+                    {errors.userName && (
+                      <div className="text-danger small">{errors.userName}</div>
                     )}
                   </Form.Group>
 
