@@ -144,7 +144,7 @@ const Header = () => {
                 Betting History
               </a>
             </li> */}
-            <li onClick={() => navigate("/leagues-list")}>
+            <li onClick={() => navigate(token ? "/leagues-list" : "/login")}>
               <a onClick={toggleDrawer} href="#">
                 Leagues
               </a>

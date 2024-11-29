@@ -30,14 +30,15 @@ const LeagueDetails = () => {
   const navigate = useNavigate();
   const userData = getUserdata();
   const [league, setLeague] = React.useState([]);
+  const [leagueList, setLeagueList] = React.useState([]);
   const [load, setLoad] = React.useState(true);
   const [copy, setCopy] = React.useState(false);
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
-
-  console.log("userData", userData.id, "leage", league.user_id);
+  const matchId = leagueList?.find((item) => item.id == id);
 
   useEffect(() => {
     getLeagueDetails();
+    getLeagues();
     window.scrollTo(0, 0);
   }, [id, code]);
 
@@ -61,6 +62,17 @@ const LeagueDetails = () => {
       }
     } catch (error) {
       setLoad(false);
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  const getLeagues = async () => {
+    try {
+      const response = await apiCallNew("post", null, ApiEndPoints.LeagueList);
+      if (response.success === true) {
+        setLeagueList(response.result);
+      }
+    } catch (error) {
       console.error("Error fetching profile:", error);
     }
   };
@@ -161,7 +173,7 @@ const LeagueDetails = () => {
               lg="6"
               className="d-flex justify-content-center justify-content-lg-end"
             >
-              {userData?.id === league?.user_id && (
+              {userData?.id !== league?.user_id && (
                 <Button
                   className="ms-lg-2 mb-2 mb-lg-0 me-1"
                   size="sm"
@@ -181,15 +193,18 @@ const LeagueDetails = () => {
               >
                 Bets on {league.name}
               </Button>
-              <Button
-                className="ms-lg-2 mb-2 mb-lg-0"
-                size="sm"
-                variant="#155239"
-                style={{ backgroundColor: "#155239", color: "white" }}
-                onClick={confirmLeagueInvites}
-              >
-                Accept Invite
-              </Button>
+              {userData?.id === league?.user_id ? null : league?.id ==
+                matchId?.id ? null : (
+                <Button
+                  className="ms-lg-2 mb-2 mb-lg-0"
+                  size="sm"
+                  variant="#155239"
+                  style={{ backgroundColor: "#155239", color: "white" }}
+                  onClick={confirmLeagueInvites}
+                >
+                  Accept Invite
+                </Button>
+              )}
             </Col>
           </Row>
         </Card.Header>
@@ -284,6 +299,7 @@ const LeagueDetails = () => {
               <thead>
                 <tr>
                   <th>Member ID</th>
+                  <th>Member Name</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -291,6 +307,7 @@ const LeagueDetails = () => {
                 {league.league_members.map((member) => (
                   <tr key={member.id}>
                     <td>{member.member_id}</td>
+                    <td>{member.member_name}</td>
                     <td>{member.member_status}</td>
                   </tr>
                 ))}

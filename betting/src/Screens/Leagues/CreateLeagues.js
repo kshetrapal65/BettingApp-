@@ -70,6 +70,7 @@ const CreateLeagues = () => {
     formData.append("name", leagueName);
     formData.append("is_paid", gameType);
     formData.append("units_issued", unit);
+    formData.append("units_issued_type", "a_week");
     formData.append("match_length", matchLength);
     formData.append("season_start_date", startDate);
     formData.append("season_end_date", endDate);

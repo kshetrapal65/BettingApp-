@@ -80,9 +80,7 @@ const LeaguesList = () => {
       )}
       <Row className="justify-content-between align-items-center mt-3">
         <Col xs="auto">
-          <h4 className="fw-bold" onClick={() => navigate("/login")}>
-            Leagues
-          </h4>
+          <h4 className="fw-bold">Leagues</h4>
         </Col>
         <Col xs="auto">
           <Link to="/create-leagues">
