@@ -13,7 +13,8 @@ import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import moment from "moment";
 import { PulseLoader } from "react-spinners";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 import "./createlegue.css";
 
 const LeaguesList = () => {
@@ -38,6 +39,38 @@ const LeaguesList = () => {
       setLoad(false);
     }
   };
+
+  const confirmDeletion = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove the league?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#155636",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteLeague(id);
+      }
+    });
+  };
+
+  const deleteLeague = async (id) => {
+    try {
+      const response = await apiCallNew(
+        "get",
+        {},
+        ApiEndPoints.DeleteLeague + id
+      );
+      if (response.success === true) {
+        getLeagues();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       {load && (
@@ -51,7 +84,11 @@ const LeaguesList = () => {
         </Col>
         <Col xs="auto">
           <Link to="/create-leagues">
-            <Button variant="link" className="text-decoration-none fw-bold">
+            <Button
+              variant="#155239"
+              className="text-decoration-none fw-bold"
+              style={{ color: "#155239" }}
+            >
               + New League
             </Button>
           </Link>
@@ -67,6 +104,7 @@ const LeaguesList = () => {
           <h4 className="fw-bold text-muted m-5">No Leagues Found</h4>
         </div>
       )}
+
       {leagues.map((league, index) => (
         <Row key={index} className="mb-4">
           <Col>
@@ -84,7 +122,7 @@ const LeaguesList = () => {
                       {league.name}
                     </Card.Title>
                   </Col>
-                  <Col xs="auto">
+                  <Col xs="auto" className="d-flex">
                     <Button
                       variant="#155239"
                       size="sm"
@@ -96,6 +134,14 @@ const LeaguesList = () => {
                       }
                     >
                       View League <FaChevronRight className="ms-2" />
+                    </Button>
+                    <Button
+                      variant="#155239"
+                      size="sm"
+                      className="custom-btns ms-2 d-flex align-items-center"
+                      onClick={() => confirmDeletion(league.id)}
+                    >
+                      <FaTrash />
                     </Button>
                   </Col>
                 </Row>
