@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Pagination,
+  Row,
+  Table,
+} from "react-bootstrap";
 import { apiCallNew } from "../../../Network_Call/apiservices";
 import ApiEndPoints from "../../../Network_Call/ApiEndPoints";
 import { PulseLoader } from "react-spinners";
@@ -8,12 +16,92 @@ const BettingHistory = () => {
   const [betHistoryData, setBetHistoryData] = useState([]);
   const [load, setLoad] = useState(false);
   const [page, setPage] = useState(1);
+  const [event, setEvent] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const itemPerPage = 20;
 
   useEffect(() => {
     getBetHistory(page);
   }, [page]);
+  useEffect(() => {
+    fetchEvent();
+  }, []);
+
+  const checkSpreadBet = (bet, scores) => {
+    const { sport_key, outcomes_odds_point1, sport_id } = bet;
+
+    const match = scores.find((score) => score.id === sport_id);
+    if (match?.completed) {
+      return true;
+    } else {
+      return false;
+    }
+
+    // if (!match) return "Pending";
+    // if (!match.completed || !match.scores) return "Pending";
+
+    // const homeScore = parseInt(
+    //   match.scores.find((s) => s.name === match.home_team).score
+    // );
+    // const awayScore = parseInt(
+    //   match.scores.find((s) => s.name === match.away_team).score
+    // );
+
+    // const pointSpread = outcomes_odds_point1;
+
+    // if (match.home_team === bet.sport_name) {
+    //   return homeScore - awayScore > pointSpread ? "Win" : "Loss";
+    // } else if (match.away_team === bet.sport_name) {
+    //   return awayScore - homeScore > pointSpread ? "Win" : "Loss";
+    // }
+
+    // return "Loss";
+  };
+
+  const checkTotalBet = (bet, scores) => {
+    const { sport_key, outcomes_odds_point1, sport_id } = bet;
+
+    const match = scores.find((score) => score.id === sport_id);
+
+    if (!match) return "Pending"; // No match found
+    if (!match.completed || !match.scores) return "Pending"; // Match not completed or scores unavailable
+
+    const homeScore = parseInt(
+      match.scores.find((s) => s.name === match.home_team).score
+    );
+    const awayScore = parseInt(
+      match.scores.find((s) => s.name === match.away_team).score
+    );
+
+    const totalPoints = homeScore + awayScore;
+
+    return totalPoints > outcomes_odds_point1 ? "Win" : "Loss";
+  };
+  const checkMoneylineBet = (bet, scores) => {
+    const { sport_key, sport_name, sport_id } = bet;
+
+    // Find the matching score data
+    const match = scores.find((score) => score.id === sport_id);
+
+    if (!match) return "Pending"; // No match found
+    if (!match.completed || !match.scores) return "Pending"; // Match not completed or scores unavailable
+
+    const homeScore = parseInt(
+      match.scores.find((s) => s.name === match.home_team).score
+    );
+    const awayScore = parseInt(
+      match.scores.find((s) => s.name === match.away_team).score
+    );
+
+    // Moneyline logic (compare scores)
+    if (match.home_team === sport_name) {
+      return homeScore > awayScore ? "Win" : "Loss";
+    } else if (match.away_team === sport_name) {
+      return awayScore > homeScore ? "Win" : "Loss";
+    }
+
+    return "Loss"; // Fallback
+  };
 
   const getBetHistory = async (page) => {
     const formData = new FormData();
@@ -37,6 +125,30 @@ const BettingHistory = () => {
       setLoad(false);
     }
   };
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(
+        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
+        `https://api.the-odds-api.com/v4/sports/americanfootball_nfl/scores/?&daysFrom=3&apiKey=${ApiEndPoints.ApiKey}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("response", data);
+      setEvent(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -54,7 +166,7 @@ const BettingHistory = () => {
         <thead>
           <tr>
             <th>No.</th>
-            <th>Bet Type</th> {/* New Column for Bet Type */}
+            <th>Bet Type</th>
             <th>Sport</th>
             <th>Market</th>
             <th>Amount</th>
@@ -62,49 +174,61 @@ const BettingHistory = () => {
             <th>Bet Status</th>
             <th>Bookmaker</th>
             <th>Date</th>
+            {/* <th>Settlement </th> */}
           </tr>
         </thead>
         <tbody>
-          {betHistoryData?.length === 0 && (
-            <tr className="p-5">
-              <td colSpan={8} className="text-center">
-                No Data Found
-              </td>
-            </tr>
-          )}
           {betHistoryData?.map((bet, index) => (
             <React.Fragment key={bet.id}>
-              {bet.bet_detail?.map((detail, detailIndex) => (
-                <tr key={detail.id}>
-                  {detailIndex === 0 && (
-                    <>
-                      <td rowSpan={bet.bet_detail.length}>{index + 1}</td>
-                      <td rowSpan={bet.bet_detail.length}>{bet.bet_type}</td>
-                    </>
-                  )}
-                  <td>{detail.sport_name}</td>
-                  <td>{detail.market_key}</td>
-                  {bet.bet_type === "Parlay" && detailIndex === 0 ? (
-                    <>
-                      <td rowSpan={bet.bet_detail.length}>
-                        {bet.total_amount}
-                      </td>
-                      <td rowSpan={bet.bet_detail.length}>
-                        {bet.bet_win_amount}
-                      </td>
-                    </>
-                  ) : bet.bet_type !== "Parlay" ? (
-                    <>
-                      <td>{detail.amount}</td>
-                      <td>{detail.win_amount}</td>
-                    </>
-                  ) : null}
+              {bet.bet_detail?.map((detail, detailIndex) => {
+                let result = checkSpreadBet(detail, event);
 
-                  <td>{detail.bet_status}</td>
-                  <td>{detail.bookmaker_name}</td>
-                  <td>{new Date(detail.created_at).toLocaleDateString()}</td>
-                </tr>
-              ))}
+                // if (detail.market_key === "spread") {
+                //   result = checkSpreadBet(detail, event);
+                // } else if (detail.market_key === "total") {
+                //   result = checkTotalBet(detail, event);
+                // } else if (detail.market_key === "moneyline") {
+                //   result = checkMoneylineBet(detail, event);
+                // }
+
+                return (
+                  <tr key={detail.id}>
+                    {detailIndex === 0 && (
+                      <>
+                        <td rowSpan={bet.bet_detail.length}>{index + 1}</td>
+                        <td rowSpan={bet.bet_detail.length}>{bet.bet_type}</td>
+                      </>
+                    )}
+                    <td>{detail.sport_name}</td>
+                    <td>{detail.market_key}</td>
+                    {bet.bet_type === "Parlay" && detailIndex === 0 ? (
+                      <>
+                        <td rowSpan={bet.bet_detail.length}>
+                          {bet.total_amount}
+                        </td>
+                        <td rowSpan={bet.bet_detail.length}>
+                          {bet.bet_win_amount}
+                        </td>
+                      </>
+                    ) : bet.bet_type !== "Parlay" ? (
+                      <>
+                        <td>{detail.amount}</td>
+                        <td>{detail.win_amount}</td>
+                      </>
+                    ) : null}
+                    <td>{detail.bet_status}</td>
+                    <td>{detail.bookmaker_name}</td>
+                    <td>{new Date(detail.created_at).toLocaleDateString()}</td>
+                    {/* <td className="text-center">
+                      {result ? (
+                        <Button>Settle</Button>
+                      ) : (
+                        <Button disabled>Settle</Button>
+                      )}
+                    </td> */}
+                  </tr>
+                );
+              })}
             </React.Fragment>
           ))}
         </tbody>
