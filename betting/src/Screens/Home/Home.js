@@ -31,7 +31,7 @@ const Home = () => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
-        `https://api.the-odds-api.com/v4/sports/${sport}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}`,
+        `https://api.the-odds-api.com/v4/sports/${sport}/scores/?&daysFrom=1&apiKey=${ApiEndPoints.ApiKey}`,
         {
           method: "GET",
           headers: {
@@ -1294,7 +1294,7 @@ const Home = () => {
                             </p>
                             {eventItem?.completed && (
                               <span className="text-muted fw-bold ms-2">
-                                ({eventItem?.scores[0]?.score})
+                                ({eventItem?.scores[1]?.score})
                               </span>
                             )}
                           </div>
@@ -1318,7 +1318,7 @@ const Home = () => {
                             </p>
                             {eventItem?.completed && (
                               <span className="text-muted fw-bold ms-2">
-                                ({eventItem?.scores[1]?.score})
+                                ({eventItem?.scores[0]?.score})
                               </span>
                             )}
                           </div>
@@ -1326,9 +1326,11 @@ const Home = () => {
 
                         {/* Event Time */}
                         <p className="text-start text-muted small mt-3">
-                          {moment(eventItem.commence_time).format(
+                          {/* {moment(eventItem.commence_time).format(
                             "ddd MM/DD, h:mm A"
-                          )}
+                          )} */}
+                          {moment(eventItem.commence_time) // Parse and ensure UTC context
+                            .format("ddd MM/DD, h:mm A")}
                         </p>
                       </Card.Body>
                     </Card>
