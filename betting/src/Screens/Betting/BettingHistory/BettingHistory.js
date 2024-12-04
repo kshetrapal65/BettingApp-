@@ -201,7 +201,8 @@ const BettingHistory = () => {
                     )}
                     <td>{detail.sport_name}</td>
                     <td>{detail.market_key}</td>
-                    {bet.bet_type === "Parlay" && detailIndex === 0 ? (
+                    {(bet.bet_type === "Parlay" && detailIndex === 0) ||
+                    (bet.bet_type === "Teaser" && detailIndex === 0) ? (
                       <>
                         <td rowSpan={bet.bet_detail.length}>
                           {bet.total_amount}
@@ -210,7 +211,8 @@ const BettingHistory = () => {
                           {bet.bet_win_amount}
                         </td>
                       </>
-                    ) : bet.bet_type !== "Parlay" ? (
+                    ) : bet.bet_type !== "Parlay" &&
+                      bet.bet_type !== "Teaser" ? (
                       <>
                         <td>{detail.amount}</td>
                         <td>{detail.win_amount}</td>

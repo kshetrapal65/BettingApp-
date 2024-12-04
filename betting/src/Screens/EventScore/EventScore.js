@@ -1095,17 +1095,30 @@ export const EventScore = React.memo(() => {
   const [bookmakerName, setBookmakername] = React.useState("DraftKings");
   const [load, setLoad] = React.useState(false);
   const token = getToken();
-
+  const [teaser, setTeaser] = React.useState(6);
+  const [teaserBet, setTeaserBet] = React.useState();
+  const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
-  console.log("BOOKMAKER", bookmaker, "bookmakerName", bookmakerName);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
   }, [selectedMarkets]);
 
-  const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === bookmaker);
+  React.useEffect(() => {
+    if (event?.sport_key === "americanfootball_nfl") {
+      setTeaser(6);
+    } else if (event?.sport_key === "basketball_nba") {
+      setTeaser(4);
+    } else {
+      setTeaser(6);
+    }
+  }, [event?.sport_key]);
 
+  const Fandualodds = eventOdds?.bookmakers?.find((m) => m.key === bookmaker);
+  const getmonyline = selectedMarkets?.find(
+    (item) => item?.market == "moneyline"
+  );
   const totalWager = selectedMarkets.reduce(
     (total, market) => total + (market.wager || 0),
     0
@@ -1120,7 +1133,6 @@ export const EventScore = React.memo(() => {
   }, [event, activeTab]);
   useEffect(() => {
     if (eventOdds?.bookmakers) {
-      console.log("enter in useeffect>>>");
       const bookmakerKeysAndTitles = eventOdds?.bookmakers?.map(
         (bookmaker) => ({
           key: bookmaker.key,
@@ -1130,7 +1142,6 @@ export const EventScore = React.memo(() => {
 
       setBookmakers(bookmakerKeysAndTitles);
     }
-    console.log("out in useeffect>>>");
   }, [eventOdds]);
 
   const totalPays = selectedMarkets.reduce(
@@ -1138,9 +1149,6 @@ export const EventScore = React.memo(() => {
     0
   );
 
-  // const handleMarketClick = (marketData) => {
-  //   setSelectedMarkets((prev) => [...prev, marketData]);
-  // };
   const handleMarketClick = (newItem) => {
     setSelectedMarkets((currentCartData) => {
       const exists = currentCartData.some(
@@ -1163,8 +1171,8 @@ export const EventScore = React.memo(() => {
 
   const handleSelectChange = (e) => {
     const selectedIndex = e.target.selectedIndex;
-    setMarket(e.target.value); // Set market_key
-    setMarketName(e.target.options[selectedIndex].text); // Set market_name
+    setMarket(e.target.value);
+    setMarketName(e.target.options[selectedIndex].text);
   };
 
   useEffect(() => {
@@ -1187,9 +1195,7 @@ export const EventScore = React.memo(() => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
-      // console.log("responseOFSCOREEEEEE", data);
       setMarketKey(data);
     } catch (error) {
       console.log(error);
@@ -1201,6 +1207,12 @@ export const EventScore = React.memo(() => {
       calculateParlay();
     }
   }, [activeTabs, parlayBet, selectedMarkets]);
+
+  useEffect(() => {
+    if (activeTabs === "Teaser") {
+      calculateTeaser();
+    }
+  }, [activeTabs, teaserBet, selectedMarkets]);
 
   const handleSelect = (key) => {
     setActiveTabs(key);
@@ -1248,7 +1260,6 @@ export const EventScore = React.memo(() => {
       }
 
       const data = await response.json();
-      // console.log("responseOFODSSSSSS>>>>", data);
       setEventOdds(data);
     } catch (error) {
       console.log(error);
@@ -1365,6 +1376,60 @@ export const EventScore = React.memo(() => {
     return 1;
   };
 
+  const calculateTeaser = () => {
+    const nflTeaserOdds = {
+      2: { 6: -120, 6.5: -130, 7: -140 },
+      3: { 6: +150, 6.5: +135, 7: +120 },
+      4: { 6: +300, 6.5: +275, 7: +250 },
+      5: { 6: +450, 6.5: +400, 7: +375 },
+      6: { 6: +600, 6.5: +550, 7: +500 },
+    };
+
+    const nbaTeaserOdds = {
+      2: { 4: -110, 4.5: -120, 5: -130 },
+      3: { 4: +140, 4.5: +130, 5: +120 },
+      4: { 4: +300, 4.5: +250, 5: +200 },
+      5: { 4: +450, 4.5: +400, 5: +350 },
+      6: { 4: +600, 4.5: +500, 5: +450 },
+    };
+
+    let oddsTable;
+    if (event?.sport_key === "americanfootball_nfl") {
+      oddsTable = nflTeaserOdds;
+    } else if (event?.sport_key === "basketball_nba") {
+      oddsTable = nbaTeaserOdds;
+    } else {
+      console.error("Unsupported sport type");
+      return;
+    }
+
+    const formattedTease = teaser?.toString();
+    const validOdds = oddsTable[selectedMarkets?.length]?.[formattedTease];
+
+    if (validOdds === undefined) {
+      console.log("Invalid number of teams or teaser points.");
+      return;
+    }
+
+    let decimalOdds;
+    if (validOdds < 0) {
+      decimalOdds = 1 + 100 / Math.abs(validOdds);
+    } else {
+      decimalOdds = 1 + validOdds / 100;
+    }
+
+    const totalPayout = teaserBet * decimalOdds;
+    const profit = totalPayout - teaserBet;
+
+    setTeaserResult(profit?.toFixed(2));
+
+    return {
+      totalPayout: totalPayout.toFixed(2),
+      profit: profit.toFixed(2),
+      odds: validOdds,
+    };
+  };
+
   const calculateParlay = () => {
     const wagerAmount = parseFloat(parlayBet) || 0;
 
@@ -1393,6 +1458,10 @@ export const EventScore = React.memo(() => {
         toast.error(`Please enter wager amount`);
         return;
       }
+      if ((activeTabs == "Teaser" && !teaserBet) || teaserBet <= 0) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
     }
     selectedMarkets?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
@@ -1416,11 +1485,19 @@ export const EventScore = React.memo(() => {
     formData.append(`bet_type`, activeTabs);
     formData.append(
       `total_amount`,
-      activeTabs == "Straights" ? totalWager?.toFixed(2) : parlayBet
+      activeTabs == "Straights"
+        ? totalWager
+        : activeTabs == "Parlay"
+        ? parlayBet
+        : teaserBet
     );
     formData.append(
       `bet_win_amount`,
-      activeTabs == "Straights" ? totalPays?.toFixed(2) : parlayResult
+      activeTabs == "Straights"
+        ? totalPays
+        : activeTabs == "Parlay"
+        ? parlayResult
+        : teaserResult
     );
     formData.append(`bet_loss_amount`, 0);
 
@@ -1562,14 +1639,14 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!spreadMarket?.outcomes[1].price}
-                variant="outline-secondary"
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() => {
                   handleMarketClick({
                     team: eventOdds?.away_team,
-                    market: "spread",
+                    market: "spreads",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[1],
@@ -1593,14 +1670,14 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!totalsMarket?.outcomes[0].price}
-                variant="outline-secondary"
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
                     team: eventOdds?.away_team,
-                    market: "total",
+                    market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[0],
@@ -1624,9 +1701,9 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!moneylineMarket?.outcomes[1].price}
-                variant="outline-secondary"
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
@@ -1669,14 +1746,14 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
-                variant="outline-secondary"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!spreadMarket?.outcomes[0].price}
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
                     team: eventOdds?.home_team,
-                    market: "spread",
+                    market: "spreads",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[0],
@@ -1702,14 +1779,14 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
-                variant="outline-secondary"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!totalsMarket?.outcomes[1].price}
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
                     team: eventOdds?.home_team,
-                    market: "total",
+                    market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[1],
@@ -1735,9 +1812,9 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col xs={4} lg={2}>
               <Button
-                className="shadow"
+                variant="#155239"
+                className="odds-btn"
                 disabled={!moneylineMarket?.outcomes[0].price}
-                variant="outline-secondary"
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
@@ -1799,7 +1876,10 @@ export const EventScore = React.memo(() => {
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip <Badge bg="success">{selectedMarkets.length}</Badge>
+              Betslip{" "}
+              <Badge bg="#155239" style={{ backgroundColor: "#155239" }}>
+                {selectedMarkets.length}
+              </Badge>
             </h5>
           </Col>
           <Col xs="auto">
@@ -1814,7 +1894,7 @@ export const EventScore = React.memo(() => {
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
-          {selectedMarkets?.length == 2 && (
+          {selectedMarkets?.length >= 2 && (
             <Col xs="auto">
               <Tabs
                 className="mb-2 odds-tab-bar-new border-bottom-0"
@@ -1832,13 +1912,373 @@ export const EventScore = React.memo(() => {
               variant="link"
               size="sm"
               className="text-danger p-0"
+              style={{ fontSize: "12px", fontWeight: "500" }}
             >
               Clear All
             </Button>
           </Col>
         </Row>
 
-        {activeTabs === "Straights" ? (
+        {activeTabs === "Parlay" ? (
+          <>
+            <div
+              style={{ maxHeight: "350px" }}
+              className="overflow-y-scroll overflow-x-hidden"
+            >
+              {selectedMarkets?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
+              {selectedMarkets?.length > 0 && (
+                <Row className="mt-2 mb-2">
+                  <Col lg={12}>
+                    <div className="d-flex flex-column">
+                      <span>Wager</span>
+                      <input
+                        type="text"
+                        placeholder="0.00"
+                        className="form-control"
+                        value={parlayBet}
+                        onChange={(e) => setParlayBet(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  <Col lg={12}>
+                    <div className="d-flex flex-column">
+                      <span>To Win</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={parlayResult}
+                        readOnly
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {selectedMarkets?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "16px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
+
+                      <Col xs="auto" className=" ">
+                        <span className="fw-bold"> {market?.point}</span>
+                        <span className="text-muted"> ({market?.price})</span>
+                        <span className="text-muted small fw-bold   ms-1">
+                          {market?.home_team?.slice(0, 3).toUpperCase()}@
+                          {market?.away_team?.slice(0, 3).toUpperCase()}
+                        </span>
+                      </Col>
+                    </Row>
+
+                    <Row className="mt-2">
+                      {market?.market !== "h2h" && (
+                        <Col lg={12}>
+                          <div className="d-flex flex-column">
+                            <div>
+                              <span
+                                className="fw-bold"
+                                style={{
+                                  fontSize: "12px",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                ({market?.bookmaker})
+                              </span>
+                              <span
+                                className="ms-2"
+                                style={{
+                                  fontSize: "12px",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                {market?.market == "h2h"
+                                  ? "Moneyline"
+                                  : market?.market}
+                              </span>
+                            </div>
+                            {market?.market == "moneyline" ? null : (
+                              <input
+                                type="text"
+                                placeholder="0.00"
+                                className="form-control"
+                                value={market.point || ""}
+                                readOnly
+                              />
+                            )}
+                          </div>
+                        </Col>
+                      )}
+
+                      <Col lg={12}>
+                        <div className="d-flex flex-column">
+                          <span>Odds</span>
+                          <input
+                            placeholder="0.00"
+                            className="form-control"
+                            value={market.price || ""}
+                            readOnly
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
+
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${parlayBet}</h6>
+              </Col>
+            </Row>
+
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>To Win:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${parlayResult}</h6>
+              </Col>
+            </Row>
+
+            <Button
+              onClick={SubmitBet}
+              disabled={selectedMarkets.length === 0}
+              variant="#155239"
+              style={{ backgroundColor: "#155239", color: "white" }}
+              size="lg"
+              className="w-100"
+            >
+              Bet Now
+            </Button>
+          </>
+        ) : activeTabs === "Teaser" ? (
+          <>
+            <div
+              style={{ maxHeight: "350px" }}
+              className="overflow-y-scroll overflow-x-hidden"
+            >
+              {selectedMarkets?.length === 0 && (
+                <p className="text-center">No bets added</p>
+              )}
+              {selectedMarkets?.length > 0 && (
+                <Row className="mt-2 mb-2">
+                  <Col xs={12} md={4} lg={4}>
+                    <div className="d-flex flex-column">
+                      <span>Wager</span>
+                      <input
+                        type="text"
+                        placeholder="0.00"
+                        className="form-control"
+                        value={teaserBet}
+                        onChange={(e) => setTeaserBet(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={12} md={4} lg={4}>
+                    <div className="d-flex flex-column">
+                      <span>To Win</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={teaserResult}
+                        readOnly
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={12} md={4} lg={4}>
+                    <div className="d-flex flex-column">
+                      <span>Tease</span>
+                      <input
+                        placeholder="0.00"
+                        className="form-control"
+                        value={teaser >= 0 ? `+${teaser}` : teaser}
+                        onChange={(e) => {
+                          let value = e.target.value;
+
+                          let numericValue = value.replace(/[^0-9.-]/g, "");
+
+                          const parsedValue = parseFloat(numericValue);
+                          setTeaser(isNaN(parsedValue) ? 0 : parsedValue);
+                        }}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {selectedMarkets?.map((market, index) => (
+                <Card key={index} className="mb-2">
+                  <Card.Body>
+                    <Row className="justify-content-between align-items-center">
+                      <Row className="d-flex ">
+                        <Col xs={10} md={10} className="">
+                          <Card.Title
+                            className="mb-0"
+                            style={{ fontSize: "16px" }}
+                          >
+                            {market?.team}
+                          </Card.Title>
+                        </Col>
+                        <Col xs={2} md={2} className="p-0 text-end">
+                          <MdDelete
+                            size={20}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveMarket(index)}
+                          />
+                        </Col>
+                      </Row>
+
+                      <Col xs="auto" className=" ">
+                        <span className="small">
+                          {market?.market == "totals" ? market?.name : ""}
+                        </span>{" "}
+                        <span className="fw-bold">
+                          {market?.market == "totals"
+                            ? ""
+                            : market?.point + teaser >= 0
+                            ? "+"
+                            : "-"}
+                          {market?.name == "Over"
+                            ? market?.point - teaser
+                            : market?.point + teaser}
+                        </span>
+                        <span className="text-muted"> ({market?.price})</span>
+                        <span className="text-muted small fw-bold   ms-1">
+                          {market?.home_team?.slice(0, 3).toUpperCase()}@
+                          {market?.away_team?.slice(0, 3).toUpperCase()}
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row className="mt-2">
+                      {market?.market !== "moneyline" &&
+                        market?.market !== "h2h" && (
+                          <Col lg={12}>
+                            <div className="d-flex flex-column">
+                              <div>
+                                <span
+                                  className="fw-bold"
+                                  style={{
+                                    fontSize: "12px",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  ({market?.bookmaker})
+                                </span>
+                                <span
+                                  className="ms-2"
+                                  style={{
+                                    fontSize: "12px",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  {market?.market}
+                                </span>
+                              </div>
+
+                              <div>
+                                {market.market === "spreads" ? (
+                                  <div>
+                                    <span className="form-control">
+                                      {typeof market?.point === "number" &&
+                                      !isNaN(market?.point) &&
+                                      typeof teaser === "number" &&
+                                      !isNaN(teaser)
+                                        ? (market?.point + teaser).toFixed(1)
+                                        : 0}
+                                    </span>
+                                  </div>
+                                ) : market.market === "totals" &&
+                                  market?.name === "Over" ? (
+                                  <div>
+                                    <span className="form-control">
+                                      {typeof market?.point === "number" &&
+                                      !isNaN(market?.point) &&
+                                      typeof teaser === "number" &&
+                                      !isNaN(teaser)
+                                        ? (market?.point - teaser).toFixed(1)
+                                        : 0}
+                                    </span>
+                                  </div>
+                                ) : market.market === "totals" &&
+                                  market?.name === "Under" ? (
+                                  <div>
+                                    <span className="form-control">
+                                      {typeof market?.point === "number" &&
+                                      !isNaN(market?.point) &&
+                                      typeof teaser === "number" &&
+                                      !isNaN(teaser)
+                                        ? (market?.point + teaser).toFixed(1)
+                                        : 0}
+                                    </span>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
+                          </Col>
+                        )}
+                    </Row>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
+
+            <Row className="mt-2 mb-2">
+              <Col xs={6}>
+                <h6>Cash Wager:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${teaserBet}</h6>
+              </Col>
+            </Row>
+
+            <Row className="mt-2 mb-4">
+              <Col xs={6}>
+                <h6>To Win:</h6>
+              </Col>
+              <Col xs={6} className="text-end">
+                <h6>${teaserResult}</h6>
+              </Col>
+            </Row>
+
+            {getmonyline && (
+              <span className="text-danger" style={{ fontSize: "12px" }}>
+                Teasers can only include spreads and totals from football and
+                basketball. Please remove invalid picks or select a different
+                bet type.
+              </span>
+            )}
+            <Button
+              onClick={SubmitBet}
+              variant="#155239"
+              disabled={selectedMarkets?.length === 0 || getmonyline}
+              style={{ backgroundColor: "#155239", color: "white" }}
+              size="lg"
+              className="w-100"
+            >
+              Bet Now
+            </Button>
+          </>
+        ) : (
           <>
             <div style={{ maxHeight: "350px" }} className="overflow-y-scroll">
               {selectedMarkets?.length === 0 && (
@@ -1965,157 +2405,6 @@ export const EventScore = React.memo(() => {
               Bet Now
             </Button>
           </>
-        ) : (
-          <>
-            <div
-              style={{ maxHeight: "350px" }}
-              className="overflow-y-scroll overflow-x-hidden"
-            >
-              {selectedMarkets?.length === 0 && (
-                <p className="text-center">No bets added</p>
-              )}
-              {selectedMarkets?.length > 0 && (
-                <Row className="mt-2 mb-2">
-                  <Col lg={12}>
-                    <div className="d-flex flex-column">
-                      <span>Wager</span>
-                      <input
-                        type="text"
-                        placeholder="0.00"
-                        className="form-control"
-                        value={parlayBet}
-                        onChange={(e) => setParlayBet(e.target.value)}
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={12}>
-                    <div className="d-flex flex-column">
-                      <span>To Win</span>
-                      <input
-                        placeholder="0.00"
-                        className="form-control"
-                        value={parlayResult}
-                        readOnly
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              )}
-              {selectedMarkets?.map((market, index) => (
-                <Card key={index} className="mb-2">
-                  <Card.Body>
-                    <Row className="justify-content-between align-items-center">
-                      <Row className="d-flex ">
-                        <Col xs={10} md={10} className="">
-                          <Card.Title
-                            className="mb-0"
-                            style={{ fontSize: "16px" }}
-                          >
-                            {market?.team}
-                          </Card.Title>
-                        </Col>
-                        <Col xs={2} md={2} className="p-0 text-end">
-                          <MdDelete
-                            size={20}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleRemoveMarket(index)}
-                          />
-                        </Col>
-                      </Row>
-
-                      <Col xs="auto" className=" ">
-                        <span className="fw-bold"> {market?.point}</span>
-                        <span className="text-muted"> ({market?.price})</span>
-                        <span className="text-muted small fw-bold   ms-1">
-                          {market?.home_team?.slice(0, 3).toUpperCase()}@
-                          {market?.away_team?.slice(0, 3).toUpperCase()}
-                        </span>
-                      </Col>
-                    </Row>
-
-                    <Row className="mt-2">
-                      {market?.market !== "h2h" && (
-                        <Col lg={12}>
-                          <div className="d-flex flex-column">
-                            <div>
-                              <span
-                                className="fw-bold"
-                                style={{
-                                  fontSize: "12px",
-                                  marginBottom: "5px",
-                                }}
-                              >
-                                ({market?.bookmaker})
-                              </span>
-                              <span
-                                className="ms-2"
-                                style={{
-                                  fontSize: "12px",
-                                  marginBottom: "5px",
-                                }}
-                              >
-                                {market?.market == "h2h"
-                                  ? "Moneyline"
-                                  : market?.market}
-                              </span>
-                            </div>
-                            <input
-                              type="text"
-                              placeholder="0.00"
-                              className="form-control"
-                              value={market.point || ""}
-                              readOnly
-                            />
-                          </div>
-                        </Col>
-                      )}
-
-                      <Col lg={12}>
-                        <div className="d-flex flex-column">
-                          <span>Odds</span>
-                          <input
-                            placeholder="0.00"
-                            className="form-control"
-                            value={market.price || ""}
-                            readOnly
-                          />
-                        </div>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
-              ))}
-            </div>
-
-            <Row className="mt-2 mb-2">
-              <Col xs={6}>
-                <h6>Cash Wager:</h6>
-              </Col>
-              <Col xs={6} className="text-end">
-                <h6>${parlayBet}</h6>
-              </Col>
-            </Row>
-
-            <Row className="mt-2 mb-4">
-              <Col xs={6}>
-                <h6>To Win:</h6>
-              </Col>
-              <Col xs={6} className="text-end">
-                <h6>${parlayResult}</h6>
-              </Col>
-            </Row>
-
-            <Button
-              onClick={SubmitBet}
-              disabled={selectedMarkets.length === 0}
-              variant="#155239"
-              style={{ backgroundColor: "#155239", color: "white" }}
-              size="lg"
-              className="w-100"
-            >
-              Bet Now
-            </Button>
-          </>
         )}
       </Container>
     );
@@ -2221,8 +2510,8 @@ export const EventScore = React.memo(() => {
                             <Col xs={6}>
                               <Button
                                 key={idx}
-                                className={`shadow ${idx === 0 ? "" : "ms-1"}`}
-                                variant="outline-secondary"
+                                variant="#155239"
+                                className="odds-btn"
                                 style={{ minWidth: "80px", minHeight: "60px" }}
                                 onClick={() =>
                                   handleMarketClick({

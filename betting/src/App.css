@@ -36,10 +36,6 @@
     transform: rotate(360deg);
   }
 }
-/* * {
-  font-family: "font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol";
-} */
-/* App.css or index.css */
 * {
   font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -51,6 +47,7 @@
   box-shadow: 0px 2px 4px #a4a4aa !important;
   font-weight: 500 !important;
   font-size: 14px !important;
+  border-radius: 4px !important;
 }
 
 .odds-btn:hover {
