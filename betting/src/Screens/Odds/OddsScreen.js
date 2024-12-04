@@ -2059,7 +2059,7 @@ export const OddsScreen = () => {
   useEffect(() => {
     if (status == 1) {
       localStorage.removeItem("cartData");
-      // setCartData([]);
+      setCartData([]);
     }
   }, []);
 
@@ -2276,11 +2276,19 @@ export const OddsScreen = () => {
     formData.append(`bet_type`, activeTabs);
     formData.append(
       `total_amount`,
-      activeTabs == "Straights" ? totalWager?.toFixed(2) : parlayBet
+      activeTabs == "Straights"
+        ? totalWager
+        : activeTabs == "Parlay"
+        ? parlayBet
+        : teaserBet
     );
     formData.append(
       `bet_win_amount`,
-      activeTabs == "Straights" ? totalPays?.toFixed(2) : parlayResult
+      activeTabs == "Straights"
+        ? totalPays
+        : activeTabs == "Parlay"
+        ? parlayResult
+        : teaserResult
     );
     formData.append(`bet_loss_amount`, 0);
 
@@ -2319,7 +2327,10 @@ export const OddsScreen = () => {
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip <Badge bg="success">{cartData.length}</Badge>
+              Betslip{" "}
+              <Badge bg="#155239" style={{ backgroundColor: "#155239" }}>
+                {cartData.length}
+              </Badge>
             </h5>
           </Col>
           <Col xs="auto">
@@ -2352,6 +2363,7 @@ export const OddsScreen = () => {
               variant="link"
               size="sm"
               className="text-danger p-0"
+              style={{ fontSize: "12px", fontWeight: "500" }}
             >
               Clear All
             </Button>
@@ -2551,17 +2563,6 @@ export const OddsScreen = () => {
                   <Col xs={12} md={4} lg={4}>
                     <div className="d-flex flex-column">
                       <span>Tease</span>
-                      {/* <input
-                        placeholder="0.00"
-                        className="form-control"
-                        value={teaser >= 0 ? `+${teaser}` : teaser}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          const numericValue = value.replace("+", "");
-
-                          setTeaser(numericValue);
-                        }}
-                      /> */}
                       <input
                         placeholder="0.00"
                         className="form-control"
@@ -2736,7 +2737,11 @@ export const OddsScreen = () => {
             <Button
               onClick={SubmitBet}
               variant="#155239"
-              disabled={cartData?.length === 0 || getmonyline}
+              disabled={
+                cartData?.length === 0 ||
+                getmonyline ||
+                (status == 1 && teaserBet > Number(unitData.member_unit))
+              }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
