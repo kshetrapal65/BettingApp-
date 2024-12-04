@@ -2042,8 +2042,6 @@ export const OddsScreen = () => {
 
   const getmonyline = cartData?.find((item) => item?.market == "moneyline");
 
-  console.log("getmonyline", getmonyline);
-
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
@@ -2505,7 +2503,10 @@ export const OddsScreen = () => {
             <Button
               onClick={SubmitBet}
               variant="#155239"
-              disabled={cartData?.length === 0}
+              disabled={
+                cartData?.length === 0 ||
+                (status == 1 && parlayBet > Number(unitData.member_unit))
+              }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
@@ -3053,7 +3054,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {moneylineMarket?.outcomes[0] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!moneylineMarket?.outcomes[0].price}
                               onClick={() =>
@@ -3086,7 +3088,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {spreadMarket?.outcomes[0] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!spreadMarket?.outcomes[0].price}
                               onClick={() =>
@@ -3121,7 +3124,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {totalsMarket?.outcomes[0] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!totalsMarket?.outcomes[0].price}
                               onClick={() =>
@@ -3182,7 +3186,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {moneylineMarket?.outcomes[1] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!moneylineMarket?.outcomes[1].price}
                               onClick={() =>
@@ -3215,7 +3220,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {spreadMarket?.outcomes[1] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!spreadMarket?.outcomes[1].price}
                               onClick={() =>
@@ -3249,7 +3255,8 @@ export const OddsScreen = () => {
                         <Col xs={2}>
                           {totalsMarket?.outcomes[1] && (
                             <Button
-                              variant="outline-secondary"
+                              variant="#155239"
+                              className="odds-btn"
                               style={{ minWidth: "100px", minHeight: "62px" }}
                               disabled={!totalsMarket?.outcomes[1].price}
                               onClick={() =>
