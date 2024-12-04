@@ -11,6 +11,8 @@ import {
   InputGroup,
   Form,
   Button,
+  Modal,
+  FormGroup,
 } from "react-bootstrap";
 import { PulseLoader } from "react-spinners";
 import {
@@ -24,6 +26,7 @@ import ShareableLink from "../../Components/ShareableLink ";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { getUserdata } from "../../Helper/Storage";
+import { FaGear } from "react-icons/fa6";
 
 const LeagueDetails = () => {
   const { id, code } = useParams();
@@ -33,18 +36,51 @@ const LeagueDetails = () => {
   const [leagueList, setLeagueList] = React.useState([]);
   const [load, setLoad] = React.useState(true);
   const [copy, setCopy] = React.useState(false);
+  const [show, setShow] = React.useState(false);
+
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
   const matchId = leagueList?.find((item) => item.id == id);
 
   useEffect(() => {
     getLeagueDetails();
     getLeagues();
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   }, [id, code]);
 
   setTimeout(() => {
     setCopy(false);
   }, 2000);
+  const deleteLeague = async (id) => {
+    try {
+      const response = await apiCallNew(
+        "get",
+        {},
+        ApiEndPoints.DeleteLeague + id
+      );
+      if (response.success === true) {
+        getLeagues();
+        setShow(false);
+        navigate("/leagues-list");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const confirmDeletion = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove the league?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#155636",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteLeague(id);
+      }
+    });
+  };
 
   const getLeagueDetails = async () => {
     try {
@@ -144,6 +180,88 @@ const LeagueDetails = () => {
       setLoad(false);
     }
   };
+  const event = [
+    {
+      title: "Event 1",
+      id: 1,
+      home_team: "Layne",
+      away_team: "Ben",
+    },
+    {
+      title: "Event 1",
+      id: 1,
+      home_team: "Bailey",
+      away_team: "Phil",
+    },
+    {
+      title: "Event 1",
+      id: 1,
+      home_team: "Tylor",
+      away_team: "Jhon",
+    },
+    {
+      title: "Event 1",
+      id: 1,
+      home_team: "Layne",
+      away_team: "Ben",
+    },
+  ];
+  const Betdata = [
+    {
+      player: "kunal",
+      id: 1,
+      roi: "16.6%",
+      score: "85",
+    },
+    {
+      player: "Tyler",
+      id: 1,
+      roi: "12.6%",
+      score: "36",
+    },
+    {
+      player: "Benley",
+      id: 1,
+      roi: "19.6%",
+      score: "45",
+    },
+    {
+      player: "Phill",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+    {
+      player: "Dom",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+    {
+      player: "Diwyne",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+    {
+      player: "Diwyne",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+    {
+      player: "Owens",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+    {
+      player: "Owens",
+      id: 1,
+      roi: "18.6%",
+      score: "36",
+    },
+  ];
 
   return (
     <Container className="mt-4">
@@ -170,10 +288,10 @@ const LeagueDetails = () => {
             </Col>
             <Col
               xs="12"
-              lg="6"
+              lg={5}
               className="d-flex justify-content-center justify-content-lg-end"
             >
-              {userData?.id !== league?.user_id && (
+              {/* {userData?.id !== league?.user_id && (
                 <Button
                   className="ms-lg-2 mb-2 mb-lg-0 me-1"
                   size="sm"
@@ -183,7 +301,7 @@ const LeagueDetails = () => {
                 >
                   Leave
                 </Button>
-              )}
+              )} */}
 
               <Button
                 className="ms-lg-2 mb-2 mb-lg-0 me-1"
@@ -210,6 +328,17 @@ const LeagueDetails = () => {
                   Accept Invite
                 </Button>
               )}
+            </Col>
+            <Col
+              xs="12"
+              lg={1}
+              className="text-center text-lg-center mb-2 mb-lg-0"
+            >
+              <FaGear
+                onClick={() => setShow(true)}
+                className=""
+                style={{ cursor: "pointer" }}
+              />
             </Col>
           </Row>
         </Card.Header>
@@ -296,35 +425,204 @@ const LeagueDetails = () => {
           className="text-white"
           style={{ backgroundColor: "#155239" }}
         >
-          League Members
+          Leadboard
         </Card.Header>
         <Card.Body>
           {league?.league_members?.length > 0 ? (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Member ID</th>
-                  <th>Member Name</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {league.league_members.map((member) => (
-                  <tr key={member.id}>
-                    <td>{member.member_id}</td>
-                    <td>{member.member_name}</td>
-                    <td>{member.member_status}</td>
+            <>
+              {" "}
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Record</th>
+                    <th>Total Units</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {league.league_members.map((member) => (
+                    <tr key={member.id}>
+                      <td>{member.member_id}</td>
+                      <td>
+                        {member.member_name}
+                        <br />
+                        <span className="text-primary">@philipin</span>
+                      </td>
+                      <td>2-1-0</td>
+                      <td>35</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </>
           ) : (
             <p>No members available for this league.</p>
           )}
         </Card.Body>
       </Card>
-
+      <Row className="mb-2">
+        <Col lg={8}>
+          <h4 className="fw-bold"> Schedule</h4>
+        </Col>
+        <Col className="text-end" lg={4}>
+          {" "}
+          <Form.Group controlId="formSelect ">
+            <Form.Select aria-label="Select option">
+              <option disabled>select</option>
+              <option value="option1">Current Week</option>
+              <option value="option2">Last Week</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+      </Row>
       <Card className="mb-4">
+        <Card.Body>
+          <Row className="rounded-2">
+            <Col lg={12}>
+              {event.length > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    overflowX: "scroll",
+                    overflowY: "hidden",
+                    padding: "10px",
+                    whiteSpace: "nowrap",
+                    scrollBehavior: "smooth",
+                  }}
+                >
+                  {event.map((eventItem) => (
+                    <Card
+                      key={eventItem.id}
+                      className="shadow p-2"
+                      style={{
+                        minWidth: "300px",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Card.Body>
+                        {/* Teams */}
+                        <div className="text-center">
+                          {/* Home Team */}
+                          <Row className="justify-content-between bg-light rounded">
+                            <Col xs={6} lg={5}>
+                              {" "}
+                              <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
+                                {eventItem.home_team || "Not Available"}
+                              </p>
+                            </Col>
+                            <Col xs={6} lg={5}>
+                              {" "}
+                              <span className="text-muted fw-bold ms-2">
+                                34
+                              </span>
+                            </Col>
+                          </Row>
+
+                          <span className="text-muted fs-6">vs</span>
+
+                          {/* Away Team */}
+                          <Row className="justify-content-between bg-light rounded">
+                            <Col xs={6} lg={5}>
+                              {" "}
+                              <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
+                                {eventItem.away_team || "Not Available"}
+                              </p>
+                            </Col>
+                            <Col xs={6} lg={5}>
+                              {" "}
+                              <span className="text-muted fw-bold ms-2">
+                                45
+                              </span>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-muted p-5">
+                  No events available.
+                </p>
+              )}
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+      <Row className="mb-2">
+        <Col lg={12}>
+          <h4 className="fw-bold">Betslip</h4>
+        </Col>
+      </Row>
+      <Card className="mb-4">
+        <Card.Body>
+          <Row className="rounded-2">
+            <Col lg={12}>
+              {Betdata.length > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    overflowX: "scroll",
+                    overflowY: "hidden",
+                    padding: "10px",
+                    whiteSpace: "nowrap",
+                    scrollBehavior: "smooth",
+                  }}
+                >
+                  {Betdata.map((eventItem) => (
+                    <Card
+                      key={eventItem.id}
+                      className="shadow p-2"
+                      style={{
+                        minWidth: "139px",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Card.Body>
+                        {/* Teams */}
+                        <div className="text-center">
+                          {/* Home Team */}
+                          <Row className="justify-content-between   rounded">
+                            <Col xs={12} lg={12}>
+                              {" "}
+                              <h6 className="text-truncate fw-bold text-dark">
+                                {eventItem.player || "Not Available"}
+                              </h6>
+                            </Col>
+                            <Col xs={12} lg={12}>
+                              {" "}
+                              <h5 className="text-muted fw-bold ">
+                                {eventItem?.score}
+                              </h5>
+                            </Col>
+                            <Col xs={12} lg={12}>
+                              {" "}
+                              <span className="text-muted  fw-bold  ">
+                                ROI - {eventItem?.roi}
+                              </span>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-muted p-5">
+                  No events available.
+                </p>
+              )}
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* <Card className="mb-4">
         <Card.Header
           as="h5"
           className="text-white"
@@ -333,24 +631,7 @@ const LeagueDetails = () => {
           League Invites
         </Card.Header>
         <Card.Body>
-          {/* {league?.league_invites?.length > 0 ? (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Invite ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {league.league_invites.map((invite, index) => (
-                  <tr key={index}>
-                    <td>{invite.id}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p>No invites available for this league.</p>
-          )} */}
+           
           <InputGroup>
             <InputGroup.Text>
               <FaLink />
@@ -372,7 +653,107 @@ const LeagueDetails = () => {
             </InputGroup.Text>
           </InputGroup>
         </Card.Body>
-      </Card>
+      </Card> */}
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton> settings </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="text-end mb-3" lg={12}>
+              {userData?.id == league?.user_id ? (
+                <Button
+                  className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                  size="sm"
+                  variant="#155239"
+                  style={{ backgroundColor: "#b50404", color: "white" }}
+                  onClick={() => confirmDeletion(league.id)}
+                >
+                  Delete League
+                </Button>
+              ) : (
+                <Button
+                  className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                  size="sm"
+                  variant="#155239"
+                  style={{ backgroundColor: "#b50404", color: "white" }}
+                  onClick={() => confirmLeave(league.id)}
+                >
+                  Leave
+                </Button>
+              )}
+            </Col>
+          </Row>
+          <Card className="mb-4">
+            <Card.Body>
+              <h5>League Invites</h5>
+              {/* {league?.league_invites?.length > 0 ? (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Invite ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {league.league_invites.map((invite, index) => (
+                  <tr key={index}>
+                    <td>{invite.id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p>No invites available for this league.</p>
+          )} */}
+              <InputGroup>
+                <InputGroup.Text>
+                  <FaLink />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  readOnly
+                  value={shareUrl}
+                  style={{ color: "#007bff", cursor: "pointer" }}
+                />
+                <InputGroup.Text
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareUrl);
+                    setCopy(true);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {copy ? <FaCopy /> : <FaRegCopy />}
+                </InputGroup.Text>
+              </InputGroup>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <h5>League Members</h5>
+              {league?.league_members?.length > 0 ? (
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Member ID</th>
+                      <th>Member Name</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {league.league_members.map((member) => (
+                      <tr key={member?.id}>
+                        <td>{member?.member_id}</td>
+                        <td>{member?.member_name}</td>
+                        <td>{member?.member_status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <p>No members available for this league.</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

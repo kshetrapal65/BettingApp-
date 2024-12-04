@@ -159,14 +159,14 @@ const LeaguesList = () => {
                     >
                       View League <FaChevronRight className="ms-2" />
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="#155239"
                       size="sm"
                       className="custom-btns ms-2 d-flex align-items-center"
                       onClick={() => confirmDeletion(league.id)}
                     >
                       <FaTrash />
-                    </Button>
+                    </Button> */}
                   </Col>
                 </Row>
                 <Row className="mt-4">
