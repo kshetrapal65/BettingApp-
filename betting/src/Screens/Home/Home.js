@@ -1381,7 +1381,7 @@ const Home = () => {
                 </div>
               ) : (
                 <p className="text-center text-muted p-5">
-                  No events available.
+                  No league available.
                 </p>
               )}
             </Col>
