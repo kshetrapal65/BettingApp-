@@ -1822,6 +1822,7 @@ export const EventScore = React.memo(() => {
               >
                 <Tab eventKey="Straights" title="Straights"></Tab>
                 <Tab eventKey="Parlay" title="Parlay"></Tab>
+                <Tab eventKey="Teaser" title="Teaser"></Tab>
               </Tabs>
             </Col>
           )}

@@ -62,7 +62,7 @@ const LeagueDetails = () => {
       }
     } catch (error) {
       setLoad(false);
-      console.error("Error fetching profile:", error);
+      console.error(error);
     }
   };
 
@@ -73,7 +73,7 @@ const LeagueDetails = () => {
         setLeagueList(response.result);
       }
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error(error);
     }
   };
 
@@ -190,6 +190,11 @@ const LeagueDetails = () => {
                 size="sm"
                 variant="#155239"
                 style={{ backgroundColor: "#155239", color: "white" }}
+                onClick={() =>
+                  navigate(`/odds/${league?.league_sports[0]?.sport_key}`, {
+                    state: { league: league, status: 1 },
+                  })
+                }
               >
                 Bets on {league.name}
               </Button>

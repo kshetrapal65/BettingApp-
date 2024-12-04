@@ -4,7 +4,7 @@ const APPConfig = {
 };
 
 const ApiEndPoints = {
-  ApiKey: "064fd11a5a4d8e65caa7daefc515eecb",
+  ApiKey: "f663d287d85962ce6ae7b6f6108b345d",
   // ApiKey: "f9af698cc538367931ebfe9e11c6b3cc",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
@@ -25,6 +25,7 @@ const ApiEndPoints = {
   DeleteLeague: `${APPConfig.API_URL}/league-delete/`,
   LeaveLeague: `${APPConfig.API_URL}/league-leave/`,
   AcceptInvite: `${APPConfig.API_URL}/league-accept-invite`,
+  LeagueUnits: `${APPConfig.API_URL}/league-member/`,
 };
 
 export default ApiEndPoints;

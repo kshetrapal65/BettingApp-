@@ -20,18 +20,37 @@ import "./createlegue.css";
 const LeaguesList = () => {
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [load, setLoad] = useState(false);
+  const [filterData, setFilterData] = useState([]);
 
   useEffect(() => {
     getLeagues();
   }, []);
 
+  const handleSearchChange = (e) => {
+    setSearchKeyword(e.target.value);
+
+    const searchData = leagues?.filter((item) => {
+      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setFilterData(searchData);
+  };
+
   const getLeagues = async () => {
+    const payload = {
+      page: 0,
+    };
     try {
       setLoad(true);
-      const response = await apiCallNew("post", null, ApiEndPoints.LeagueList);
+      const response = await apiCallNew(
+        "post",
+        payload,
+        ApiEndPoints.LeagueList
+      );
       if (response.success === true) {
         setLeagues(response.result);
+        setFilterData(response.result);
         setLoad(false);
       }
     } catch (error) {
@@ -96,16 +115,21 @@ const LeaguesList = () => {
       </Row>
       <Row className="mt-3 mb-4">
         <Col>
-          <Form.Control type="search" placeholder="Search..." />
+          <Form.Control
+            type="search"
+            placeholder="Search..."
+            value={searchKeyword}
+            onChange={handleSearchChange}
+          />
         </Col>
       </Row>
-      {leagues.length === 0 && (
+      {leagues?.length === 0 && (
         <div className="d-flex justify-content-center align-items-center">
           <h4 className="fw-bold text-muted m-5">No Leagues Found</h4>
         </div>
       )}
 
-      {leagues.map((league, index) => (
+      {filterData?.map((league, index) => (
         <Row key={index} className="mb-4">
           <Col>
             <Card className="league-card h-100 shadow-sm">
