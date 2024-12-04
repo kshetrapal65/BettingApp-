@@ -36,10 +36,11 @@ const CreateLeagues = () => {
   const [selectedLeagues, setSelectedLeagues] = useState([]);
   const [gameType, setGameType] = useState(null);
   const [leagueName, setLeagueName] = useState("");
-  const [unit, setUnit] = useState("");
+  const [unit, setUnit] = useState(100);
   const [matchLength, setMatchLength] = useState(0);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [unitType, setUnitType] = useState("a_day");
   const [load, setLoad] = useState(false);
   const [linkData, setLinkData] = useState(null);
   const [copy, setCopy] = useState(false);
@@ -64,16 +65,42 @@ const CreateLeagues = () => {
     }
   };
 
+  const getFormattedDateTime = () => {
+    if (startDate) {
+      const localDateTime = new Date(startDate);
+      const utcDateTime = new Date(
+        localDateTime.getTime() - localDateTime.getTimezoneOffset() * 60000
+      ).toISOString();
+      return utcDateTime;
+    }
+    return "";
+  };
+
+  const formattedDateTime = getFormattedDateTime();
+
+  const getFormattedEndDateTime = (e) => {
+    if (endDate) {
+      const localDateTime = new Date(endDate);
+      const utcDateTime = new Date(
+        localDateTime.getTime() - localDateTime.getTimezoneOffset() * 60000
+      ).toISOString();
+      return utcDateTime;
+    }
+    return "";
+  };
+
+  const formattedEndDateTime = getFormattedEndDateTime();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", leagueName);
     formData.append("is_paid", gameType);
     formData.append("units_issued", unit);
-    formData.append("units_issued_type", "a_week");
+    formData.append("units_issued_type", unitType);
     formData.append("match_length", matchLength);
-    formData.append("season_start_date", startDate);
-    formData.append("season_end_date", endDate);
+    formData.append("season_start_date", formattedDateTime);
+    formData.append("season_end_date", formattedEndDateTime);
     selectedLeagues.forEach((item, index) => {
       formData.append(`sports[${index}][sport_key]`, item.key);
       formData.append(`sports[${index}][sport_name]`, item.title);
@@ -233,7 +260,7 @@ const CreateLeagues = () => {
                           <FaCalendarAlt />
                         </InputGroup.Text>
                         <Form.Control
-                          type="date"
+                          type="datetime-local"
                           placeholder="Start Date"
                           value={startDate}
                           onChange={(e) => setStartDate(e.target.value)}
@@ -246,7 +273,7 @@ const CreateLeagues = () => {
                           <FaCalendarAlt />
                         </InputGroup.Text>
                         <Form.Control
-                          type="date"
+                          type="datetime-local"
                           placeholder="End Date"
                           value={endDate}
                           onChange={(e) => setEndDate(e.target.value)}
@@ -263,7 +290,19 @@ const CreateLeagues = () => {
                     placeholder="Units Issued"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
+                    readOnly
                   />
+                </Form.Group>
+                <Form.Group controlId="unitsIssued" className="mt-4">
+                  <Form.Label className="fw-bold">Units Issued Type</Form.Label>
+                  <Form.Select
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                  >
+                    <option value="a_day">A day</option>
+                    <option value="a_week">A week</option>
+                    <option value="all_at_once">All at once</option>
+                  </Form.Select>
                 </Form.Group>
                 <Button
                   variant="#155239"
