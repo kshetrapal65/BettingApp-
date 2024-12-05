@@ -26,6 +26,8 @@ const ApiEndPoints = {
   LeaveLeague: `${APPConfig.API_URL}/league-leave/`,
   AcceptInvite: `${APPConfig.API_URL}/league-accept-invite`,
   LeagueUnits: `${APPConfig.API_URL}/league-member/`,
+  getOddsBygame: `${APPConfig.API_URL}/odds-by-game/americanfootball_nfl`,
+  UpdateUnit: `${APPConfig.API_URL}/update-unit-league/`,
 };
 
 export default ApiEndPoints;
