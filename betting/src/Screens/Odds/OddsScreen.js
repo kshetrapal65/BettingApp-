@@ -2884,17 +2884,41 @@ export const OddsScreen = () => {
       </Container>
     );
   };
+  console.log(
+    "league?.season_start_date>>>",
+    league?.season_start_date,
+    "league?.season_end_date",
+    league?.season_end_date
+  );
+
   const fetchEvent = async () => {
     try {
+      const payload = {
+        region: "us",
+      };
+      const payload1 = {
+        region: "us",
+        start_date: league?.season_start_date,
+        end_date: league?.season_end_date,
+      };
       const response = await fetch(
-        status == 1
-          ? `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=spreads,totals,h2h&oddsFormat=american&commenceTimeFrom=${league?.season_start_date}T00:00:00Z&commenceTimeTo=${league?.season_end_date}T23:59:59Z`
-          : `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=totals,h2h,spreads&oddsFormat=american`,
+        // status == 1
+        //   ? `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=spreads,totals,h2h&oddsFormat=american&commenceTimeFrom=${league?.season_start_date}T00:00:00Z&commenceTimeTo=${league?.season_end_date}T23:59:59Z`
+        //   : `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=totals,h2h,spreads&oddsFormat=american`,
+        // {
+        //   method: "GET",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        // }
+        ApiEndPoints.getOddsBygame,
+
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(status == 1 ? payload1 : payload),
         }
       );
 
@@ -2904,7 +2928,7 @@ export const OddsScreen = () => {
 
       const data = await response.json();
       console.log("response", data);
-      setData(data);
+      setData(data?.result);
     } catch (error) {
       console.log(error);
     }
@@ -3301,9 +3325,9 @@ export const OddsScreen = () => {
                           marginTop: "10px",
                         }}
                       >
-                        {moment(game?.commence_time).format(
-                          "MMMM Do YYYY, h:mm A"
-                        )}
+                        {moment
+                          .utc(game?.commence_time)
+                          .format("MMMM Do YYYY, h:mm A")}
                       </p>
                     </Col>
                   </Row>

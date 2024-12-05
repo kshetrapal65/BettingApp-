@@ -7,6 +7,7 @@ import {
   Button,
   Form,
   Badge,
+  Modal,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
@@ -16,13 +17,52 @@ import { PulseLoader } from "react-spinners";
 import { FaChevronRight, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import "./createlegue.css";
+import { getUserdata } from "../../Helper/Storage";
+import axios from "axios";
 
 const LeaguesList = () => {
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [load, setLoad] = useState(false);
+  const [show, setShow] = useState(false);
+  const [id, setid] = useState();
   const [filterData, setFilterData] = useState([]);
+  const userData = getUserdata();
+  const [formData, setFormData] = useState({
+    inputValue: "",
+    selectValue: "",
+  });
+  console.log();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    // const payload = {
+    //   units_issued_type: formData.selectValue,
+    //   units_issued: formData.inputValue,
+    // };
+    const formdata = new FormData();
+    formdata.append("units_issued_type", formData.selectValue);
+    formdata.append("units_issued", formData.inputValue);
+    const response = await axios.post(ApiEndPoints.UpdateUnit + id, formdata, {
+      headers: {
+        Authorization: `Bearer ${userData?.api_token}`,
+      },
+    });
+    if (response.success == true) {
+      alert(response?.msg);
+    }
+
+    setShow(false);
+  };
+  console.log("FORMDATA", formData);
 
   useEffect(() => {
     getLeagues();
@@ -147,6 +187,20 @@ const LeaguesList = () => {
                     </Card.Title>
                   </Col>
                   <Col xs="auto" className="d-flex">
+                    {userData?.id == league?.user_id && (
+                      <Button
+                        className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                        size="sm"
+                        variant="#155239"
+                        style={{ backgroundColor: "#155239", color: "white" }}
+                        onClick={() => {
+                          setShow(true);
+                          setid(league.id);
+                        }}
+                      >
+                        Update Units
+                      </Button>
+                    )}
                     <Button
                       variant="#155239"
                       size="sm"
@@ -182,6 +236,47 @@ const LeaguesList = () => {
           </Col>
         </Row>
       ))}
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update units</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Units</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter something"
+                name="inputValue"
+                value={formData.inputValue}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Select Type</Form.Label>
+              <Form.Select
+                name="selectValue"
+                value={formData.selectValue}
+                onChange={handleInputChange}
+              >
+                <option value="">Choose an option</option>
+                <option value="all_at_once">All At Once</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSave}>
+            Save changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

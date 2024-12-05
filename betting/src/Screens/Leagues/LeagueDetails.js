@@ -446,11 +446,11 @@ const LeagueDetails = () => {
                       <td>{member.member_id}</td>
                       <td>
                         {member.member_name}
-                        <br />
-                        <span className="text-primary">@philipin</span>
+                        {/* <br />
+                        <span className="text-primary">@philipin</span> */}
                       </td>
                       <td>2-1-0</td>
-                      <td>35</td>
+                      <td>{member.member_unit}</td>
                     </tr>
                   ))}
                 </tbody>
