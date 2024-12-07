@@ -2042,6 +2042,8 @@ export const OddsScreen = () => {
 
   const getmonyline = cartData?.find((item) => item?.market == "moneyline");
 
+  console.log("unitData", unitData?.member_unit);
+
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
@@ -2290,7 +2292,14 @@ export const OddsScreen = () => {
         ? parlayResult
         : teaserResult
     );
-    formData.append(`bet_loss_amount`, 0);
+    formData.append(
+      `bet_loss_amount`,
+      activeTabs == "Straights"
+        ? totalWager
+        : activeTabs == "Parlay"
+        ? parlayBet
+        : teaserBet
+    );
 
     try {
       setLoad(true);
@@ -2368,6 +2377,15 @@ export const OddsScreen = () => {
               Clear All
             </Button>
           </Col>
+          <Row className="d-flex justify-content-center align-items-center">
+            {status == 1 && cartData?.length > 0 && (
+              <Col xs="auto">
+                <p className="mb-0 small text-muted fw-bold text-uppercase text-center">
+                  remaining unit: {unitData?.member_unit}
+                </p>
+              </Col>
+            )}
+          </Row>
         </Row>
 
         {activeTabs == "Parlay" ? (
@@ -2511,13 +2529,13 @@ export const OddsScreen = () => {
                 <h6>${parlayResult}</h6>
               </Col>
             </Row>
-
             <Button
               onClick={SubmitBet}
               variant="#155239"
               disabled={
                 cartData?.length === 0 ||
-                (status == 1 && parlayBet > Number(unitData.member_unit))
+                (status == 1 &&
+                  Number(parlayBet) > Number(unitData.member_unit))
               }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2607,14 +2625,12 @@ export const OddsScreen = () => {
                           {market?.market == "totals" ? market?.name : ""}
                         </span>{" "}
                         <span className="fw-bold">
-                          {market?.market == "totals"
-                            ? ""
-                            : market?.point + teaser >= 0
-                            ? "+"
-                            : "-"}
-                          {market?.name == "Over"
-                            ? market?.point - teaser
-                            : market?.point + teaser}
+                          {market?.market !== "totals" &&
+                            (market?.point + teaser >= 0 ? "+" : "-")}
+
+                          {market?.name === "Over"
+                            ? (parseFloat(market?.point) - teaser).toFixed(1)
+                            : (parseFloat(market?.point) + teaser).toFixed(1)}
                         </span>
                         <span className="text-muted"> ({market?.price})</span>
                         <span className="text-muted small fw-bold   ms-1">
@@ -2648,29 +2664,18 @@ export const OddsScreen = () => {
                                   {market?.market}
                                 </span>
                               </div>
-                              {/* <span className="form-control">
-                                {market?.market === "totals"
-                                  ? market?.name === "Over"
-                                    ? (market?.point - teaser)?.toFixed(2)
-                                    : (market?.point + teaser)?.toFixed(2)
-                                  : `${
-                                      market?.point + teaser >= 0 ? "+" : "-"
-                                    }${Math.abs(
-                                      market?.name === "Over"
-                                        ? market?.point - teaser
-                                        : market?.point + teaser
-                                    )?.toFixed(2)}`}
-                              </span> */}
-
                               <div>
                                 {market.market === "spreads" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point + teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) + teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>
@@ -2678,11 +2683,14 @@ export const OddsScreen = () => {
                                   market?.name === "Over" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point - teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) - teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>
@@ -2690,11 +2698,14 @@ export const OddsScreen = () => {
                                   market?.name === "Under" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point + teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) + teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>
@@ -2884,12 +2895,6 @@ export const OddsScreen = () => {
       </Container>
     );
   };
-  console.log(
-    "league?.season_start_date>>>",
-    league?.season_start_date,
-    "league?.season_end_date",
-    league?.season_end_date
-  );
 
   const fetchEvent = async () => {
     try {
@@ -2911,7 +2916,7 @@ export const OddsScreen = () => {
         //     "Content-Type": "application/json",
         //   },
         // }
-        ApiEndPoints.getOddsBygame,
+        ApiEndPoints.getOddsBygame + sport,
 
         {
           method: "POST",
@@ -3113,7 +3118,6 @@ export const OddsScreen = () => {
                             </Button>
                           )}
                         </Col>
-
                         <Col xs={2}>
                           {spreadMarket?.outcomes[0] && (
                             <Button

@@ -2153,14 +2153,12 @@ export const EventScore = React.memo(() => {
                           {market?.market == "totals" ? market?.name : ""}
                         </span>{" "}
                         <span className="fw-bold">
-                          {market?.market == "totals"
-                            ? ""
-                            : market?.point + teaser >= 0
-                            ? "+"
-                            : "-"}
-                          {market?.name == "Over"
-                            ? market?.point - teaser
-                            : market?.point + teaser}
+                          {market?.market !== "totals" &&
+                            (market?.point + teaser >= 0 ? "+" : "-")}
+
+                          {market?.name === "Over"
+                            ? (parseFloat(market?.point) - teaser).toFixed(1)
+                            : (parseFloat(market?.point) + teaser).toFixed(1)}
                         </span>
                         <span className="text-muted"> ({market?.price})</span>
                         <span className="text-muted small fw-bold   ms-1">
@@ -2194,16 +2192,18 @@ export const EventScore = React.memo(() => {
                                   {market?.market}
                                 </span>
                               </div>
-
                               <div>
                                 {market.market === "spreads" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point + teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) + teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>
@@ -2211,11 +2211,14 @@ export const EventScore = React.memo(() => {
                                   market?.name === "Over" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point - teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) - teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>
@@ -2223,11 +2226,14 @@ export const EventScore = React.memo(() => {
                                   market?.name === "Under" ? (
                                   <div>
                                     <span className="form-control">
-                                      {typeof market?.point === "number" &&
-                                      !isNaN(market?.point) &&
+                                      {typeof parseFloat(market?.point) ===
+                                        "number" &&
+                                      !isNaN(parseFloat(market?.point)) &&
                                       typeof teaser === "number" &&
                                       !isNaN(teaser)
-                                        ? (market?.point + teaser).toFixed(1)
+                                        ? (
+                                            parseFloat(market?.point) + teaser
+                                          ).toFixed(1)
                                         : 0}
                                     </span>
                                   </div>

@@ -124,17 +124,6 @@
   object-fit: cover;
 }
 
-/* .edit-icon {
-  position: absolute;
-  bottom: 0;
-  cursor: pointer;
-  background-color: rgb(117, 115, 115);
-  border-radius: 50%;
-  padding: 4px;
-  font-size: 14px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-  right: 0;
-} */
 .edit-icon {
   position: absolute;
   bottom: 0;
@@ -150,4 +139,69 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ***************tab************* */
+
+.odds-tab-bar .nav-item .nav-link {
+  color: #555;
+  font-weight: bold;
+  border: 1px solid #dee2e6;
+}
+
+.odds-tab-bar .nav-item .nav-link.active {
+  color: #000;
+  border-bottom: 3px solid green;
+  background-color: #f8f9fa;
+}
+
+.odds-tab-bar .nav-item .nav-link:hover {
+  color: #000;
+  background-color: #f8f9fa;
+}
+
+.profile-tab-bar-new .nav-link {
+  background-color: transparent;
+  border: none;
+  color: #6f6e6e;
+  font-weight: bold;
+  padding: 10px 15px;
+  margin-right: 0px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.profile-tab-bar-new .nav-link.active {
+  border-bottom: 2px solid green;
+}
+
+.profile-tab-bar-new .nav-link:hover {
+  text-decoration: underline;
+  text-decoration: none;
+}
+
+.custom-card-ana {
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card-ana .amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.custom-card-ana .record,
+.custom-card-ana .roi {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.anal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.recordss {
+  font-size: 0.9rem;
+  color: #155239;
+  font-weight: bold;
 }

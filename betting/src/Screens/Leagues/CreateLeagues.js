@@ -36,11 +36,13 @@ const CreateLeagues = () => {
   const [selectedLeagues, setSelectedLeagues] = useState([]);
   const [gameType, setGameType] = useState(null);
   const [leagueName, setLeagueName] = useState("");
-  const [unit, setUnit] = useState(100);
-  const [matchLength, setMatchLength] = useState(0);
+  const [unit, setUnit] = useState("");
+  const [extraUnit, setExtraUnit] = useState("");
+  const [matchLength, setMatchLength] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [unitType, setUnitType] = useState("a_day");
+  const [unitType, setUnitType] = useState("");
+  const [winnigPrize, setWinnigPrize] = useState("");
   const [load, setLoad] = useState(false);
   const [linkData, setLinkData] = useState(null);
   const [copy, setCopy] = useState(false);
@@ -54,6 +56,7 @@ const CreateLeagues = () => {
   const handleGameTypeChange = (type) => {
     setGameType(type);
   };
+  console.log("unitType", unitType);
 
   const handleLeagueChange = (league) => {
     if (selectedLeagues.some((item) => item.title === league.title)) {
@@ -101,6 +104,8 @@ const CreateLeagues = () => {
     formData.append("match_length", matchLength);
     formData.append("season_start_date", formattedDateTime);
     formData.append("season_end_date", formattedEndDateTime);
+    formData.append("winning_prize", winnigPrize);
+    formData.append("extra_unit", extraUnit);
     selectedLeagues.forEach((item, index) => {
       formData.append(`sports[${index}][sport_key]`, item.key);
       formData.append(`sports[${index}][sport_name]`, item.title);
@@ -241,15 +246,30 @@ const CreateLeagues = () => {
                   </Button>
                 </Form.Group>
 
-                <Form.Group controlId="matchLength" className="mt-4">
-                  <Form.Label className="fw-bold">Match Length</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter match length"
-                    value={matchLength}
-                    onChange={(e) => setMatchLength(e.target.value)}
-                  />
-                </Form.Group>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId="matchLength" className="mt-4">
+                      <Form.Label className="fw-bold">Match Length</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter match length"
+                        value={matchLength}
+                        onChange={(e) => setMatchLength(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="unitsIssued" className="mt-4">
+                      <Form.Label className="fw-bold">Units </Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter Units "
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
                 <Form.Group controlId="seasonLength" className="mt-4">
                   <Form.Label className="fw-bold">Season Length</Form.Label>
@@ -282,28 +302,45 @@ const CreateLeagues = () => {
                     </Col>
                   </Row>
                 </Form.Group>
-
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId="unitsIssued" className="mt-4">
+                      <Form.Label className="fw-bold">Units Type</Form.Label>
+                      <Form.Select
+                        value={unitType}
+                        onChange={(e) => setUnitType(e.target.value)}
+                      >
+                        <option value="" disabled></option>
+                        <option value="a_day">A day</option>
+                        <option value="a_week">A week</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  {unitType && (
+                    <Col md={6}>
+                      <Form.Group controlId="unitsIssued" className="mt-4">
+                        <Form.Label className="fw-bold">
+                          Extra Units{" "}
+                        </Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="Enter Units "
+                          value={extraUnit}
+                          onChange={(e) => setExtraUnit(e.target.value)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  )}
+                </Row>
                 <Form.Group controlId="unitsIssued" className="mt-4">
-                  <Form.Label className="fw-bold">Units Issued</Form.Label>
+                  <Form.Label className="fw-bold">Winning Prize </Form.Label>
                   <Form.Control
-                    type="number"
-                    placeholder="Units Issued"
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                    readOnly
+                    type="text"
+                    value={winnigPrize}
+                    onChange={(e) => setWinnigPrize(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group controlId="unitsIssued" className="mt-4">
-                  <Form.Label className="fw-bold">Units Issued Type</Form.Label>
-                  <Form.Select
-                    value={unitType}
-                    onChange={(e) => setUnitType(e.target.value)}
-                  >
-                    <option value="a_day">A day</option>
-                    <option value="a_week">A week</option>
-                    <option value="all_at_once">All at once</option>
-                  </Form.Select>
-                </Form.Group>
+
                 <Button
                   variant="#155239"
                   style={{ backgroundColor: "#155239", color: "white" }}
@@ -315,69 +352,6 @@ const CreateLeagues = () => {
               </Form>
             </Card.Body>
           </Card>
-          {/* <h5 className="fw-bold">Invite Friends</h5>
-          <Card className="mb-4">
-            <Card.Body>
-              <Form>
-                <Form.Group controlId="inviteLink">
-                  <Form.Label className="fw-bold">Share Link</Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text>
-                      <FaLink />
-                    </InputGroup.Text>
-
-                    <Form.Control
-                      type="text"
-                      readOnly
-                      value="joingroup.com/abcdefg/invite"
-                      style={{ color: "#007bff", cursor: "pointer" }}
-                    />
-
-                    <InputGroup.Text
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          "joingroup.com/abcdefg/invite"
-                        );
-                        setCopy(true);
-                      }}
-                    >
-                      {copy ? <FaCopy /> : <FaRegCopy />}
-                    </InputGroup.Text>
-                  </InputGroup>
-                </Form.Group>
-
-                 
-                <Form.Group controlId="inviteContacts" className="mt-4">
-                  <Form.Label className="fw-bold">Contacts</Form.Label>
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span
-                      className="text-muted fw-bold"
-                      style={{ fontSize: "15px" }}
-                    >
-                      Aaron Centifonte
-                    </span>
-                    <Button variant="outline-primary" size="sm">
-                      Invite
-                    </Button>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span
-                      className="text-muted fw-bold"
-                      style={{ fontSize: "15px" }}
-                    >
-                      Ben
-                    </span>
-                    <Button variant="outline-primary" size="sm">
-                      Invite
-                    </Button>
-                  </div>
-                </Form.Group>
-
-               
-              </Form>
-            </Card.Body>
-          </Card> */}
         </Col>
       </Row>
       <Modal

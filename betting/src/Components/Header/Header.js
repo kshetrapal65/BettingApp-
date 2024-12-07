@@ -41,7 +41,7 @@ const Header = () => {
     <nav className="navbar p-0">
       <div className="navbar">
         <i className="bx bx-menu" onClick={toggleDrawer}></i>
-        <div className="logo">
+        <div className="logo" onClick={() => navigate("/")}>
           <a href="#">BetApp</a>
         </div>
         <div className={`nav-links ${drawerOpen ? "open" : ""}`}>
@@ -54,7 +54,7 @@ const Header = () => {
               <Link to="/">
                 {" "}
                 <a onClick={toggleDrawer} href="#">
-                  HOME
+                  Home
                 </a>
               </Link>
             </li>
@@ -84,7 +84,7 @@ const Header = () => {
 
             <li>
               <a href="#" onClick={() => setShowJsSubMenu(!showJsSubMenu)}>
-                ODDS
+                Odds
               </a>
               <i
                 className="bx bxs-chevron-down js-arrow arrow"
@@ -94,6 +94,7 @@ const Header = () => {
                 <ul className="htmlCss-sub-menu sub-menu">
                   {data?.map((group, index) => (
                     <li
+                      className="border-bottom"
                       onClick={() => {
                         navigate(`/odds/${group.key}`);
                         toggleDrawer();
@@ -120,7 +121,9 @@ const Header = () => {
 
               {showHtmlCssSubMenu && (
                 <ul className="htmlCss-sub-menu sub-menu">
+                  {/* style dropdown bttun */}
                   <li
+                    className="border-bottom"
                     onClick={() => {
                       navigate(`/odds-calculater`);
                       toggleDrawer();
@@ -129,12 +132,29 @@ const Header = () => {
                     <a href="#">Odds Calculator</a>
                   </li>
                   <li
+                    className="border-bottom"
                     onClick={() => {
                       navigate(`/parlay-calculater`);
                       toggleDrawer();
                     }}
                   >
                     <a href="#">Parlay Calculator</a>
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate(`/hedge-calculater`);
+                      toggleDrawer();
+                    }}
+                  >
+                    <a href="#">Hedge Calculator</a>
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate(`/ev-calculater`);
+                      toggleDrawer();
+                    }}
+                  >
+                    <a href="#">EV Calculator</a>
                   </li>
                 </ul>
               )}
@@ -149,14 +169,9 @@ const Header = () => {
                 Leagues
               </a>
             </li>
-            <li>
+            <li onClick={() => navigate(token ? "/challanges" : "/login")}>
               <a onClick={toggleDrawer} href="#">
-                ABOUT US
-              </a>
-            </li>
-            <li>
-              <a onClick={toggleDrawer} href="#">
-                CONTACT US
+                Challenges
               </a>
             </li>
 
