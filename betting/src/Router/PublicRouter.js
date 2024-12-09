@@ -20,6 +20,9 @@ import LeaguesList from "../Screens/Leagues/LeaguesList";
 import CreateLeagues from "../Screens/Leagues/CreateLeagues.js";
 import LeagueDetails from "../Screens/Leagues/LeagueDetails.js";
 import PrivateRoute from "../Components/PrivateRoute.js";
+import ChallangesList from "../Screens/Challanges/ChallangesList.js";
+import HedgeCalculater from "../Screens/Parlay/HedgeCalculater.js";
+import EvCalculater from "../Screens/Parlay/EvCalculater.js";
 
 const PublicRouter = () => {
   return (
@@ -39,10 +42,12 @@ const PublicRouter = () => {
         <Route path="/recent-news" element={<RecentNews />} />
         <Route path="/parlay-calculater" element={<ParlayCalculater />} />
         <Route path="/odds-calculater" element={<OddsCalculater />} />
+        <Route path="/hedge-calculater" element={<HedgeCalculater />} />
+        <Route path="/ev-calculater" element={<EvCalculater />} />
         <Route path="/betting-history" element={<BettingHistory />} />
         <Route path="/leagues-list" element={<LeaguesList />} />
         <Route path="/create-leagues" element={<CreateLeagues />} />
-        {/* <Route path="/league-details/:id" element={<LeagueDetails />} /> */}
+        <Route path="/challanges" element={<ChallangesList />} />
         <Route
           path="/league-details/:id/invite/:code"
           element={

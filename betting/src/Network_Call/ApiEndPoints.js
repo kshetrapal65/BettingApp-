@@ -2,9 +2,9 @@ const APPConfig = {
   // API_URL: "http://173.212.250.62/betting/ap-admin/public/api",
   API_URL: "https://betting.aercjbp.com/ap-admin/public/api",
 };
-
+// 752d253c74fc59219fd336b881fdd13c
 const ApiEndPoints = {
-  ApiKey: "d721d4110bd0a00db3ad99235111f749",
+  ApiKey: "752d253c74fc59219fd336b881fdd13c",
   // ApiKey: "f9af698cc538367931ebfe9e11c6b3cc",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
@@ -26,8 +26,12 @@ const ApiEndPoints = {
   LeaveLeague: `${APPConfig.API_URL}/league-leave/`,
   AcceptInvite: `${APPConfig.API_URL}/league-accept-invite`,
   LeagueUnits: `${APPConfig.API_URL}/league-member/`,
-  getOddsBygame: `${APPConfig.API_URL}/odds-by-game/americanfootball_nfl`,
+  getOddsBygame: `${APPConfig.API_URL}/odds-by-game/`,
   UpdateUnit: `${APPConfig.API_URL}/update-unit-league/`,
+  GlobalLeagues: `${APPConfig.API_URL}/global-leagues`,
+  GlobalLeagueDetails: `${APPConfig.API_URL}/global-league/`,
+  GlobalLeagueJoin: `${APPConfig.API_URL}/global-league-join/`,
+  GlobalLeagueLeave: `${APPConfig.API_URL}/global-league-leave/`,
 };
 
 export default ApiEndPoints;

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import RecentStory from "../../Components/RecentStory";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import "./Home.css";
+import { formatCapital } from "../../Components/formatCapitalize";
 
 const sports = SportList;
 
@@ -1369,7 +1370,9 @@ const Home = () => {
                         style={{ cursor: "pointer" }}
                       >
                         <Card.Body>
-                          <h6 className="fw-bold">{league?.name}</h6>
+                          <h6 className="fw-bold">
+                            {formatCapital(league?.name)}
+                          </h6>
 
                           <Card.Text className="text-muted">
                             End Date: <strong>{league?.season_end_date}</strong>

@@ -31,6 +31,8 @@ import { FaGear } from "react-icons/fa6";
 const LeagueDetails = () => {
   const { id, code } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const status = location.state?.status;
   const userData = getUserdata();
   const [league, setLeague] = React.useState([]);
   const [leagueList, setLeagueList] = React.useState([]);
@@ -41,10 +43,17 @@ const LeagueDetails = () => {
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
   const matchId = leagueList?.find((item) => item.id == id);
 
+  const findInviteUser = league?.league_members?.find(
+    (item) => item.member_id == userData?.id
+  );
+  const currentDate = new Date();
+  const seasonStartDate = new Date(league?.season_start_date);
+
+  console.log("status", status);
   useEffect(() => {
     getLeagueDetails();
     getLeagues();
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   }, [id, code]);
 
   setTimeout(() => {
@@ -88,7 +97,9 @@ const LeagueDetails = () => {
       const response = await apiCallNew(
         "post",
         null,
-        ApiEndPoints.LeagueDetail + id
+        status == 1
+          ? ApiEndPoints.GlobalLeagueDetails + id
+          : ApiEndPoints.LeagueDetail + id
       );
       if (response.success === true) {
         setLeague(response.result);
@@ -124,7 +135,11 @@ const LeagueDetails = () => {
       confirmButtonText: "Yes, remove it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        leaveFromLeague(id);
+        if (status == 1) {
+          leaveFromGlobleLeague(id);
+        } else {
+          leaveFromLeague(id);
+        }
       }
     });
   };
@@ -139,7 +154,11 @@ const LeagueDetails = () => {
       confirmButtonText: "Yes, accept it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        acceptInvites();
+        if (status == 1) {
+          acceptGlobleInvites();
+        } else {
+          acceptInvites();
+        }
       }
     });
   };
@@ -153,6 +172,20 @@ const LeagueDetails = () => {
       );
       if (response.success === true) {
         navigate("/leagues-list");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const leaveFromGlobleLeague = async (id) => {
+    try {
+      const response = await apiCallNew(
+        "get",
+        {},
+        ApiEndPoints.GlobalLeagueLeave + id
+      );
+      if (response.success === true) {
+        navigate("/challanges");
       }
     } catch (error) {
       console.log(error);
@@ -180,6 +213,28 @@ const LeagueDetails = () => {
       setLoad(false);
     }
   };
+
+  const acceptGlobleInvites = async () => {
+    try {
+      setLoad(true);
+      const response = await apiCallNew(
+        "get",
+        null,
+        ApiEndPoints.GlobalLeagueJoin + id
+      );
+      if (response.success === true) {
+        navigate("/challanges");
+        setLoad(false);
+      } else {
+        toast.error(response.msg);
+        setLoad(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
+
   const event = [
     {
       title: "Event 1",
@@ -280,7 +335,9 @@ const LeagueDetails = () => {
               className="text-center text-lg-start mb-2 mb-lg-0"
             >
               <FaArrowLeft
-                onClick={() => navigate("/leagues-list")}
+                onClick={() =>
+                  navigate(status == 1 ? "/challanges" : "/leagues-list")
+                }
                 className="me-3"
                 style={{ cursor: "pointer" }}
               />
@@ -302,31 +359,83 @@ const LeagueDetails = () => {
                   Leave
                 </Button>
               )} */}
+              {status == 1 ? (
+                findInviteUser ? (
+                  <>
+                    <Button
+                      className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                      size="sm"
+                      variant="#155239"
+                      style={{ backgroundColor: "#155239", color: "white" }}
+                      onClick={() =>
+                        navigate(
+                          `/odds/${league?.league_sports[0]?.sport_key}`,
+                          {
+                            state: { league: league, status: 1 },
+                          }
+                        )
+                      }
+                      disabled={currentDate >= seasonStartDate}
+                    >
+                      Bets on {league.name}
+                    </Button>
+                  </>
+                ) : null
+              ) : (
+                <>
+                  <>
+                    {league?.id == matchId?.id ? (
+                      <Button
+                        className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                        size="sm"
+                        variant="#155239"
+                        style={{ backgroundColor: "#155239", color: "white" }}
+                        onClick={() =>
+                          navigate(
+                            `/odds/${league?.league_sports[0]?.sport_key}`,
+                            {
+                              state: { league: league, status: 1 },
+                            }
+                          )
+                        }
+                        disabled={currentDate >= seasonStartDate}
+                      >
+                        Bets on {league.name}
+                      </Button>
+                    ) : null}
+                  </>
+                </>
+              )}
 
-              <Button
-                className="ms-lg-2 mb-2 mb-lg-0 me-1"
-                size="sm"
-                variant="#155239"
-                style={{ backgroundColor: "#155239", color: "white" }}
-                onClick={() =>
-                  navigate(`/odds/${league?.league_sports[0]?.sport_key}`, {
-                    state: { league: league, status: 1 },
-                  })
-                }
-              >
-                Bets on {league.name}
-              </Button>
-              {userData?.id === league?.user_id ? null : league?.id ==
-                matchId?.id ? null : (
-                <Button
-                  className="ms-lg-2 mb-2 mb-lg-0"
-                  size="sm"
-                  variant="#155239"
-                  style={{ backgroundColor: "#155239", color: "white" }}
-                  onClick={confirmLeagueInvites}
-                >
-                  Accept Invite
-                </Button>
+              {status == 1 ? (
+                findInviteUser ? null : (
+                  <>
+                    <Button
+                      className="ms-lg-2 mb-2 mb-lg-0"
+                      size="sm"
+                      variant="#155239"
+                      style={{ backgroundColor: "#155239", color: "white" }}
+                      onClick={confirmLeagueInvites}
+                    >
+                      Accept Invitess
+                    </Button>
+                  </>
+                )
+              ) : (
+                <>
+                  {userData?.id === league?.user_id ? null : league?.id ==
+                    matchId?.id ? null : (
+                    <Button
+                      className="ms-lg-2 mb-2 mb-lg-0"
+                      size="sm"
+                      variant="#155239"
+                      style={{ backgroundColor: "#155239", color: "white" }}
+                      onClick={confirmLeagueInvites}
+                    >
+                      Accept Invite
+                    </Button>
+                  )}
+                </>
               )}
             </Col>
             <Col
@@ -390,7 +499,7 @@ const LeagueDetails = () => {
           className="text-white"
           style={{ backgroundColor: "#155239" }}
         >
-          Sports in League
+          {status == 1 ? "Sports in season" : "Sports in League"}
         </Card.Header>
         <Card.Body>
           {league?.league_sports?.length > 0 ? (
@@ -684,25 +793,7 @@ const LeagueDetails = () => {
           </Row>
           <Card className="mb-4">
             <Card.Body>
-              <h5>League Invites</h5>
-              {/* {league?.league_invites?.length > 0 ? (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Invite ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {league.league_invites.map((invite, index) => (
-                  <tr key={index}>
-                    <td>{invite.id}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p>No invites available for this league.</p>
-          )} */}
+              <h5>{status == 1 ? "Season Invites" : "League Invites"}</h5>
               <InputGroup>
                 <InputGroup.Text>
                   <FaLink />
@@ -727,7 +818,7 @@ const LeagueDetails = () => {
           </Card>
           <Card>
             <Card.Body>
-              <h5>League Members</h5>
+              <h5>{status == 1 ? "Season Members" : "League Members"}</h5>
               {league?.league_members?.length > 0 ? (
                 <Table striped bordered hover>
                   <thead>
