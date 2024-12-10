@@ -1,39 +1,119 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Container,
+  Row,
+  Col,
+  Dropdown,
+  Card,
+  ProgressBar,
+  Badge,
+} from "react-bootstrap";
+import {
+  Chart as ChartJS,
+  CategoryScale, // Add this
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement, // Required for Pie chart
+  Title,
   Tooltip,
   Legend,
-  Area,
-  ResponsiveContainer,
-} from "recharts";
-import { Card, Col, Container, Row } from "react-bootstrap";
+} from "chart.js";
+import { Line, Bar, Pie } from "react-chartjs-2";
+import { FaArrowUp, FaDollarSign, FaSnowflake } from "react-icons/fa";
 
-const data = [
-  { name: "Day 1", value: 2 },
-  { name: "Day 2", value: 5.5 },
-  { name: "Day 3", value: 2 },
-  { name: "Day 4", value: 8.5 },
-  { name: "Day 5", value: 1.5 },
-  { name: "Day 6", value: 5 },
-];
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
+const chartData = {
+  labels: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  datasets: [
+    {
+      label: "Sales Data",
+      data: [65, 30, 59, 80, 30, 56, 55, 40, 50, 15, 78, 40],
+      backgroundColor: "rgba(75, 192, 192, 0.6)",
+      borderColor: "rgba(75, 192, 192, 1)",
+      borderWidth: 3,
+      pointBackgroundColor: "rgba(255, 99, 132, 1)",
+      tension: 0.4,
+    },
+  ],
+};
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      grid: {
+        color: "rgba(220, 220, 220, 0.3)", // X-axis gridline color
+      },
+      ticks: {
+        color: "#4A4A4A", // X-axis label color
+      },
+    },
+    y: {
+      grid: {
+        color: "rgba(220, 220, 220, 0.3)", // Y-axis gridline color
+      },
+      ticks: {
+        color: "#4A4A4A", // Y-axis label color
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      labels: {
+        color: "#4A4A4A",
+      },
+    },
+  },
+};
 const AnalyticsTab = () => {
+  const [chartType, setChartType] = useState("Line");
+
+  const handleSelect = (eventKey) => {
+    setChartType(eventKey);
+  };
+
+  const renderChart = () => {
+    switch (chartType) {
+      case "Line":
+        return <Line data={chartData} options={chartOptions} />;
+      case "Bar":
+        return <Bar data={chartData} options={chartOptions} />;
+      case "Pie":
+        return <Pie data={chartData} options={chartOptions} />;
+      default:
+        return <Line data={chartData} options={chartOptions} />;
+    }
+  };
+
   return (
-    <Container
-      fluid
-      style={{
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        padding: "16px",
-        fontFamily: "'Arial', sans-serif",
-        color: "#333",
-        backgroundColor: "#fff",
-      }}
-    >
+    <Container>
       <Row className="justify-content-center mb-2">
         <Col xs={12} sm={6} md={4} className="mb-3">
           <Card className="text-center custom-card-ana">
@@ -108,61 +188,44 @@ const AnalyticsTab = () => {
         </Col>
       </Row>
 
-      <Row>
-        <Col xs={12}>
-          <div style={{ width: "100%", height: "400px" }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
-                <defs>
-                  <linearGradient
-                    id="lineGradient"
-                    x1="10%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor="#155239" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#6a994e" stopOpacity={0.8} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#155239"
-                  fill="url(#areaGradient)"
-                  fillOpacity={0.4}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="url(#lineGradient)"
-                  strokeWidth={3}
-                  dot={{
-                    r: 5,
-                    fill: "#155239",
-                    stroke: "#fff",
-                    strokeWidth: 2,
-                  }}
-                  activeDot={{
-                    r: 8,
-                    fill: "#d32f2f",
-                    stroke: "#fff",
-                    strokeWidth: 3,
-                  }}
-                  animationDuration={1000}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+      <Row className="justify-content-center">
+        <Col xs={12} md={12}>
+          <Dropdown onSelect={handleSelect} className="float-end">
+            <Dropdown.Toggle
+              style={{
+                backgroundColor: "#155239",
+                borderColor: "#155239",
+                color: "white",
+              }}
+              size="sm"
+            >
+              Select Chart Type
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="Line">Line Chart</Dropdown.Item>
+              <Dropdown.Item eventKey="Bar">Bar Chart</Dropdown.Item>
+              <Dropdown.Item eventKey="Pie">Pie Chart</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className="justify-content-center mt-4">
+        <Col xs={12} md={12}>
+          <div
+            className="chart-container"
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "400px",
+            }}
+          >
+            {renderChart()}
           </div>
         </Col>
       </Row>
 
-      <Row className="justify-content-center mt-4">
+      <Row className="justify-content-center mt-5">
         <Col xs={12} sm={6} md={4} className="mb-3">
           <Card className="text-center custom-card-ana">
             <Card.Body>
@@ -202,6 +265,115 @@ const AnalyticsTab = () => {
           </Card>
         </Col>
       </Row>
+
+      <div className="container py-4">
+        {/* Favorite Bets Section */}
+        <Card
+          className="mb-4 shadow-sm"
+          style={{ borderRadius: "12px", padding: "20px" }}
+        >
+          <Card.Body>
+            <Card.Title className="mb-3">
+              Favorite Bets <small className="text-muted">⚠️</small>
+            </Card.Title>
+            <ProgressBar
+              className="mb-3"
+              now={70}
+              label="NCAAF"
+              variant="success"
+            />
+            <ProgressBar
+              className="mb-3"
+              now={50}
+              label="N/A"
+              variant="secondary"
+            />
+            <ProgressBar
+              className="mb-3"
+              now={30}
+              label="N/A"
+              variant="secondary"
+            />
+
+            {/* Bet Categories */}
+            <div className="d-flex justify-content-between">
+              <small>Spread</small>
+              <small>ML</small>
+              <small>Total</small>
+              <small>Props</small>
+              <small>Futures</small>
+            </div>
+          </Card.Body>
+        </Card>
+
+        <Row>
+          {/* Cold Streak Section */}
+          <Col md={6} className="mb-3">
+            <Card
+              className="shadow-sm"
+              style={{ borderRadius: "12px", padding: "20px" }}
+            >
+              <Card.Body>
+                <div className="d-flex align-items-center">
+                  <FaSnowflake size={24} className="me-3" />
+                  <div>
+                    <h5>Cold Streak</h5>
+                    <span className="text-primary">1 day</span>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          {/* Best Week Section */}
+          <Col md={6} className="mb-3">
+            <Card
+              className="shadow-sm"
+              style={{ borderRadius: "12px", padding: "20px" }}
+            >
+              <Card.Body>
+                <div className="d-flex align-items-center">
+                  <FaDollarSign size={24} className="me-3" />
+                  <div>
+                    <h5>Best Week</h5>
+                    <div className="text-success">
+                      <FaArrowUp /> $2 <small>Oct 14 - Oct 20</small>
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        {/* Closing Line Value Section */}
+        <Card
+          className="shadow-sm"
+          style={{ borderRadius: "12px", padding: "20px" }}
+        >
+          <Card.Body>
+            <Card.Title className="mb-3">
+              Closing Line Value <small className="text-muted">⚠️</small>
+            </Card.Title>
+            <Row>
+              <Col md={6} className="text-center">
+                <Badge bg="success" className="mb-2">
+                  +CLV Bets
+                </Badge>
+                <h6>1 Total</h6>
+                <span className="text-success">33.33%</span>
+              </Col>
+              <Col md={6} className="text-center">
+                <Badge bg="danger" className="mb-2">
+                  -CLV Bets
+                </Badge>
+                <h6>2 Total</h6>
+                <span className="text-danger">66.67%</span>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </div>
     </Container>
   );
 };

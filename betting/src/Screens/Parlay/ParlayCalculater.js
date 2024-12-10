@@ -96,8 +96,11 @@ const ParlayCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold mb-5">Parlay Calculator</h3>
-
+          <h3 className="text-center fw-bold mb-2">Parlay Calculator</h3>
+          <h6 className="fw-bold mb-5 text-center text-muted">
+            A parlay is a bet that combines multiple selections into a single
+            wager that has a payout only when all parts win.
+          </h6>
           {status === "parlay" ? (
             <Form>
               <Row>

@@ -94,7 +94,12 @@ const OddsCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold mb-5">Odds Calculator</h3>
+          <h3 className="text-center fw-bold mb-2">Odds Calculator</h3>
+          <h6 className="fw-bold mb-5 text-center text-muted">
+            The betting odds calculator allows you to input your stake & odds in
+            American, Decimal, or Fractional formats to quickly calculate the
+            payout for your bets.
+          </h6>
           {status === "parlay" ? (
             <Form>
               <Row>

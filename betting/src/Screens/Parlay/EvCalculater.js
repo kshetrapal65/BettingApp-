@@ -69,7 +69,13 @@ const EvCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold mb-5">EV Calculator</h3>
+          <h3 className="text-center fw-bold mb-2">EV Calculator</h3>
+          <h6 className="fw-bold mb-5 text-center text-muted">
+            Expected Value (EV) in sports betting measures the profitability of
+            a wager over time, considering probabilities of winning and losing.
+            A positive EV indicates potential long-term profit, while a negative
+            EV suggests likely losses.
+          </h6>
           <Form>
             <Row>
               <Col xs={12} md={6}>
