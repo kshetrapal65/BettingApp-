@@ -1092,6 +1092,7 @@ export const EventScore = React.memo(() => {
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
   const [bookmaker, setBookmaker] = React.useState("draftkings");
+  const [propBookmaker, setPropBookmaker] = React.useState("draftkings");
   const [bookmakerName, setBookmakername] = React.useState("DraftKings");
   const [load, setLoad] = React.useState(false);
   const token = getToken();
@@ -1100,6 +1101,7 @@ export const EventScore = React.memo(() => {
   const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
+  console.log("bookmakers", bookmakers);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
@@ -1126,6 +1128,10 @@ export const EventScore = React.memo(() => {
   const handleBookmaker = (e) => {
     setBookmaker(e.target.value);
     setBookmakername(e.target.options[e.target.selectedIndex].text);
+  };
+  const handlePropBookmaker = (e) => {
+    setPropBookmaker(e.target.value);
+    // setBookmakername(e.target.options[e.target.selectedIndex].text);
   };
   useEffect(() => {
     fetchScore();
@@ -2443,10 +2449,24 @@ export const EventScore = React.memo(() => {
       >
         <Card className="p-4 ">
           <Row className="justify-content-between">
-            <Col className="mb-3" lg={6} md={9}>
+            <Col className="mb-3" lg={4} md={4}>
               <h5 className="fw-bold">Prop Odds</h5>
             </Col>
-            <Col className="mb-3" lg={6} md={3}>
+            <Col className="mb-3" lg={4} md={4}>
+              <Form.Group controlId="formSelect ">
+                <Form.Select
+                  onChange={handlePropBookmaker}
+                  aria-label="Select option"
+                >
+                  {bookmakers?.map((market, index) => (
+                    <option key={index} value={market.key}>
+                      {market.title}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col className="mb-3" lg={4} md={4}>
               <Form.Group controlId="formSelect ">
                 <Form.Select
                   onChange={handleSelectChange}
@@ -2480,7 +2500,7 @@ export const EventScore = React.memo(() => {
             <p>No props found</p>
           ) : (
             propData?.bookmakers
-              ?.filter((market) => market.key === "fanduel")
+              ?.filter((market) => market.key === bookmaker)
               .map((market, marketIndex) => (
                 <div key={marketIndex}>
                   {Object.values(
