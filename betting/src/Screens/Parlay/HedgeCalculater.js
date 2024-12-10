@@ -72,7 +72,12 @@ const HedgeCalculater = () => {
     <Container className="my-4">
       <Row className="justify-content-center">
         <Col xs={12} md={8} lg={6}>
-          <h3 className="text-center fw-bold mb-5">Hedging Calculator</h3>
+          <h3 className="text-center fw-bold mb-2">Hedging Calculator</h3>
+          <h6 className="fw-bold mb-5 text-center text-muted">
+            Use the hedging calculator to see how you can guarantee yourself a
+            profit on your live bets. Enter your bets and see how much you need
+            to hedge.
+          </h6>
           <Form>
             <Row>
               <Col xs={12} md={6}>

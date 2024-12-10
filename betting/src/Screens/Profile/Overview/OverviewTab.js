@@ -38,7 +38,6 @@ const OverviewTab = ({ profileData, getProfile }) => {
     account_name: "",
   });
 
-  console.log("pers", profileData);
   React.useEffect(() => {
     if (profileData) {
       setFormDatas({

@@ -220,7 +220,7 @@ const LeaguesList = () => {
                       <Button
                         variant="#155239"
                         size="sm"
-                        className="custom-btns d-flex align-items-center"
+                        className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
                         onClick={() =>
                           navigate(
                             `/league-details/${league?.id}/invite/${league?.invite_code}`

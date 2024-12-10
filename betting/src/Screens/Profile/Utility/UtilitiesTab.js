@@ -1,147 +1,82 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Dropdown } from "react-bootstrap";
+import React, { useCallback, useMemo, useState } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale, // Add this
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement, // Required for Pie chart
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line, Bar, Pie } from "react-chartjs-2";
+  FaCalculator,
+  FaPercent,
+  FaBalanceScale,
+  FaCoins,
+  FaChartLine,
+} from "react-icons/fa";
+import { Card, ListGroup } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const chartData = {
-  labels: [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ],
-  datasets: [
-    {
-      label: "Sales Data",
-      data: [65, 30, 59, 80, 30, 56, 55, 40, 50, 15, 78, 40],
-      backgroundColor: "rgba(75, 192, 192, 0.6)", // Bar and Pie background color
-      borderColor: "rgba(75, 192, 192, 1)", // Border color for all chart types
-      borderWidth: 3, // Border width for all chart types
-      pointBackgroundColor: "rgba(255, 99, 132, 1)", // Line chart point color
-      tension: 0.4, // Smooth line for Line chart
-    },
-  ],
-};
-
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      grid: {
-        color: "rgba(220, 220, 220, 0.3)", // X-axis gridline color
-      },
-      ticks: {
-        color: "#4A4A4A", // X-axis label color
-      },
-    },
-    y: {
-      grid: {
-        color: "rgba(220, 220, 220, 0.3)", // Y-axis gridline color
-      },
-      ticks: {
-        color: "#4A4A4A", // Y-axis label color
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      labels: {
-        color: "#4A4A4A",
-      },
-    },
-  },
-};
 const UtilitiesTab = () => {
-  const [chartType, setChartType] = useState("Line");
-
-  const handleSelect = (eventKey) => {
-    setChartType(eventKey);
-  };
-
-  const renderChart = () => {
-    switch (chartType) {
-      case "Line":
-        return <Line data={chartData} options={chartOptions} />;
-      case "Bar":
-        return <Bar data={chartData} options={chartOptions} />;
-      case "Pie":
-        return <Pie data={chartData} options={chartOptions} />;
-      default:
-        return <Line data={chartData} options={chartOptions} />;
-    }
-  };
+  const navigate = useNavigate();
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col xs={12} md={12}>
-          <Dropdown onSelect={handleSelect} className="float-end">
-            <Dropdown.Toggle
-              style={{
-                backgroundColor: "#155239",
-                borderColor: "#155239",
-                color: "white",
-              }}
-              size="sm"
-            >
-              Select Chart Type
-            </Dropdown.Toggle>
+    <div>
+      {" "}
+      <Card
+        className="shadow-sm"
+        style={{ borderRadius: "12px", padding: "20px" }}
+      >
+        <Card.Body>
+          <Card.Title className="mb-4">Bet Tools</Card.Title>
+          <ListGroup variant="flush" className="">
+            <ListGroup.Item className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex align-items-center">
+                <FaCalculator size={24} className="me-3" />
+                <div
+                  onClick={() => navigate("/odds-calculater")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <strong>Odds Calculator</strong>
+                </div>
+              </div>
+              <span>{">"}</span>
+            </ListGroup.Item>
 
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="Line">Line Chart</Dropdown.Item>
-              <Dropdown.Item eventKey="Bar">Bar Chart</Dropdown.Item>
-              <Dropdown.Item eventKey="Pie">Pie Chart</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className="justify-content-center mt-4">
-        <Col xs={12} md={12}>
-          <div
-            className="chart-container"
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "400px",
-            }}
-          >
-            {renderChart()}
-          </div>
-        </Col>
-      </Row>
-    </Container>
+            <ListGroup.Item className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex align-items-center">
+                <FaPercent size={24} className="me-3" />
+                <div
+                  onClick={() => navigate("/parlay-calculater")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <strong>Parlay Calculator</strong>
+                </div>
+              </div>
+              <span>{">"}</span>
+            </ListGroup.Item>
+
+            <ListGroup.Item className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex align-items-center">
+                <FaCoins size={24} className="me-3" />
+                <div
+                  onClick={() => navigate("/hedge-calculater")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <strong>Hedge/Arb Calculator</strong>
+                </div>
+              </div>
+              <span>{">"}</span>
+            </ListGroup.Item>
+
+            <ListGroup.Item className="d-flex justify-content-between align-items-center">
+              <div className="d-flex align-items-center">
+                <FaChartLine size={24} className="me-3" />
+                <div
+                  onClick={() => navigate("/ev-calculater")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <strong>EV Calculator</strong>
+                </div>
+              </div>
+              <span>{">"}</span>
+            </ListGroup.Item>
+          </ListGroup>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 
