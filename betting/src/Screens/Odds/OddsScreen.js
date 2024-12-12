@@ -2002,6 +2002,9 @@ export const OddsScreen = () => {
   const location = useLocation();
   const league = location.state?.league;
   const status = location.state?.status;
+  const league_type = location.state?.league_type;
+  console.log("league_type", league_type, "league", league);
+
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
 
@@ -2300,6 +2303,8 @@ export const OddsScreen = () => {
         ? parlayBet
         : teaserBet
     );
+    formData.append("league_id", league?.id);
+    formData.append("league_type", league_type);
 
     try {
       setLoad(true);
