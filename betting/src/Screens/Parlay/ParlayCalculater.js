@@ -24,8 +24,6 @@ const ParlayCalculater = () => {
   const [wagerAmount, setWagerAmount] = useState(0);
   const [odds, setOdds] = useState(0);
 
-  console.log("status", status);
-
   useEffect(() => {
     if (bets.length > 0) {
       calculatePayout();

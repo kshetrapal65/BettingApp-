@@ -15,16 +15,6 @@ const EvCalculater = () => {
   const [probability, setProbability] = useState("");
   const [expectedValue, setExpectedValue] = useState("");
 
-  console.log(
-    "expectedValue",
-    expectedValue,
-    "probability",
-    probability,
-    "betAmount",
-    betAmount,
-    "americanOdds",
-    americanOdds
-  );
   useEffect(() => {
     calculateEV();
   }, [americanOdds, betAmount, probability]);

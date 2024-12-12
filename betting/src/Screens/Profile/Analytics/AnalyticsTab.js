@@ -10,12 +10,12 @@ import {
 } from "react-bootstrap";
 import {
   Chart as ChartJS,
-  CategoryScale, // Add this
+  CategoryScale,
   LinearScale,
   BarElement,
   PointElement,
   LineElement,
-  ArcElement, // Required for Pie chart
+  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -36,31 +36,62 @@ ChartJS.register(
 );
 
 const chartData = {
-  labels: [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ],
-  datasets: [
-    {
-      label: "Sales Data",
-      data: [65, 30, 59, 80, 30, 56, 55, 40, 50, 15, 78, 40],
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-      borderColor: "rgba(75, 192, 192, 1)",
-      borderWidth: 3,
-      pointBackgroundColor: "rgba(255, 99, 132, 1)",
-      tension: 0.4,
-    },
-  ],
+  bettingSuccessRate: {
+    labels: ["Wins", "Losses"],
+    datasets: [
+      {
+        label: "Betting Success Rate",
+        data: [60, 40],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        fill: true,
+        borderColor: "rgba(75, 192, 192, 1)",
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        tension: 0.4,
+        barThickness: 120,
+        pointRadius: 6,
+      },
+    ],
+  },
+  profitLossOverTime: {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        label: "Profit/Loss Over Time",
+        data: [500, 200, 800, 100, 600, 300],
+        borderColor: "#36A2EB",
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        fill: true,
+        borderColor: "rgba(75, 192, 192, 1)",
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        // tension: 0.4,
+        barThickness: 120,
+        pointRadius: 6,
+      },
+    ],
+  },
+  betTypeDistribution: {
+    labels: ["Moneyline", "Point Spread", "Over/Under"],
+    datasets: [
+      {
+        fill: true,
+        label: "Total Bets",
+        data: [50, 30, 20],
+        backgroundColor: "#36A2EB",
+        borderColor: "#4BC0C0",
+        barThickness: 120,
+        pointRadius: 6,
+      },
+      {
+        fill: true,
+        label: "Wins",
+        data: [30, 20, 18],
+        backgroundColor: "#FF6384",
+        borderColor: "#4BC0C0",
+        barThickness: 120,
+        pointRadius: 6,
+      },
+    ],
+  },
 };
 
 const chartOptions = {
@@ -69,18 +100,18 @@ const chartOptions = {
   scales: {
     x: {
       grid: {
-        color: "rgba(220, 220, 220, 0.3)", // X-axis gridline color
+        color: "rgba(220, 220, 220, 0.3)",
       },
       ticks: {
-        color: "#4A4A4A", // X-axis label color
+        color: "#4A4A4A",
       },
     },
     y: {
       grid: {
-        color: "rgba(220, 220, 220, 0.3)", // Y-axis gridline color
+        color: "rgba(220, 220, 220, 0.3)",
       },
       ticks: {
-        color: "#4A4A4A", // Y-axis label color
+        color: "#4A4A4A",
       },
     },
   },
@@ -92,23 +123,30 @@ const chartOptions = {
     },
   },
 };
+
 const AnalyticsTab = () => {
   const [chartType, setChartType] = useState("Line");
+  const [dataType, setDataType] = useState("bettingSuccessRate");
 
   const handleSelect = (eventKey) => {
     setChartType(eventKey);
   };
 
+  const handleDataTypeSelect = (eventKey) => {
+    setDataType(eventKey);
+  };
+
   const renderChart = () => {
+    const selectedData = chartData[dataType];
     switch (chartType) {
       case "Line":
-        return <Line data={chartData} options={chartOptions} />;
+        return <Line data={selectedData} options={chartOptions} />;
       case "Bar":
-        return <Bar data={chartData} options={chartOptions} />;
+        return <Bar data={selectedData} options={chartOptions} />;
       case "Pie":
-        return <Pie data={chartData} options={chartOptions} />;
+        return <Pie data={selectedData} options={chartOptions} />;
       default:
-        return <Line data={chartData} options={chartOptions} />;
+        return <Line data={selectedData} options={chartOptions} />;
     }
   };
 
@@ -208,7 +246,55 @@ const AnalyticsTab = () => {
               <Dropdown.Item eventKey="Pie">Pie Chart</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          <Dropdown onSelect={handleDataTypeSelect} className="float-end me-2">
+            <Dropdown.Toggle
+              style={{
+                backgroundColor: "#1d3b48",
+                borderColor: "#1d3b48",
+                color: "white",
+              }}
+              size="sm"
+            >
+              Select Data Type
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="bettingSuccessRate">
+                Betting Success Rate
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="profitLossOverTime">
+                Profit/Loss Over Time
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="betTypeDistribution">
+                Bet Type Distribution
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
+        {/* <Col xs={12} md={6}>
+          <Dropdown onSelect={handleDataTypeSelect} className="float-end">
+            <Dropdown.Toggle
+              style={{
+                backgroundColor: "#1d3b48",
+                borderColor: "#1d3b48",
+                color: "white",
+              }}
+              size="sm"
+            >
+              Select Data Type
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="bettingSuccessRate">
+                Betting Success Rate
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="profitLossOverTime">
+                Profit/Loss Over Time
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="betTypeDistribution">
+                Bet Type Distribution
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col> */}
       </Row>
       <Row className="justify-content-center mt-4">
         <Col xs={12} md={12}>
