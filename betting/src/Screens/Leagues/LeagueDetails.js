@@ -33,12 +33,15 @@ const LeagueDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const status = location.state?.status;
+  console.log("status", status);
+
   const userData = getUserdata();
   const [league, setLeague] = React.useState([]);
   const [leagueList, setLeagueList] = React.useState([]);
   const [load, setLoad] = React.useState(true);
   const [copy, setCopy] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  console.log("league", league);
 
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
   const matchId = leagueList?.find((item) => item.id == id);
@@ -371,7 +374,11 @@ const LeagueDetails = () => {
                         navigate(
                           `/odds/${league?.league_sports[0]?.sport_key}`,
                           {
-                            state: { league: league, status: 1 },
+                            state: {
+                              league: league,
+                              status: 1,
+                              league_type: "global_league",
+                            },
                           }
                         )
                       }
@@ -394,7 +401,11 @@ const LeagueDetails = () => {
                           navigate(
                             `/odds/${league?.league_sports[0]?.sport_key}`,
                             {
-                              state: { league: league, status: 1 },
+                              state: {
+                                league: league,
+                                status: 1,
+                                league_type: "league",
+                              },
                             }
                           )
                         }

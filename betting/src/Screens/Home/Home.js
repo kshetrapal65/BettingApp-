@@ -32,9 +32,9 @@ const Home = () => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
-        `https://api.the-odds-api.com/v4/sports/${sport}/scores/?&daysFrom=1&apiKey=${ApiEndPoints.ApiKey}`,
+        ApiEndPoints.getScore + sport,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -47,7 +47,7 @@ const Home = () => {
 
       const data = await response.json();
       console.log("response", data);
-      setEvent(data);
+      setEvent(data?.result);
     } catch (error) {
       console.log(error);
     }
@@ -1293,7 +1293,7 @@ const Home = () => {
                             <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
                               {eventItem.home_team || "Not Available"}
                             </p>
-                            {eventItem?.completed && (
+                            {eventItem?.is_completed == "1" && (
                               <span className="text-muted fw-bold ms-2">
                                 ({eventItem?.scores[1]?.score})
                               </span>
@@ -1317,7 +1317,7 @@ const Home = () => {
                             <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
                               {eventItem.away_team || "Not Available"}
                             </p>
-                            {eventItem?.completed && (
+                            {eventItem?.is_completed == "1" && (
                               <span className="text-muted fw-bold ms-2">
                                 ({eventItem?.scores[0]?.score})
                               </span>

@@ -1075,7 +1075,7 @@ const teamImages = {
 
 export const EventScore = React.memo(() => {
   const navigate = useNavigate();
-  const [scoreData, setScoreData] = useState([]);
+  const [scoreData, setScoreData] = useState({});
   const [activeTab, setActiveTab] = useState("spreads,totals,h2h");
   const [marketkey, setMarketKey] = useState([]);
   const [propData, setPropData] = useState([]);
@@ -1086,6 +1086,7 @@ export const EventScore = React.memo(() => {
     const storedMarkets = localStorage.getItem("cartData");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
+  console.log("SCOREDATA", scoreData);
 
   const [activeTabs, setActiveTabs] = useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
@@ -1101,7 +1102,6 @@ export const EventScore = React.memo(() => {
   const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
-  console.log("bookmakers", bookmakers);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
@@ -1228,7 +1228,8 @@ export const EventScore = React.memo(() => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        ` https://api.the-odds-api.com/v4/sports/${event?.sport_key}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}&eventIds=${event?.id}`,
+        // ` https://api.the-odds-api.com/v4/sports/${event?.sport_key}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}&eventIds=${event?.sport_key_id}`,
+        ApiEndPoints.getScoreById + event?.sport_key_id,
         {
           method: "GET",
           headers: {
@@ -1243,7 +1244,7 @@ export const EventScore = React.memo(() => {
 
       const data = await response.json();
       //   console.log("responseOFSCOREEEEEE", data);
-      setScoreData(data);
+      setScoreData(data?.result);
     } catch (error) {
       console.log(error);
     }
@@ -1252,7 +1253,7 @@ export const EventScore = React.memo(() => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${activeTab}&oddsFormat=american`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.sport_key_id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${activeTab}&oddsFormat=american`,
         {
           method: "GET",
           headers: {
@@ -1275,7 +1276,7 @@ export const EventScore = React.memo(() => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${markets}&oddsFormat=american`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.sport_key_id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${markets}&oddsFormat=american`,
         {
           method: "GET",
           headers: {
@@ -1323,26 +1324,26 @@ export const EventScore = React.memo(() => {
           <Row className="mt-4">
             <Col className="d-flex flex-column align-items-center">
               <img
-                src={teamImages[scoreData[0]?.home_team]}
+                src={teamImages[scoreData?.home_team]}
                 alt="Denver Broncos"
                 style={{ width: "60px" }}
               />
-              <h6 className="mt-2 fw-bold">{scoreData[0]?.home_team}</h6>
+              <h6 className="mt-2 fw-bold">{scoreData?.home_team}</h6>
               {/* <p className="text-muted">5-4</p> */}
             </Col>
             <Col className="d-flex flex-column align-items-center justify-content-center">
               <h2 className="mb-0">
-                {scoreData[0]?.scores?.[0]?.score ?? ""} -
-                {scoreData[0]?.scores?.[1]?.score ?? ""}
+                {scoreData?.scores?.[1]?.score ?? ""} -
+                {scoreData?.scores?.[0]?.score ?? ""}
               </h2>
             </Col>
             <Col className="d-flex flex-column align-items-center">
               <img
-                src={teamImages[scoreData[0]?.away_team]}
+                src={teamImages[scoreData?.away_team]}
                 alt="Baltimore Ravens"
                 style={{ width: "60px" }}
               />
-              <h6 className="mt-2 fw-bold">{scoreData[0]?.away_team}</h6>
+              <h6 className="mt-2 fw-bold">{scoreData?.away_team}</h6>
               {/* <p className="text-muted">6-3</p> */}
             </Col>
           </Row>
@@ -2449,10 +2450,10 @@ export const EventScore = React.memo(() => {
       >
         <Card className="p-4 ">
           <Row className="justify-content-between">
-            <Col className="mb-3" lg={4} md={4}>
+            <Col className="mb-3" lg={5} md={4}>
               <h5 className="fw-bold">Prop Odds</h5>
             </Col>
-            <Col className="mb-3" lg={4} md={4}>
+            {/* <Col className="mb-3" lg={4} md={4}>
               <Form.Group controlId="formSelect ">
                 <Form.Select
                   onChange={handlePropBookmaker}
@@ -2465,8 +2466,8 @@ export const EventScore = React.memo(() => {
                   ))}
                 </Form.Select>
               </Form.Group>
-            </Col>
-            <Col className="mb-3" lg={4} md={4}>
+            </Col> */}
+            <Col className="mb-3" lg={5} md={4}>
               <Form.Group controlId="formSelect ">
                 <Form.Select
                   onChange={handleSelectChange}
