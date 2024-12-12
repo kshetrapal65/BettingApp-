@@ -28,7 +28,6 @@ const LeaguesList = () => {
   const [load, setLoad] = useState(false);
   const [show, setShow] = useState(false);
   const [id, setid] = useState();
-  const [filterData, setFilterData] = useState([]);
   const userData = getUserdata();
   const [formData, setFormData] = useState({
     inputValue: "",
@@ -36,8 +35,12 @@ const LeaguesList = () => {
   });
 
   useEffect(() => {
-    getLeagues();
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      getLeagues();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchKeyword]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -74,27 +77,21 @@ const LeaguesList = () => {
 
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
-
-    const searchData = leagues?.filter((item) => {
-      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
-    });
-    setFilterData(searchData);
   };
 
   const getLeagues = async () => {
-    const payload = {
-      page: 0,
-    };
+    const formData = new FormData();
+    formData.append("page", 0);
+    formData.append("keyword", searchKeyword);
     try {
       setLoad(true);
       const response = await apiCallNew(
         "post",
-        payload,
+        formData,
         ApiEndPoints.LeagueList
       );
       if (response.success === true) {
         setLeagues(response.result);
-        setFilterData(response.result);
         setLoad(false);
       }
     } catch (error) {
@@ -173,7 +170,7 @@ const LeaguesList = () => {
         </div>
       )}
 
-      {filterData?.map((league, index) => {
+      {leagues?.map((league, index) => {
         const startDate = moment(league?.season_start_date).format(
           "YYYY-MM-DD"
         );

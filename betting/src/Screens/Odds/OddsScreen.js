@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { FaChampagneGlasses } from "react-icons/fa6";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import { getToken } from "../../Helper/Storage";
+import { PulseLoader } from "react-spinners";
 const Data = oddsData;
 const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
@@ -2911,6 +2912,7 @@ export const OddsScreen = () => {
         start_date: league?.season_start_date,
         end_date: league?.season_end_date,
       };
+      setLoad(true);
       const response = await fetch(
         // status == 1
         //   ? `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=spreads,totals,h2h&oddsFormat=american&commenceTimeFrom=${league?.season_start_date}T00:00:00Z&commenceTimeTo=${league?.season_end_date}T23:59:59Z`
@@ -2939,13 +2941,20 @@ export const OddsScreen = () => {
       const data = await response.json();
       console.log("response", data);
       setData(data?.result);
+      setLoad(false);
     } catch (error) {
       console.log(error);
+      setLoad(false);
     }
   };
 
   return (
     <Container className="mt-3">
+      {load && (
+        <div>
+          <PulseLoader loading={load} color="#155239" style={styles.backdrop} />
+        </div>
+      )}
       <Row>
         <Col lg={12}>
           <h4 className="text-start fw-bold">Odds & Betting Lines</h4>
@@ -3350,4 +3359,20 @@ export const OddsScreen = () => {
       <RecentStory />
     </Container>
   );
+};
+
+const styles = {
+  backdrop: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#155239",
+  },
 };
