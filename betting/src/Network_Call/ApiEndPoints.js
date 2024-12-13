@@ -32,6 +32,7 @@ const ApiEndPoints = {
   GlobalLeagueDetails: `${APPConfig.API_URL}/global-league/`,
   GlobalLeagueJoin: `${APPConfig.API_URL}/global-league-join/`,
   GlobalLeagueLeave: `${APPConfig.API_URL}/global-league-leave/`,
+  GlobalAcceptInvite: `${APPConfig.API_URL}/global-accept-invite/`,
   getScore: `${APPConfig.API_URL}/score-by-game/`,
   getScoreById: `${APPConfig.API_URL}/score-by-event/`,
   getOddsById: `${APPConfig.API_URL}/odds-by-event/`,

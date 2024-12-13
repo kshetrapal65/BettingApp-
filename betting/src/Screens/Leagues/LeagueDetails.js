@@ -223,7 +223,7 @@ const LeagueDetails = () => {
       const response = await apiCallNew(
         "get",
         null,
-        ApiEndPoints.GlobalLeagueJoin + id
+        ApiEndPoints.GlobalAcceptInvite + code
       );
       if (response.success === true) {
         navigate("/challanges");
