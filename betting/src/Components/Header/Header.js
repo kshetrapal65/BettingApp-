@@ -46,7 +46,7 @@ const Header = () => {
         </div>
         <div className={`nav-links ${drawerOpen ? "open" : ""}`}>
           <div className="sidebar-logo">
-            <span className="logo-name">Logo</span>
+            <span className="logo-name fw-bold">BetApp</span>
             <i className="bx bx-x" onClick={toggleDrawer}></i>
           </div>
           <ul className="links">
