@@ -1102,6 +1102,7 @@ export const EventScore = React.memo(() => {
   const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
+  console.log("event>>>>>>>", event);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
@@ -1250,15 +1251,20 @@ export const EventScore = React.memo(() => {
     }
   };
   const fetchEventOdds = async () => {
+    const formdata = new FormData();
+    formdata.append("region", "us");
+    formdata.append("oddsFormat", "american");
+    formdata.append("markets", activeTab);
+    formdata.append("eventId", event?.sport_key_id);
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.sport_key_id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${activeTab}&oddsFormat=american`,
+        // `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.sport_key_id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${activeTab}&oddsFormat=american`,
+        ApiEndPoints.getOddsById + event?.sport_key,
         {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          method: "POST",
+
+          body: formdata,
         }
       );
 
@@ -1267,7 +1273,7 @@ export const EventScore = React.memo(() => {
       }
 
       const data = await response.json();
-      setEventOdds(data);
+      setEventOdds(data?.result);
     } catch (error) {
       console.log(error);
     }
@@ -1635,13 +1641,13 @@ export const EventScore = React.memo(() => {
               className="d-flex align-items-center justify-content-center"
             >
               <Image
-                src={teamImages[event?.away_team]}
+                src={teamImages[event?.home_team]}
                 // alt={eventOdds?.away_team}
                 width="30"
                 className="mr-2"
               />
               <span className="fw-bold ms-2">
-                {event?.away_team?.slice(0, 15) + "..."}
+                {event?.home_team?.slice(0, 15) + "..."}
               </span>
             </Col>
             <Col xs={4} lg={2}>
@@ -1652,14 +1658,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() => {
                   handleMarketClick({
-                    team: eventOdds?.away_team,
+                    team: eventOdds?.home_team,
                     market: "spreads",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   });
@@ -1683,14 +1689,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
-                    team: eventOdds?.away_team,
+                    team: eventOdds?.home_team,
                     market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   })
@@ -1714,14 +1720,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
-                    team: eventOdds?.away_team,
+                    team: eventOdds?.home_team,
                     market: "moneyline",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...moneylineMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   })
@@ -1742,13 +1748,13 @@ export const EventScore = React.memo(() => {
               className="d-flex align-items-center justify-content-center"
             >
               <Image
-                src={teamImages[event?.home_team]}
+                src={teamImages[event?.away_team]}
                 // alt={eventOdds?.home_team}
                 width="30"
                 className="mr-2"
               />
               <span className="fw-bold ms-2">
-                {event?.home_team?.slice(0, 15) + ".."}
+                {event?.away_team?.slice(0, 15) + ".."}
               </span>
             </Col>
             <Col xs={4} lg={2}>
@@ -1759,14 +1765,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
-                    team: eventOdds?.home_team,
+                    team: eventOdds?.away_team,
                     market: "spreads",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...spreadMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   })
@@ -1792,14 +1798,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
-                    team: eventOdds?.home_team,
+                    team: eventOdds?.away_team,
                     market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...totalsMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   })
@@ -1825,14 +1831,14 @@ export const EventScore = React.memo(() => {
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
-                    team: eventOdds?.home_team,
+                    team: eventOdds?.away_team,
                     market: "moneyline",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
                     ...moneylineMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
-                    id: event?.id,
+                    id: event?.sport_key_id,
                     bookmaker: bookmaker,
                     bookmakerName: bookmakerName,
                   })
@@ -1883,7 +1889,7 @@ export const EventScore = React.memo(() => {
         <Row className="d-flex justify-content-between align-items-center mb-3">
           <Col xs="auto">
             <h5 className="mb-0">
-              Betslip{" "}
+              Betslip
               <Badge bg="#155239" style={{ backgroundColor: "#155239" }}>
                 {selectedMarkets.length}
               </Badge>
@@ -2551,6 +2557,7 @@ export const EventScore = React.memo(() => {
                                     away_team: propData?.away_team,
                                     bookmaker: bookmaker,
                                     bookmakerName: bookmakerName,
+                                    id: event?.sport_key_id,
                                   })
                                 }
                               >

@@ -2245,20 +2245,20 @@ export const OddsScreen = () => {
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
 
-    for (let item of cartData) {
-      if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
-        toast.error(`Please enter wager amount`);
-        return;
-      }
-      if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
-        toast.error(`Please enter wager amount`);
-        return;
-      }
-      if ((activeTabs == "Teaser" && !teaserBet) || teaserBet <= 0) {
-        toast.error(`Please enter wager amount`);
-        return;
-      }
-    }
+    // for (let item of cartData) {
+    //   if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
+    //     toast.error(`Please enter wager amount`);
+    //     return;
+    //   }
+    //   if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
+    //     toast.error(`Please enter wager amount`);
+    //     return;
+    //   }
+    //   if ((activeTabs == "Teaser" && !teaserBet) || teaserBet <= 0) {
+    //     toast.error(`Please enter wager amount`);
+    //     return;
+    //   }
+    // }
 
     cartData?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
@@ -2274,7 +2274,7 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][outcomes_odds_point2]`, 0);
       formData.append(`odds[${index}][loss_amount]`, 0);
       formData.append(`odds[${index}][sport_key]`, item.key);
-      formData.append(`odds[${index}][sport_id]`, item.id);
+      formData.append(`odds[${index}][sport_id]`, item?.id);
       formData.append(`odds[${index}][sport_name]`, item.title);
       formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
       formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
@@ -3120,7 +3120,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
@@ -3150,7 +3150,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
@@ -3186,7 +3186,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[0],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
@@ -3251,7 +3251,7 @@ export const OddsScreen = () => {
                                   ...moneylineMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
@@ -3282,7 +3282,7 @@ export const OddsScreen = () => {
                                   ...spreadMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
@@ -3317,7 +3317,7 @@ export const OddsScreen = () => {
                                   ...totalsMarket?.outcomes[1],
                                   key: sportData?.key,
                                   title: sportData?.title,
-                                  id: game?.id,
+                                  id: game?.odd_key_id,
                                   bookmaker: Bookmaker,
                                   bookmakerName: BookmakerName,
                                 })
