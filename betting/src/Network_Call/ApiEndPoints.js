@@ -34,6 +34,7 @@ const ApiEndPoints = {
   GlobalLeagueLeave: `${APPConfig.API_URL}/global-league-leave/`,
   getScore: `${APPConfig.API_URL}/score-by-game/`,
   getScoreById: `${APPConfig.API_URL}/score-by-event/`,
+  getOddsById: `${APPConfig.API_URL}/odds-by-event/`,
 };
 
 export default ApiEndPoints;
