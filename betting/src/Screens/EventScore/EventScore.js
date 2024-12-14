@@ -1086,7 +1086,6 @@ export const EventScore = React.memo(() => {
     const storedMarkets = localStorage.getItem("cartData");
     return storedMarkets ? JSON.parse(storedMarkets) : [];
   });
-  console.log("SCOREDATA", scoreData);
 
   const [activeTabs, setActiveTabs] = useState("Straights");
   const [parlayBet, setParlayBet] = React.useState();
@@ -1102,7 +1101,6 @@ export const EventScore = React.memo(() => {
   const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
-  console.log("event>>>>>>>", event);
 
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
@@ -1150,6 +1148,12 @@ export const EventScore = React.memo(() => {
       setBookmakers(bookmakerKeysAndTitles);
     }
   }, [eventOdds]);
+
+  React.useEffect(() => {
+    if (selectedMarkets?.length >= 2) {
+      setActiveTabs("Straights");
+    }
+  }, [selectedMarkets?.length >= 2]);
 
   const totalPays = selectedMarkets.reduce(
     (total, market) => total + (market.winAmount || 0),
@@ -1463,23 +1467,22 @@ export const EventScore = React.memo(() => {
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
     for (let item of selectedMarkets) {
-      if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
-        toast.error(`Please enter wager amount`);
+      if (activeTabs == "Straights" && !item.wager) {
+        toast.error(`Please enter wager amount1`);
         return;
       }
-      if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
-        toast.error(`Please enter wager amount`);
+      if (activeTabs == "Parlay" && !parlayBet) {
+        toast.error(`Please enter wager amount2`);
         return;
       }
-      if ((activeTabs == "Teaser" && !teaserBet) || teaserBet <= 0) {
-        toast.error(`Please enter wager amount`);
+      if (activeTabs == "Teaser" && !teaserBet) {
+        toast.error(`Please enter wager amount3`);
         return;
       }
     }
     selectedMarkets?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
       formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
-      // formData.append(`odds[${index}][sport_name]`, item.team);
       formData.append(`odds[${index}][outcomes_odds_point1]`, item.point);
       formData.append(`odds[${index}][amount]`, item.wager);
       formData.append(
@@ -1528,6 +1531,7 @@ export const EventScore = React.memo(() => {
         setSelectedMarkets([]);
         setParlayBet(0);
         setParlayResult(0);
+        setActiveTabs("Straights");
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -1942,7 +1946,7 @@ export const EventScore = React.memo(() => {
               {selectedMarkets?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
-              {selectedMarkets?.length > 0 && (
+              {selectedMarkets?.length >= 2 && (
                 <Row className="mt-2 mb-2">
                   <Col lg={12}>
                     <div className="d-flex flex-column">
@@ -1962,7 +1966,7 @@ export const EventScore = React.memo(() => {
                       <input
                         placeholder="0.00"
                         className="form-control"
-                        value={parlayResult}
+                        value={parlayResult == "NaN" ? 0 : parlayResult}
                         readOnly
                       />
                     </div>
@@ -2071,7 +2075,7 @@ export const EventScore = React.memo(() => {
                 <h6>To Win:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${parlayResult}</h6>
+                <h6>${parlayResult == "NaN" ? 0 : parlayResult}</h6>
               </Col>
             </Row>
 
@@ -2095,7 +2099,7 @@ export const EventScore = React.memo(() => {
               {selectedMarkets?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
-              {selectedMarkets?.length > 0 && (
+              {selectedMarkets?.length >= 2 && (
                 <Row className="mt-2 mb-2">
                   <Col xs={12} md={4} lg={4}>
                     <div className="d-flex flex-column">
@@ -2115,7 +2119,7 @@ export const EventScore = React.memo(() => {
                       <input
                         placeholder="0.00"
                         className="form-control"
-                        value={teaserResult}
+                        value={teaserResult == "NaN" ? 0 : teaserResult}
                         readOnly
                       />
                     </div>
@@ -2276,7 +2280,7 @@ export const EventScore = React.memo(() => {
                 <h6>To Win:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${teaserResult}</h6>
+                <h6>${teaserResult == "NaN" ? 0 : teaserResult}</h6>
               </Col>
             </Row>
 
