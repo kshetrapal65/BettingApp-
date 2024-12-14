@@ -2004,7 +2004,6 @@ export const OddsScreen = () => {
   const league = location.state?.league;
   const status = location.state?.status;
   const league_type = location.state?.league_type;
-  console.log("league_type", league_type, "league", league);
 
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
@@ -2079,6 +2078,12 @@ export const OddsScreen = () => {
       calculateTeaser();
     }
   }, [activeTabs, teaserBet, cartData]);
+
+  React.useEffect(() => {
+    if (cartData?.length >= 2) {
+      setActiveTabs("Straights");
+    }
+  }, [cartData?.length >= 2]);
 
   const handleSportData = (item) => {
     setSportData(item);
@@ -2245,20 +2250,20 @@ export const OddsScreen = () => {
   const SubmitPlaceBet = async () => {
     const formData = new FormData();
 
-    // for (let item of cartData) {
-    //   if ((activeTabs == "Straights" && !item.wager) || item.wager <= 0) {
-    //     toast.error(`Please enter wager amount`);
-    //     return;
-    //   }
-    //   if ((activeTabs == "Parlay" && !parlayBet) || parlayBet <= 0) {
-    //     toast.error(`Please enter wager amount`);
-    //     return;
-    //   }
-    //   if ((activeTabs == "Teaser" && !teaserBet) || teaserBet <= 0) {
-    //     toast.error(`Please enter wager amount`);
-    //     return;
-    //   }
-    // }
+    for (let item of cartData) {
+      if (activeTabs == "Straights" && !item.wager) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+      if (activeTabs == "Parlay" && !parlayBet) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+      if (activeTabs == "Teaser" && !teaserBet) {
+        toast.error(`Please enter wager amount`);
+        return;
+      }
+    }
 
     cartData?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
@@ -2278,6 +2283,7 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][sport_name]`, item.title);
       formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
       formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
+      formData.append(`odds[${index}][team_name]`, item?.team);
     });
     formData.append(`bet_type`, activeTabs);
     formData.append(
@@ -2403,7 +2409,7 @@ export const OddsScreen = () => {
               {cartData?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
-              {cartData?.length > 0 && (
+              {cartData?.length >= 2 && (
                 <Row className="mt-2 mb-2">
                   <Col xs={12} md={6} lg={6}>
                     <div className="d-flex flex-column">
@@ -2532,7 +2538,7 @@ export const OddsScreen = () => {
                 <h6>To Win:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${parlayResult}</h6>
+                <h6>${parlayResult == "NaN" ? 0 : parlayResult}</h6>
               </Col>
             </Row>
             <Button
@@ -2559,7 +2565,7 @@ export const OddsScreen = () => {
               {cartData?.length === 0 && (
                 <p className="text-center">No bets added</p>
               )}
-              {cartData?.length > 0 && (
+              {cartData?.length >= 2 && (
                 <Row className="mt-2 mb-2">
                   <Col xs={12} md={4} lg={4}>
                     <div className="d-flex flex-column">
@@ -2579,7 +2585,7 @@ export const OddsScreen = () => {
                       <input
                         placeholder="0.00"
                         className="form-control"
-                        value={teaserResult}
+                        value={teaserResult == "NaN" ? 0 : teaserResult}
                         readOnly
                       />
                     </div>
@@ -2740,7 +2746,7 @@ export const OddsScreen = () => {
                 <h6>To Win:</h6>
               </Col>
               <Col xs={6} className="text-end">
-                <h6>${teaserResult}</h6>
+                <h6>${teaserResult == "NaN" ? 0 : teaserResult}</h6>
               </Col>
             </Row>
 

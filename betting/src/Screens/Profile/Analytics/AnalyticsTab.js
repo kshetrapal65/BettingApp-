@@ -63,7 +63,7 @@ const chartData = {
         fill: true,
         borderColor: "rgba(75, 192, 192, 1)",
         pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        // tension: 0.4,
+        tension: 0.4,
         barThickness: 120,
         pointRadius: 6,
       },
@@ -80,6 +80,7 @@ const chartData = {
         borderColor: "#4BC0C0",
         barThickness: 120,
         pointRadius: 6,
+        tension: 0.4,
       },
       {
         fill: true,
