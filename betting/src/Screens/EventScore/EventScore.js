@@ -1479,7 +1479,7 @@ export const EventScore = React.memo(() => {
     selectedMarkets?.forEach((item, index) => {
       formData.append(`odds[${index}][market_key]`, item.market);
       formData.append(`odds[${index}][outcomes_odds_price1]`, item.price);
-      formData.append(`odds[${index}][sport_name]`, item.team);
+      // formData.append(`odds[${index}][sport_name]`, item.team);
       formData.append(`odds[${index}][outcomes_odds_point1]`, item.point);
       formData.append(`odds[${index}][amount]`, item.wager);
       formData.append(
@@ -1494,6 +1494,7 @@ export const EventScore = React.memo(() => {
       formData.append(`odds[${index}][loss_amount]`, 0);
       formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
       formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
+      formData.append(`odds[${index}][team_name]`, item?.team);
     });
     formData.append(`bet_type`, activeTabs);
     formData.append(
@@ -1685,7 +1686,7 @@ export const EventScore = React.memo(() => {
               <Button
                 variant="#155239"
                 className="odds-btn"
-                disabled={!totalsMarket?.outcomes[0].price}
+                disabled={!totalsMarket?.outcomes[1].price}
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
@@ -1693,7 +1694,7 @@ export const EventScore = React.memo(() => {
                     market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
-                    ...totalsMarket?.outcomes[0],
+                    ...totalsMarket?.outcomes[1],
                     key: event?.sport_key,
                     title: event?.sport_title,
                     id: event?.sport_key_id,
@@ -1702,10 +1703,10 @@ export const EventScore = React.memo(() => {
                   })
                 }
               >
-                {totalsMarket?.outcomes[0]?.point ? (
+                {totalsMarket?.outcomes[1]?.point ? (
                   <>
-                    o{totalsMarket?.outcomes[0]?.point} <br />(
-                    {totalsMarket?.outcomes[0]?.price})
+                    u{totalsMarket?.outcomes[1]?.point} <br />(
+                    {totalsMarket?.outcomes[1]?.price})
                   </>
                 ) : (
                   "N/A"
@@ -1794,7 +1795,7 @@ export const EventScore = React.memo(() => {
               <Button
                 variant="#155239"
                 className="odds-btn"
-                disabled={!totalsMarket?.outcomes[1].price}
+                disabled={!totalsMarket?.outcomes[0].price}
                 style={{ minWidth: "80px", minHeight: "62px" }}
                 onClick={() =>
                   handleMarketClick({
@@ -1802,7 +1803,7 @@ export const EventScore = React.memo(() => {
                     market: "totals",
                     home_team: eventOdds?.home_team,
                     away_team: eventOdds?.away_team,
-                    ...totalsMarket?.outcomes[1],
+                    ...totalsMarket?.outcomes[0],
                     key: event?.sport_key,
                     title: event?.sport_title,
                     id: event?.sport_key_id,
@@ -1813,10 +1814,10 @@ export const EventScore = React.memo(() => {
               >
                 {/* u{totalsMarket?.outcomes[1].point} (
                 {totalsMarket?.outcomes[1].price}) */}
-                {totalsMarket?.outcomes[1]?.point ? (
+                {totalsMarket?.outcomes[0]?.point ? (
                   <>
-                    u{totalsMarket?.outcomes[1]?.point} <br />(
-                    {totalsMarket?.outcomes[1]?.price})
+                    o{totalsMarket?.outcomes[0]?.point} <br />(
+                    {totalsMarket?.outcomes[0]?.price})
                   </>
                 ) : (
                   "N/A"
