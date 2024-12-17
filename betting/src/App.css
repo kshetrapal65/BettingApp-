@@ -54,3 +54,16 @@
   color: #fff !important;
   background-color: #155239 !important;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-button {
+  background: #eee;
+}
+::-webkit-scrollbar-track-piece {
+  background: #eee;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}

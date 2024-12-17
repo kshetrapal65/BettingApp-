@@ -16,3 +16,15 @@ code {
   font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+
+/* :root {
+  --background-color: #f1f1f5;
+  --text-color: #000;
+  --primary-color: #007bff;
+}
+
+body {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+} */

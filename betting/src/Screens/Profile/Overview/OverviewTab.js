@@ -9,8 +9,9 @@ import {
   Modal,
   Button,
   Image,
+  ButtonGroup,
 } from "react-bootstrap";
-import { FaHistory } from "react-icons/fa";
+import { FaHeart, FaHistory } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { MdModeEdit } from "react-icons/md";
@@ -28,6 +29,8 @@ const OverviewTab = ({ profileData, getProfile }) => {
   const [load, setLoad] = useState(false);
   const inputFile = useRef(null);
   const [bankData, setBankData] = React.useState({});
+  const [teams, setTeams] = useState([]);
+  const [games, setGames] = useState([]);
   const [formDatas, setFormDatas] = useState({
     name: "",
     email: "",
@@ -37,7 +40,13 @@ const OverviewTab = ({ profileData, getProfile }) => {
     account_number: "",
     account_name: "",
   });
+  const [showFavo, setShowFavo] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [favoriteTeams, setFavoriteTeams] = useState([]);
+  const [sportGames, setSportGames] = useState("americanfootball_nfl");
+  const [activeSport, setActiveSport] = useState(null);
 
+  console.log("games", games, sportGames);
   React.useEffect(() => {
     if (profileData) {
       setFormDatas({
@@ -55,11 +64,76 @@ const OverviewTab = ({ profileData, getProfile }) => {
     }
   }, [profileData, bankData]);
 
+  React.useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      getSportTeams();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, sportGames]);
+
+  React.useEffect(() => {
+    getSportGames();
+    getFavoriteTeams();
+  }, []);
+
+  const handleButtonClick = (sport) => {
+    setActiveSport(sport?.game_name);
+    setSportGames(sport?.game_key);
+  };
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleBankClose = () => setShowBank(false);
   const handleBankShow = () => setShowBank(true);
+
+  const handleFavoClose = () => setShowFavo(false);
+  const handleFavoShow = () => setShowFavo(true);
+
+  const handleAddWishlist = async (id) => {
+    try {
+      const formData = new FormData();
+      formData.append("team_id", id);
+      setLoad(true);
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.addToWishlist
+      );
+      if (response.success === true) {
+        toast.success(response.msg);
+        getFavoriteTeams();
+        setLoad(false);
+      } else {
+        setLoad(false);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      setLoad(false);
+    }
+  };
+
+  const handleRemoveTeam = async (id) => {
+    try {
+      setLoad(true);
+      const response = await apiCallNew(
+        "delete",
+        null,
+        ApiEndPoints.deleteWishlist + id
+      );
+      if (response.success === true) {
+        toast.success(response.msg);
+        getFavoriteTeams();
+        setLoad(false);
+      } else {
+        setLoad(false);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      setLoad(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormDatas({
@@ -148,6 +222,44 @@ const OverviewTab = ({ profileData, getProfile }) => {
     }
   };
 
+  const getSportTeams = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("keyword", searchTerm);
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.getTeams + sportGames
+      );
+      if (response.success === true) {
+        setTeams(response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  const getSportGames = async () => {
+    try {
+      const response = await apiCallNew("get", null, ApiEndPoints.getGames);
+      if (response.success === true) {
+        setGames(response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+  const getFavoriteTeams = async () => {
+    try {
+      const response = await apiCallNew("get", null, ApiEndPoints.wishlist);
+      if (response.success === true) {
+        setFavoriteTeams(response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("@userToken");
     navigate("/login");
@@ -168,19 +280,34 @@ const OverviewTab = ({ profileData, getProfile }) => {
                 <span className="option-icon">
                   <FaUsers />
                 </span>
-                <span onClick={handleShow}>Personal Information</span>
+                <span className="small fw-bold" onClick={handleShow}>
+                  Personal Information
+                </span>
               </div>
               <div className="option">
                 <span className="option-icon">
                   <RiBankFill />
                 </span>
-                <span onClick={handleBankShow}>Bank Information</span>
+                <span className="small fw-bold" onClick={handleBankShow}>
+                  Bank Information
+                </span>
+              </div>
+              <div className="option">
+                <span className="option-icon">
+                  <FaHeart />
+                </span>
+                <span className="small fw-bold" onClick={handleFavoShow}>
+                  Favorite Teams
+                </span>
               </div>
               <div className="option">
                 <span className="option-icon">
                   <FaHistory />
                 </span>
-                <span onClick={() => navigate("/betting-history")}>
+                <span
+                  className="small fw-bold"
+                  onClick={() => navigate("/betting-history")}
+                >
                   Betting History
                 </span>
               </div>
@@ -188,7 +315,9 @@ const OverviewTab = ({ profileData, getProfile }) => {
                 <span className="option-icon">
                   <RiLogoutBoxLine />
                 </span>
-                <span onClick={logout}>LogOut</span>
+                <span className="small fw-bold" onClick={logout}>
+                  LogOut
+                </span>
               </div>
             </div>
           </div>
@@ -322,6 +451,117 @@ const OverviewTab = ({ profileData, getProfile }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {/* favorite teams modal */}
+      <Modal show={showFavo} onHide={handleFavoClose} centered size="lg">
+        {load && (
+          <div>
+            <PulseLoader
+              loading={load}
+              color="#155239"
+              style={styles.backdrop}
+            />
+          </div>
+        )}
+        <Modal.Header closeButton>
+          <Modal.Title className="fw-bold">Favorite Teams</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="searchTeam">
+              <Form.Control
+                type="text"
+                placeholder="Search for Team"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Form.Group>
+            <Row>
+              <Col xs={12}>
+                <div className="scroll-containersss">
+                  {games?.map((sport) => (
+                    <Button
+                      key={sport.id}
+                      variant="#155239"
+                      size="sm"
+                      className={`sbtn ${
+                        activeSport === sport?.game_name ? "active" : ""
+                      }`}
+                      onClick={() => handleButtonClick(sport)}
+                    >
+                      {sport?.game_name}
+                    </Button>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+            <Row className="my-3">
+              <Col xs={12} md={6}>
+                <h5 className="fw-bold text-muted">Available Teams</h5>
+                <div
+                  className="team-list"
+                  style={{
+                    maxHeight: "280px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {teams.map((team) => (
+                    <div
+                      key={team.id}
+                      className="d-flex justify-content-between my-2"
+                      style={{ margin: "0px 8px" }}
+                    >
+                      <span>
+                        <span className="fw-bold"> {team.team_name}</span>
+                      </span>
+                      {team?.team_name && (
+                        <Button
+                          variant="#155239"
+                          onClick={() => handleAddWishlist(team.id)}
+                          size="sm"
+                          style={{ backgroundColor: "#155239", color: "white" }}
+                        >
+                          Add
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </Col>
+              <Col xs={12} md={6}>
+                <h5 className="fw-bold text-muted">My Favorite Teams</h5>
+                <div
+                  className="team-list"
+                  style={{
+                    maxHeight: "280px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {favoriteTeams.map((team) => (
+                    <div
+                      key={team.id}
+                      className="d-flex justify-content-between my-2"
+                      style={{ margin: "0px 8px" }}
+                    >
+                      <span className="fw-bold">{team.team_name}</span>
+                      <Button
+                        variant="#155239"
+                        onClick={() => handleRemoveTeam(team.wishlist_id)}
+                        size="sm"
+                        style={{
+                          border: "1px solid #155239",
+                          color: "#155239",
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
@@ -340,5 +580,18 @@ const styles = {
     color: "#155239",
   },
 };
+
+const sportsss = [
+  { id: 1, name: "Chicago Bears", league: "NFL" },
+  { id: 2, name: "Golden State Warriors", league: "NBA" },
+  { id: 3, name: "Los Angeles Lakers", league: "NBA" },
+  { id: 4, name: "New York Yankees", league: "MLB" },
+  { id: 5, name: "New England Patriots", league: "NFL" },
+  { id: 6, name: "San Francisco 49ers", league: "NFL" },
+  { id: 7, name: "Dallas Cowboys", league: "NFL" },
+  { id: 8, name: "Boston Red Sox", league: "MLB" },
+  { id: 9, name: "Miami Heat", league: "NBA" },
+  { id: 10, name: "Houston Astros", league: "MLB" },
+];
 
 export default OverviewTab;
