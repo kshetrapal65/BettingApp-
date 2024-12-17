@@ -1498,6 +1498,10 @@ export const EventScore = React.memo(() => {
       formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
       formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
       formData.append(`odds[${index}][team_name]`, item?.team);
+      formData.append(
+        `odds[${index}][over_under]`,
+        item?.name == "Over" ? "Over" : item?.name == "Under" ? "Under" : ""
+      );
     });
     formData.append(`bet_type`, activeTabs);
     formData.append(
@@ -1525,7 +1529,11 @@ export const EventScore = React.memo(() => {
         formData,
         ApiEndPoints.PlaceBet
       );
-      if (response.success === true) {
+      // formData.forEach((value, key) => {
+      //   console.log(`${key}: ${value}`);
+      // });
+
+      if (response?.success === true) {
         toast.success(response.msg);
         setLoad(false);
         setSelectedMarkets([]);
