@@ -205,3 +205,36 @@
   color: #155239;
   font-weight: bold;
 }
+
+.scroll-containersss {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+.sbtn {
+  margin-right: 10px;
+  white-space: nowrap;
+  border-radius: 20px;
+  border: 1px solid #155239;
+  color: #155239;
+  font-weight: bold;
+}
+.sbtn:hover {
+  background-color: #155239;
+  color: #fff;
+}
+
+.sbtn.active {
+  background-color: #155239;
+  color: #fff;
+}
+
+.scroll-containersss::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-containersss {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

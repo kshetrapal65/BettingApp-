@@ -36,6 +36,11 @@ const ApiEndPoints = {
   getScore: `${APPConfig.API_URL}/score-by-game/`,
   getScoreById: `${APPConfig.API_URL}/score-by-event/`,
   getOddsById: `${APPConfig.API_URL}/odds-by-event/`,
+  getTeams: `${APPConfig.API_URL}/team-by-game/`,
+  getGames: `${APPConfig.API_URL}/games`,
+  addToWishlist: `${APPConfig.API_URL}/add-to-wishlist`,
+  deleteWishlist: `${APPConfig.API_URL}/delete-wishlist/`,
+  wishlist: `${APPConfig.API_URL}/wishlist`,
 };
 
 export default ApiEndPoints;
