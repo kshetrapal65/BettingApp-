@@ -2284,6 +2284,10 @@ export const OddsScreen = () => {
       formData.append(`odds[${index}][bookmaker_key]`, item?.bookmaker);
       formData.append(`odds[${index}][bookmaker_name]`, item?.bookmakerName);
       formData.append(`odds[${index}][team_name]`, item?.team);
+      formData.append(
+        `odds[${index}][over_under]`,
+        item?.name == "Over" ? "Over" : item?.name == "Under" ? "Under" : ""
+      );
     });
     formData.append(`bet_type`, activeTabs);
     formData.append(
