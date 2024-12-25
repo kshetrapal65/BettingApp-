@@ -1343,8 +1343,8 @@ export const EventScore = React.memo(() => {
             </Col>
             <Col className="d-flex flex-column align-items-center justify-content-center">
               <h2 className="mb-0">
-                {scoreData?.scores?.[1]?.score ?? ""} -
-                {scoreData?.scores?.[0]?.score ?? ""}
+                {scoreData?.scores?.[0]?.score ?? ""} -
+                {scoreData?.scores?.[1]?.score ?? ""}
               </h2>
             </Col>
             <Col className="d-flex flex-column align-items-center">
@@ -1908,7 +1908,7 @@ export const EventScore = React.memo(() => {
               </Badge>
             </h5>
           </Col>
-          <Col xs="auto">
+          {/* <Col xs="auto">
             <Button
               variant="link"
               size="sm"
@@ -1916,7 +1916,7 @@ export const EventScore = React.memo(() => {
             >
               Settled
             </Button>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">

@@ -46,7 +46,6 @@ const OverviewTab = ({ profileData, getProfile }) => {
   const [sportGames, setSportGames] = useState("americanfootball_nfl");
   const [activeSport, setActiveSport] = useState(null);
 
-  console.log("games", games, sportGames);
   React.useEffect(() => {
     if (profileData) {
       setFormDatas({

@@ -1295,7 +1295,7 @@ const Home = () => {
                             </p>
                             {eventItem?.is_completed == "1" && (
                               <span className="text-muted fw-bold ms-2">
-                                ({eventItem?.scores[1]?.score})
+                                ({eventItem?.scores[0]?.score})
                               </span>
                             )}
                           </div>
@@ -1319,7 +1319,7 @@ const Home = () => {
                             </p>
                             {eventItem?.is_completed == "1" && (
                               <span className="text-muted fw-bold ms-2">
-                                ({eventItem?.scores[0]?.score})
+                                ({eventItem?.scores[1]?.score})
                               </span>
                             )}
                           </div>

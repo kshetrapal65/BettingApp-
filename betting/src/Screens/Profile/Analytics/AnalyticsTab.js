@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -22,6 +22,8 @@ import {
 } from "chart.js";
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { FaArrowUp, FaDollarSign, FaSnowflake } from "react-icons/fa";
+import { apiCallNew } from "../../../Network_Call/apiservices";
+import ApiEndPoints from "../../../Network_Call/ApiEndPoints";
 
 ChartJS.register(
   CategoryScale,
@@ -34,66 +36,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const chartData = {
-  bettingSuccessRate: {
-    labels: ["Wins", "Losses"],
-    datasets: [
-      {
-        label: "Betting Success Rate",
-        data: [60, 40],
-        backgroundColor: ["#36A2EB", "#FF6384"],
-        fill: true,
-        borderColor: "rgba(75, 192, 192, 1)",
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        tension: 0.4,
-        barThickness: 120,
-        pointRadius: 6,
-      },
-    ],
-  },
-  profitLossOverTime: {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        label: "Profit/Loss Over Time",
-        data: [500, 200, 800, 100, 600, 300],
-        borderColor: "#36A2EB",
-        backgroundColor: ["#36A2EB", "#FF6384"],
-        fill: true,
-        borderColor: "rgba(75, 192, 192, 1)",
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        tension: 0.4,
-        barThickness: 120,
-        pointRadius: 6,
-      },
-    ],
-  },
-  betTypeDistribution: {
-    labels: ["Moneyline", "Point Spread", "Over/Under"],
-    datasets: [
-      {
-        fill: true,
-        label: "Total Bets",
-        data: [50, 30, 20],
-        backgroundColor: "#36A2EB",
-        borderColor: "#4BC0C0",
-        barThickness: 120,
-        pointRadius: 6,
-        tension: 0.4,
-      },
-      {
-        fill: true,
-        label: "Wins",
-        data: [30, 20, 18],
-        backgroundColor: "#FF6384",
-        borderColor: "#4BC0C0",
-        barThickness: 120,
-        pointRadius: 6,
-      },
-    ],
-  },
-};
 
 const chartOptions = {
   responsive: true,
@@ -126,15 +68,101 @@ const chartOptions = {
 };
 
 const AnalyticsTab = () => {
+  const [analyticsData, setAnalyticsData] = useState({});
   const [chartType, setChartType] = useState("Line");
   const [dataType, setDataType] = useState("bettingSuccessRate");
 
+  console.log("analyticsData", analyticsData);
+  const monthBets = analyticsData?.year_month_bets;
+  const months = monthBets?.map((entry) => entry.month_name);
+  const winCounts = monthBets?.map((entry) => Number(entry.win_count));
+  const lossCounts = monthBets?.map((entry) => Number(entry.loss_count));
+
+  const betWin = analyticsData?.overoll_win_loss?.bet_win;
+  const betLoss = analyticsData?.overoll_win_loss?.bet_loss;
+
+  const marketLabels = analyticsData?.market_key?.map(
+    (item) => item.market_key
+  );
+  const totalBets = analyticsData?.market_key?.map((item) =>
+    Number(item.total_count)
+  );
+  const wins = analyticsData?.market_key?.map((item) => Number(item.win_count));
+  useEffect(() => {
+    getAnalyticsData();
+  }, []);
   const handleSelect = (eventKey) => {
     setChartType(eventKey);
   };
 
   const handleDataTypeSelect = (eventKey) => {
     setDataType(eventKey);
+  };
+
+  const chartData = {
+    bettingSuccessRate: {
+      labels: ["Wins", "Losses"],
+      datasets: [
+        {
+          label: "Betting Success Rate",
+          data: [betWin, betLoss],
+          backgroundColor: ["#36A2EB", "#FF6384"],
+          fill: true,
+          borderColor: "rgba(75, 192, 192, 1)",
+          pointBackgroundColor: "rgba(255, 99, 132, 1)",
+          tension: 0.4,
+          barThickness: 120,
+          pointRadius: 6,
+        },
+      ],
+    },
+    profitLossOverTime: {
+      labels: months,
+      datasets: [
+        {
+          label: "Win Count",
+          data: winCounts,
+          borderColor: "#36A2EB",
+          backgroundColor: ["#36A2EB", "#FF6384"],
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+        },
+        {
+          label: "Loss Count",
+          data: lossCounts,
+          borderColor: "#FF6384",
+          backgroundColor: ["#FF6384", "#FF6384"],
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+        },
+      ],
+    },
+    betTypeDistribution: {
+      labels: marketLabels,
+      datasets: [
+        {
+          fill: true,
+          label: "Total Bets",
+          data: totalBets,
+          backgroundColor: "#36A2EB",
+          borderColor: "#4BC0C0",
+          barThickness: 120,
+          pointRadius: 6,
+          tension: 0.4,
+        },
+        {
+          fill: true,
+          label: "Wins",
+          data: wins,
+          backgroundColor: "#FF6384",
+          borderColor: "#4BC0C0",
+          barThickness: 120,
+          pointRadius: 6,
+        },
+      ],
+    },
   };
 
   const renderChart = () => {
@@ -148,6 +176,21 @@ const AnalyticsTab = () => {
         return <Pie data={selectedData} options={chartOptions} />;
       default:
         return <Line data={selectedData} options={chartOptions} />;
+    }
+  };
+
+  const getAnalyticsData = async () => {
+    try {
+      const response = await apiCallNew(
+        "post",
+        null,
+        ApiEndPoints.UserAnalysis
+      );
+      if (response.success === true) {
+        setAnalyticsData(response.result);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

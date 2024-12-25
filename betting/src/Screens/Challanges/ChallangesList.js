@@ -8,6 +8,8 @@ import {
   Button,
   Form,
   Badge,
+  Dropdown,
+  FormSelect,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { apiCallNew } from "../../Network_Call/apiservices";
@@ -23,35 +25,34 @@ const ChallangesList = () => {
   const [leagues, setLeagues] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [load, setLoad] = useState(false);
-  const [filterData, setFilterData] = useState([]);
+  const [leagueType, setLeagueType] = useState("season");
 
   useEffect(() => {
-    getLeagues();
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      getLeagues();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchKeyword, leagueType]);
 
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
-
-    const searchData = leagues?.filter((item) => {
-      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
-    });
-    setFilterData(searchData);
   };
 
   const getLeagues = async () => {
-    const payload = {
-      page: 0,
-    };
+    const formData = new FormData();
+    formData.append("page", 0);
+    formData.append("keyword", searchKeyword);
+    formData.append("league_type", leagueType);
     try {
       setLoad(true);
       const response = await apiCallNew(
         "post",
-        payload,
+        formData,
         ApiEndPoints.GlobalLeagues
       );
       if (response.success === true) {
         setLeagues(response.result);
-        setFilterData(response.result);
         setLoad(false);
       }
     } catch (error) {
@@ -71,6 +72,15 @@ const ChallangesList = () => {
         <Col xs="auto">
           <h4 className="fw-bold">Challenges</h4>
         </Col>
+        <Col xs="auto">
+          <FormSelect
+            value={leagueType}
+            onChange={(e) => setLeagueType(e.target.value)}
+          >
+            <option value="tournament">Tournament</option>
+            <option value="season">Season</option>
+          </FormSelect>
+        </Col>
       </Row>
       <Row className="mt-3 mb-4">
         <Col>
@@ -88,7 +98,7 @@ const ChallangesList = () => {
         </div>
       )}
 
-      {filterData?.map((league, index) => {
+      {leagues?.map((league, index) => {
         const findInviteUser = league?.league_members?.find(
           (item) => item.member_id === userData?.id
         );

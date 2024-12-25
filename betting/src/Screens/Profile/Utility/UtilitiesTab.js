@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   FaCalculator,
   FaPercent,
@@ -6,7 +6,7 @@ import {
   FaCoins,
   FaChartLine,
 } from "react-icons/fa";
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, Col, ListGroup, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const UtilitiesTab = () => {
@@ -14,7 +14,6 @@ const UtilitiesTab = () => {
 
   return (
     <div>
-      {" "}
       <Card
         className="shadow-sm"
         style={{ borderRadius: "12px", padding: "20px" }}

@@ -41,6 +41,8 @@ const LeagueDetails = () => {
   const [load, setLoad] = React.useState(true);
   const [copy, setCopy] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const [dashboardDetails, setDashboardDetails] = React.useState([]);
+
   console.log("league", league);
 
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
@@ -56,12 +58,29 @@ const LeagueDetails = () => {
   useEffect(() => {
     getLeagueDetails();
     getLeagues();
+    // leaguesDashboard();
     window.scrollTo(0, 0);
   }, [id, code]);
 
   setTimeout(() => {
     setCopy(false);
   }, 2000);
+
+  // const leaguesDashboard = async () => {
+  //   try {
+  //     const response = await apiCallNew(
+  //       "get",
+  //       {},
+  //       ApiEndPoints.globalLeagueDashboard + id
+  //     );
+  //     if (response.success === true) {
+  //       setDashboardDetails(response.result);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const deleteLeague = async (id) => {
     try {
       const response = await apiCallNew(
@@ -98,11 +117,11 @@ const LeagueDetails = () => {
     try {
       setLoad(true);
       const response = await apiCallNew(
-        "post",
+        "get",
         null,
         status == 1
-          ? ApiEndPoints.GlobalLeagueDetails + id
-          : ApiEndPoints.LeagueDetail + id
+          ? ApiEndPoints.globalLeagueDashboard + id
+          : ApiEndPoints.leagueDashboard + id
       );
       if (response.success === true) {
         setLeague(response.result);
@@ -238,88 +257,23 @@ const LeagueDetails = () => {
     }
   };
 
-  const event = [
-    {
-      title: "Event 1",
-      id: 1,
-      home_team: "Layne",
-      away_team: "Ben",
-    },
-    {
-      title: "Event 1",
-      id: 1,
-      home_team: "Bailey",
-      away_team: "Phil",
-    },
-    {
-      title: "Event 1",
-      id: 1,
-      home_team: "Tylor",
-      away_team: "Jhon",
-    },
-    {
-      title: "Event 1",
-      id: 1,
-      home_team: "Layne",
-      away_team: "Ben",
-    },
-  ];
-  const Betdata = [
-    {
-      player: "kunal",
-      id: 1,
-      roi: "16.6%",
-      score: "85",
-    },
-    {
-      player: "Tyler",
-      id: 1,
-      roi: "12.6%",
-      score: "36",
-    },
-    {
-      player: "Benley",
-      id: 1,
-      roi: "19.6%",
-      score: "45",
-    },
-    {
-      player: "Phill",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-    {
-      player: "Dom",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-    {
-      player: "Diwyne",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-    {
-      player: "Diwyne",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-    {
-      player: "Owens",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-    {
-      player: "Owens",
-      id: 1,
-      roi: "18.6%",
-      score: "36",
-    },
-  ];
+  const createMemberPairs = (members) => {
+    const pairs = [];
+    for (let i = 0; i < members.length; i += 2) {
+      if (i + 1 < members.length) {
+        pairs.push({
+          player1: members[i].member_name,
+          id1: members[i].id,
+          unit1: members[i].member_unit || "NA",
+          player2: members[i + 1].member_name,
+          id2: members[i + 1].id,
+          unit2: members[i + 1].member_unit || "NA",
+        });
+      }
+    }
+    return pairs;
+  };
+  const memberPairs = createMemberPairs(league?.league_members || []);
 
   return (
     <Container className="mt-4">
@@ -382,7 +336,7 @@ const LeagueDetails = () => {
                           }
                         )
                       }
-                      disabled={currentDate >= seasonStartDate}
+                      // disabled={currentDate >= seasonStartDate}
                     >
                       Bets on {league.name}
                     </Button>
@@ -409,7 +363,7 @@ const LeagueDetails = () => {
                             }
                           )
                         }
-                        disabled={currentDate >= seasonStartDate}
+                        // disabled={currentDate >= seasonStartDate}
                       >
                         Bets on {league.name}
                       </Button>
@@ -518,16 +472,14 @@ const LeagueDetails = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>Sport ID</th>
-                    <th>Sport Key</th>
+                    <th>Sn.</th>
                     <th>Sport Name</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {league.league_sports.map((sport) => (
+                  {league.league_sports.map((sport, index) => (
                     <tr key={sport.id}>
-                      <td>{sport.sport_id}</td>
-                      <td>{sport.sport_key}</td>
+                      <td>{index + 1}</td>
                       <td>{sport.sport_name}</td>
                     </tr>
                   ))}
@@ -569,7 +521,10 @@ const LeagueDetails = () => {
                         {/* <br />
                         <span className="text-primary">@philipin</span> */}
                       </td>
-                      <td>2-1-0</td>
+                      <td>
+                        {member?.roi?.bet_total}-{member?.roi?.bet_win}-
+                        {member?.roi?.bet_loss}
+                      </td>
                       <td>{member.member_unit}</td>
                     </tr>
                   ))}
@@ -585,7 +540,7 @@ const LeagueDetails = () => {
         <Col lg={8}>
           <h4 className="fw-bold"> Schedule</h4>
         </Col>
-        <Col className="text-end" lg={4}>
+        {/* <Col className="text-end" lg={4}>
           {" "}
           <Form.Group controlId="formSelect ">
             <Form.Select aria-label="Select option">
@@ -594,13 +549,13 @@ const LeagueDetails = () => {
               <option value="option2">Last Week</option>
             </Form.Select>
           </Form.Group>
-        </Col>
+        </Col> */}
       </Row>
       <Card className="mb-4">
         <Card.Body>
           <Row className="rounded-2">
             <Col lg={12}>
-              {event.length > 0 ? (
+              {memberPairs.length > 0 ? (
                 <div
                   style={{
                     display: "flex",
@@ -612,9 +567,9 @@ const LeagueDetails = () => {
                     scrollBehavior: "smooth",
                   }}
                 >
-                  {event.map((eventItem) => (
+                  {memberPairs.map((eventItem) => (
                     <Card
-                      key={eventItem.id}
+                      key={eventItem.id1}
                       className="shadow p-2"
                       style={{
                         minWidth: "300px",
@@ -630,13 +585,13 @@ const LeagueDetails = () => {
                             <Col xs={6} lg={5}>
                               {" "}
                               <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
-                                {eventItem.home_team || "Not Available"}
+                                {eventItem.player1 || "Not Available"}
                               </p>
                             </Col>
                             <Col xs={6} lg={5}>
                               {" "}
                               <span className="text-muted fw-bold ms-2">
-                                34
+                                {eventItem.unit1}
                               </span>
                             </Col>
                           </Row>
@@ -648,13 +603,13 @@ const LeagueDetails = () => {
                             <Col xs={6} lg={5}>
                               {" "}
                               <p className="ms-2 mb-0 text-truncate fw-bold text-dark">
-                                {eventItem.away_team || "Not Available"}
+                                {eventItem.player2 || "Not Available"}
                               </p>
                             </Col>
                             <Col xs={6} lg={5}>
                               {" "}
                               <span className="text-muted fw-bold ms-2">
-                                45
+                                {eventItem.unit2}
                               </span>
                             </Col>
                           </Row>
@@ -681,7 +636,7 @@ const LeagueDetails = () => {
         <Card.Body>
           <Row className="rounded-2">
             <Col lg={12}>
-              {Betdata.length > 0 ? (
+              {league?.league_members?.length > 0 ? (
                 <div
                   style={{
                     display: "flex",
@@ -693,9 +648,9 @@ const LeagueDetails = () => {
                     scrollBehavior: "smooth",
                   }}
                 >
-                  {Betdata.map((eventItem) => (
+                  {league?.league_members?.map((item) => (
                     <Card
-                      key={eventItem.id}
+                      key={item.id}
                       className="shadow p-2"
                       style={{
                         minWidth: "139px",
@@ -711,19 +666,19 @@ const LeagueDetails = () => {
                             <Col xs={12} lg={12}>
                               {" "}
                               <h6 className="text-truncate fw-bold text-dark">
-                                {eventItem.player || "Not Available"}
+                                {item.member_name || "Not Available"}
                               </h6>
                             </Col>
                             <Col xs={12} lg={12}>
                               {" "}
                               <h5 className="text-muted fw-bold ">
-                                {eventItem?.score}
+                                {item?.member_unit}
                               </h5>
                             </Col>
                             <Col xs={12} lg={12}>
                               {" "}
                               <span className="text-muted  fw-bold  ">
-                                ROI - {eventItem?.roi}
+                                ROI - {item?.roi?.bet_win_avg}%
                               </span>
                             </Col>
                           </Row>
@@ -733,9 +688,7 @@ const LeagueDetails = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-muted p-5">
-                  No events available.
-                </p>
+                <p className="text-center text-muted p-5">No data available.</p>
               )}
             </Col>
           </Row>
