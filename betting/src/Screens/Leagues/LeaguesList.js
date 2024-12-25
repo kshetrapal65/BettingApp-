@@ -200,7 +200,26 @@ const LeaguesList = () => {
                       </Card.Title>
                     </Col>
                     <Col xs="auto" className="d-flex">
-                      {userData?.id == league?.user_id && (
+                      {startDate > currentDate &&
+                        userData?.id == league?.user_id && (
+                          <Button
+                            className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                            size="sm"
+                            variant="#155239"
+                            style={{
+                              backgroundColor: "#155239",
+                              color: "white",
+                            }}
+                            onClick={() => {
+                              setShow(true);
+                              setid(league.id);
+                            }}
+                            disabled={currentDate > endDate}
+                          >
+                            Update Units
+                          </Button>
+                        )}
+                      {/* {userData?.id == league?.user_id && (
                         <Button
                           className="ms-lg-2 mb-2 mb-lg-0 me-1"
                           size="sm"
@@ -210,10 +229,11 @@ const LeaguesList = () => {
                             setShow(true);
                             setid(league.id);
                           }}
+                          disabled={currentDate > endDate}
                         >
                           Update Units
                         </Button>
-                      )}
+                      )} */}
                       <Button
                         variant="#155239"
                         size="sm"

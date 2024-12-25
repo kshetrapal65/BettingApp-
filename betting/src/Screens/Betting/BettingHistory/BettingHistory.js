@@ -23,9 +23,6 @@ const BettingHistory = () => {
   useEffect(() => {
     getBetHistory(page);
   }, [page]);
-  useEffect(() => {
-    fetchEvent();
-  }, []);
 
   const checkSpreadBet = (bet, scores) => {
     const { sport_key, outcomes_odds_point1, sport_id } = bet;
@@ -125,30 +122,29 @@ const BettingHistory = () => {
       setLoad(false);
     }
   };
-  const fetchEvent = async () => {
-    try {
-      const response = await fetch(
-        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
-        `https://api.the-odds-api.com/v4/sports/americanfootball_nfl/scores/?&daysFrom=3&apiKey=${ApiEndPoints.ApiKey}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // const fetchEvent = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
+  //       `https://api.the-odds-api.com/v4/sports/americanfootball_nfl/scores/?&daysFrom=3&apiKey=${ApiEndPoints.ApiKey}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      console.log("response", data);
-      setEvent(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     const data = await response.json();
+  //     setEvent(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -181,8 +177,6 @@ const BettingHistory = () => {
           {betHistoryData?.map((bet, index) => (
             <React.Fragment key={bet.id}>
               {bet.bet_detail?.map((detail, detailIndex) => {
-                let result = checkSpreadBet(detail, event);
-
                 // if (detail.market_key === "spread") {
                 //   result = checkSpreadBet(detail, event);
                 // } else if (detail.market_key === "total") {

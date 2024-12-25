@@ -41,6 +41,9 @@ const ApiEndPoints = {
   addToWishlist: `${APPConfig.API_URL}/add-to-wishlist`,
   deleteWishlist: `${APPConfig.API_URL}/delete-wishlist/`,
   wishlist: `${APPConfig.API_URL}/wishlist`,
+  globalLeagueDashboard: `${APPConfig.API_URL}/global-league-dashboard/`,
+  leagueDashboard: `${APPConfig.API_URL}/league-dashboard/`,
+  UserAnalysis: `${APPConfig.API_URL}/user-analysis`,
 };
 
 export default ApiEndPoints;

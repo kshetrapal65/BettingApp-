@@ -2314,9 +2314,8 @@ export const OddsScreen = () => {
         ? parlayBet
         : teaserBet
     );
-    formData.append("league_id", league?.id);
-    formData.append("league_type", league_type);
-
+    formData.append("league_id", league?.id || 0);
+    formData.append("league_type", league_type || 0);
     try {
       setLoad(true);
       const response = await apiCallNew(
@@ -2358,7 +2357,7 @@ export const OddsScreen = () => {
               </Badge>
             </h5>
           </Col>
-          <Col xs="auto">
+          {/* <Col xs="auto">
             <Button
               variant="link"
               size="sm"
@@ -2366,7 +2365,7 @@ export const OddsScreen = () => {
             >
               Settled
             </Button>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
