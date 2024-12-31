@@ -44,6 +44,7 @@ const ApiEndPoints = {
   globalLeagueDashboard: `${APPConfig.API_URL}/global-league-dashboard/`,
   leagueDashboard: `${APPConfig.API_URL}/league-dashboard/`,
   UserAnalysis: `${APPConfig.API_URL}/user-analysis`,
+  Notifications: `${APPConfig.API_URL}/notifications-list`,
 };
 
 export default ApiEndPoints;

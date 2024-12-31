@@ -27,13 +27,14 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { getUserdata } from "../../Helper/Storage";
 import { FaGear } from "react-icons/fa6";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const LeagueDetails = () => {
   const { id, code } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const status = location.state?.status;
-  console.log("status", status);
 
   const userData = getUserdata();
   const [league, setLeague] = React.useState([]);
@@ -42,8 +43,10 @@ const LeagueDetails = () => {
   const [copy, setCopy] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const [dashboardDetails, setDashboardDetails] = React.useState([]);
-
-  console.log("league", league);
+  const stripe = useStripe();
+  const elements = useElements();
+  const [paymentStatus, setPaymentStatus] = React.useState("");
+  const [stripOpen, setStripOpen] = React.useState(false);
 
   const shareUrl = ShareableLink(league?.id, league?.invite_code);
   const matchId = leagueList?.find((item) => item.id == id);
@@ -52,9 +55,8 @@ const LeagueDetails = () => {
     (item) => item.member_id == userData?.id
   );
   const currentDate = new Date();
-  const seasonStartDate = new Date(league?.season_start_date);
+  const seasonStartDate = new Date(league?.season_end_date);
 
-  console.log("status", status);
   useEffect(() => {
     getLeagueDetails();
     getLeagues();
@@ -66,20 +68,69 @@ const LeagueDetails = () => {
     setCopy(false);
   }, 2000);
 
-  // const leaguesDashboard = async () => {
-  //   try {
-  //     const response = await apiCallNew(
-  //       "get",
-  //       {},
-  //       ApiEndPoints.globalLeagueDashboard + id
-  //     );
-  //     if (response.success === true) {
-  //       setDashboardDetails(response.result);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleClose = () => setStripOpen(false);
+  const handleOpen = () => setStripOpen(true);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    try {
+      // Call your backend to create the PaymentIntent and get the clientSecret
+      const response = await fetch("http://localhost:4002/payment-sheet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: 3000, currency: "eur" }),
+      });
+      console.log("res", response);
+      const { clientSecret } = await response.json();
+
+      // Now confirm the card payment using the clientSecret
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+      if (result.error) {
+        setPaymentStatus(`Payment failed: ${result.error.message}`);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          setPaymentStatus("Payment successful!");
+          console.log("PaymentIntent: ", result.paymentIntent); // Stripe payment intent response
+        }
+      }
+    } catch (error) {
+      setPaymentStatus(`Payment failed: ${error.message}`);
+      console.error("Error processing payment:", error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51ObzizSDKVzcMbwcsqNMuTHiU9e7LYlvKJcFDi4B9fXODzo9D3zbz7iCaOAWTF7WmNTO5XaXr6DM5Vp3p4pGTCoV00KjI7Hre5"
+    );
+    const { error } = await stripe.redirectToCheckout({
+      lineItems: [
+        {
+          price: "price_1HGsx6FJIG6IlLTxzQQAAAAP", // Replace with your price ID
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      successUrl: window.location.origin + "/success",
+      cancelUrl: window.location.origin + "/cancel",
+    });
+
+    if (error) {
+      console.error("Stripe checkout error", error);
+    }
+  };
 
   const deleteLeague = async (id) => {
     try {
@@ -274,7 +325,9 @@ const LeagueDetails = () => {
     return pairs;
   };
   const memberPairs = createMemberPairs(league?.league_members || []);
-
+  const cardElementOptions = {
+    hidePostalCode: true,
+  };
   return (
     <Container className="mt-4">
       {load && (
@@ -282,6 +335,7 @@ const LeagueDetails = () => {
           <PulseLoader loading={load} color="#155239" style={styles.backdrop} />
         </div>
       )}
+
       <Card className="mb-4">
         <Card.Header as="h5" className="fw-bold">
           {" "}
@@ -305,17 +359,16 @@ const LeagueDetails = () => {
               lg={5}
               className="d-flex justify-content-center justify-content-lg-end"
             >
-              {/* {userData?.id !== league?.user_id && (
-                <Button
-                  className="ms-lg-2 mb-2 mb-lg-0 me-1"
-                  size="sm"
-                  variant="#155239"
-                  style={{ backgroundColor: "#b50404", color: "white" }}
-                  onClick={() => confirmLeave(league.id)}
-                >
-                  Leave
-                </Button>
-              )} */}
+              {/* <Button
+                className="ms-lg-2 mb-2 mb-lg-0 me-1"
+                size="sm"
+                variant="#155239"
+                style={{ backgroundColor: "#b50404", color: "white" }}
+                onClick={() => handleOpen()}
+              >
+                Strip
+              </Button> */}
+
               {status == 1 ? (
                 findInviteUser ? (
                   <>
@@ -336,7 +389,7 @@ const LeagueDetails = () => {
                           }
                         )
                       }
-                      // disabled={currentDate >= seasonStartDate}
+                      disabled={currentDate >= seasonStartDate}
                     >
                       Bets on {league.name}
                     </Button>
@@ -363,7 +416,7 @@ const LeagueDetails = () => {
                             }
                           )
                         }
-                        // disabled={currentDate >= seasonStartDate}
+                        disabled={currentDate >= seasonStartDate}
                       >
                         Bets on {league.name}
                       </Button>
@@ -807,6 +860,27 @@ const LeagueDetails = () => {
               )}
             </Card.Body>
           </Card>
+        </Modal.Body>
+      </Modal>
+      <Modal show={stripOpen} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Stripe Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <CardElement options={cardElementOptions} />
+            <Button
+              className="w-100 fw-bold"
+              variant="primary"
+              type="submit"
+              disabled={!stripe}
+              style={{ marginTop: "20px" }}
+              // onClick={handleCheckout}
+            >
+              Pay
+            </Button>
+            {/* <p>{paymentStatus}</p> */}
+          </form>
         </Modal.Body>
       </Modal>
     </Container>

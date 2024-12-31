@@ -4,6 +4,7 @@ import SportList from "../../JSON/SportList";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken, getUserdata } from "../../Helper/Storage";
 import { formatCapital } from "../formatCapitalize";
+import { FaBell } from "react-icons/fa";
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -172,6 +173,11 @@ const Header = () => {
             <li onClick={() => navigate(token ? "/challanges" : "/login")}>
               <a onClick={toggleDrawer} href="#">
                 Challenges
+              </a>
+            </li>
+            <li onClick={() => navigate("/notification")}>
+              <a onClick={toggleDrawer} href="#">
+                <FaBell size={18} />
               </a>
             </li>
 

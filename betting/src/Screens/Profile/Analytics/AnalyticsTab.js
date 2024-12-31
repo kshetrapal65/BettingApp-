@@ -54,8 +54,11 @@ const chartOptions = {
         color: "rgba(220, 220, 220, 0.3)",
       },
       ticks: {
+        // stepSize: 1,
         color: "#4A4A4A",
       },
+      beginAtZero: true,
+      min: 0,
     },
   },
   plugins: {
@@ -71,26 +74,59 @@ const AnalyticsTab = () => {
   const [analyticsData, setAnalyticsData] = useState({});
   const [chartType, setChartType] = useState("Line");
   const [dataType, setDataType] = useState("bettingSuccessRate");
+  const [status, setStatus] = useState(1);
 
   console.log("analyticsData", analyticsData);
+  // month wise data
   const monthBets = analyticsData?.year_month_bets;
   const months = monthBets?.map((entry) => entry.month_name);
   const winCounts = monthBets?.map((entry) => Number(entry.win_count));
   const lossCounts = monthBets?.map((entry) => Number(entry.loss_count));
 
+  // win or loss
   const betWin = analyticsData?.overoll_win_loss?.bet_win;
   const betLoss = analyticsData?.overoll_win_loss?.bet_loss;
-
-  const marketLabels = analyticsData?.market_key?.map(
+  const betTie = analyticsData?.overoll_win_loss?.bet_tie;
+  // market wise
+  const marketLabels = analyticsData?.markets_list?.map(
     (item) => item.market_key
   );
-  const totalBets = analyticsData?.market_key?.map((item) =>
+  const totalBets = analyticsData?.markets_list?.map((item) =>
     Number(item.total_count)
   );
-  const wins = analyticsData?.market_key?.map((item) => Number(item.win_count));
+  const wins = analyticsData?.markets_list?.map((item) =>
+    Number(item.win_count)
+  );
+  // favorite bet
+  const getTotalBetsBySport = (bets) => {
+    const betCounts = {};
+
+    bets?.forEach((bet) => {
+      if (betCounts[bet.sport_name]) {
+        betCounts[bet.sport_name] += bet.win_bet_count;
+      } else {
+        betCounts[bet.sport_name] = bet.win_bet_count;
+      }
+    });
+
+    return Object.entries(betCounts).map(([sport_name, win_bet_count]) => ({
+      sport_name,
+      win_bet_count,
+    }));
+  };
+
+  const sortedBets = getTotalBetsBySport(analyticsData?.favorite_bet).sort(
+    (a, b) => b.win_bet_count - a.win_bet_count
+  );
+  const getColorByIndex = (index) => {
+    const colors = ["#28a745", "#FF6384", "#FFCE56"];
+    return colors[index] || "#36A2EB";
+  };
+
   useEffect(() => {
     getAnalyticsData();
   }, []);
+
   const handleSelect = (eventKey) => {
     setChartType(eventKey);
   };
@@ -101,12 +137,12 @@ const AnalyticsTab = () => {
 
   const chartData = {
     bettingSuccessRate: {
-      labels: ["Wins", "Losses"],
+      labels: ["Wins", "Losses", "Ties"],
       datasets: [
         {
           label: "Betting Success Rate",
-          data: [betWin, betLoss],
-          backgroundColor: ["#36A2EB", "#FF6384"],
+          data: [betWin, betLoss, betTie],
+          backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"],
           fill: true,
           borderColor: "rgba(75, 192, 192, 1)",
           pointBackgroundColor: "rgba(255, 99, 132, 1)",
@@ -199,76 +235,125 @@ const AnalyticsTab = () => {
       <Row className="justify-content-center mb-2">
         <Col xs={12} sm={6} md={4} className="mb-3">
           <Card className="text-center custom-card-ana">
-            <Card.Body>
+            <Card.Body
+              onClick={() => setStatus(1)}
+              style={{ cursor: "pointer" }}
+            >
               <Card.Title className="anal-title">Last 30</Card.Title>
               <Card.Text>
                 <span className="amount">$0.63</span>
                 <br />
-                <span className="record">2-2-0</span>
+                <span className="record">
+                  {analyticsData?.last_30_days?.bet_total}-
+                  {analyticsData?.last_30_days?.bet_win}-
+                  {analyticsData?.last_30_days?.bet_loss}
+                </span>
                 <br />
-                <span className="roi">ROI -12.67%</span>
+                <span className="roi">
+                  WIN{" "}
+                  {analyticsData?.last_30_days?.bet_win_percentage?.toFixed(2)}%
+                </span>
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
-
         <Col xs={12} sm={6} md={4} className="mb-3">
           <Card className="text-center custom-card-ana">
-            <Card.Body>
-              <Card.Title className="anal-title">All Time</Card.Title>
-              <Card.Text>
-                <span className="amount">$0.63</span>
-                <br />
-                <span className="record">2-2-0</span>
-                <br />
-                <span className="roi">ROI -12.67%</span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col xs={12} sm={6} md={4} className="mb-3">
-          <Card className="text-center custom-card-ana">
-            <Card.Body>
+            <Card.Body
+              onClick={() => setStatus(0)}
+              style={{ cursor: "pointer" }}
+            >
               <Card.Title className="anal-title">Today</Card.Title>
               <Card.Text>
                 <span className="amount">$0.0</span>
                 <br />
-                <span className="record">0-0-0</span>
+                <span className="record">
+                  {" "}
+                  {analyticsData?.today_data?.bet_total} -{" "}
+                  {analyticsData?.today_data?.bet_win} -{" "}
+                  {analyticsData?.today_data?.bet_loss}
+                </span>
                 <br />
-                <span className="roi">ROI 0%</span>
+                <span className="roi">
+                  WIN{" "}
+                  {analyticsData?.today_data?.bet_win_percentage?.toFixed(2)}%
+                </span>
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-      <Row className="mb-3">
-        <Col xs={6}>
-          <h4 style={{ margin: "0 0 8px", fontSize: "18px" }}>Last 30 Days</h4>
-          <div
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              color: "#d32f2f",
-            }}
-          >
-            $0.63 <span style={{ fontSize: "14px" }}>▼</span>
-          </div>
-        </Col>
-        <Col xs={6} style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "14px", color: "#757575" }}>
+      {status === 1 ? (
+        <Row className="mb-3">
+          <Col xs={6}>
+            <h4 style={{ margin: "0 0 8px", fontSize: "18px" }}>
+              Last 30 Days
+            </h4>
+            <div
+              style={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "#d32f2f",
+              }}
+            >
+              $0.63 <span style={{ fontSize: "14px" }}>▼</span>
+            </div>
+          </Col>
+          <Col xs={6} style={{ textAlign: "right" }}>
+            {/* <div style={{ fontSize: "14px", color: "#757575" }}>
             Wins: <span style={{ color: "#d32f2f" }}>50%</span>
-          </div>
+          </div> */}
 
-          <div style={{ fontSize: "14px", color: "#757575" }}>
-            ROI: <span style={{ color: "#d32f2f" }}>-12.07%</span>
-          </div>
+            <div style={{ fontSize: "14px", color: "#757575" }}>
+              WIN:{" "}
+              <span style={{ color: "#d32f2f" }}>
+                {analyticsData?.last_30_days?.bet_win_percentage?.toFixed(2)}%
+              </span>
+            </div>
 
-          <div style={{ fontSize: "14px", color: "#757575" }}>
-            Record: <span style={{ color: "#d32f2f" }}>2-2-0</span>
-          </div>
-        </Col>
-      </Row>
+            <div style={{ fontSize: "14px", color: "#757575" }}>
+              Record:{" "}
+              <span style={{ color: "#d32f2f" }}>
+                {analyticsData?.last_30_days?.bet_total}-
+                {analyticsData?.last_30_days?.bet_win}-
+                {analyticsData?.last_30_days?.bet_loss}
+              </span>
+            </div>
+          </Col>
+        </Row>
+      ) : (
+        <Row className="mb-3">
+          <Col xs={6}>
+            <h4 style={{ margin: "0 0 8px", fontSize: "18px" }}>Today</h4>
+            <div
+              style={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "#d32f2f",
+              }}
+            >
+              $0.63 <span style={{ fontSize: "14px" }}>▼</span>
+            </div>
+          </Col>
+          <Col xs={6} style={{ textAlign: "right" }}>
+            <div style={{ fontSize: "14px", color: "#757575" }}>
+              WIN:{" "}
+              <span style={{ color: "#d32f2f" }}>
+                {analyticsData?.today_data?.bet_win_percentage?.toFixed(2)}%
+              </span>
+            </div>
+
+            <div style={{ fontSize: "14px", color: "#757575" }}>
+              Record:{" "}
+              <span style={{ color: "#d32f2f" }}>
+                {analyticsData?.today_data?.bet_total}-
+                {analyticsData?.today_data?.bet_win}-
+                {analyticsData?.today_data?.bet_loss}
+              </span>
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <Row className="justify-content-center">
         <Col xs={12} md={12}>
@@ -314,31 +399,6 @@ const AnalyticsTab = () => {
             </Dropdown.Menu>
           </Dropdown>
         </Col>
-        {/* <Col xs={12} md={6}>
-          <Dropdown onSelect={handleDataTypeSelect} className="float-end">
-            <Dropdown.Toggle
-              style={{
-                backgroundColor: "#1d3b48",
-                borderColor: "#1d3b48",
-                color: "white",
-              }}
-              size="sm"
-            >
-              Select Data Type
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="bettingSuccessRate">
-                Betting Success Rate
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="profitLossOverTime">
-                Profit/Loss Over Time
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="betTypeDistribution">
-                Bet Type Distribution
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col> */}
       </Row>
       <Row className="justify-content-center mt-4">
         <Col xs={12} md={12}>
@@ -355,44 +415,40 @@ const AnalyticsTab = () => {
         </Col>
       </Row>
 
-      <Row className="justify-content-center mt-5">
-        <Col xs={12} sm={6} md={4} className="mb-3">
-          <Card className="text-center custom-card-ana">
-            <Card.Body>
-              <Card.Title className="anal-title">NCAAF</Card.Title>
-              <Card.Text>
-                <span className="record">2-2-0</span>
-                <br />
-                <span className="recordss">$0.63</span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col xs={12} sm={6} md={4} className="mb-3">
-          <Card className="text-center custom-card-ana">
-            <Card.Body>
-              <Card.Title className="anal-title">NBA</Card.Title>
-              <Card.Text>
-                <span className="record">2-2-0</span>
-                <br />
-                <span className="recordss">$1.70</span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col xs={12} sm={6} md={4} className="mb-3">
-          <Card className="text-center custom-card-ana">
-            <Card.Body>
-              <Card.Title className="anal-title">NFL</Card.Title>
-              <Card.Text>
-                <span className="record">2-2-0</span>
-                <br />
-                <span className="recordss">$1.63</span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
+      <Row className="mt-4  bg-light rounded-2">
+        <Col lg={12}>
+          <div
+            style={{
+              display: "flex",
+              gap: "15px",
+              overflowX: "scroll",
+              overflowY: "hidden",
+              padding: "10px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {analyticsData?.sports_list?.map((item) => (
+              <Col xs={12} sm={6} md={4} className="mb-3">
+                <Card className="text-center custom-card-ana">
+                  <Card.Body>
+                    <Card.Title className="anal-title">
+                      {item.sport_name}
+                    </Card.Title>
+                    <Card.Text>
+                      <span className="record">
+                        {item?.roi?.bet_total}-{item?.roi?.bet_win}-
+                        {item?.roi?.bet_loss}
+                      </span>
+                      <br />
+                      <span className="recordss">
+                        Win:{item?.roi?.bet_win_percentage}%
+                      </span>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </div>
         </Col>
       </Row>
 
@@ -406,38 +462,68 @@ const AnalyticsTab = () => {
             <Card.Title className="mb-3">
               Favorite Bets <small className="text-muted">⚠️</small>
             </Card.Title>
-            <ProgressBar
-              className="mb-3"
-              now={70}
-              label="NCAAF"
-              variant="success"
-            />
-            <ProgressBar
-              className="mb-3"
-              now={50}
-              label="N/A"
-              variant="secondary"
-            />
-            <ProgressBar
-              className="mb-3"
-              now={30}
-              label="N/A"
-              variant="secondary"
-            />
+            {sortedBets.map((bet, index) => (
+              <ProgressBar
+                key={index}
+                className="mb-3"
+                // now={
+                //   (bet.win_bet_count / analyticsData?.favorite_bet?.length) *
+                //   100
+                // }
+              >
+                <ProgressBar
+                  label={bet.sport_name}
+                  now={
+                    (bet.win_bet_count / analyticsData?.favorite_bet?.length) *
+                    100
+                  }
+                  style={{ backgroundColor: getColorByIndex(index) }}
+                />
+              </ProgressBar>
+            ))}
 
-            {/* Bet Categories */}
             <div className="d-flex justify-content-between">
-              <small>Spread</small>
-              <small>ML</small>
-              <small>Total</small>
-              <small>Props</small>
-              <small>Futures</small>
+              <small>
+                <span
+                  style={{
+                    backgroundColor: getColorByIndex(0),
+                    color: getColorByIndex(0),
+                    borderRadius: "50%",
+                  }}
+                >
+                  00
+                </span>
+                {sortedBets[0]?.sport_name || "Spread"}
+              </small>
+              <small className="align-items-center">
+                <span
+                  style={{
+                    backgroundColor: getColorByIndex(1),
+                    color: getColorByIndex(1),
+                    borderRadius: "50%",
+                  }}
+                >
+                  00
+                </span>
+                {sortedBets[1]?.sport_name || "MoneyLine"}
+              </small>
+              <small>
+                <span
+                  style={{
+                    backgroundColor: getColorByIndex(2),
+                    color: getColorByIndex(2),
+                    borderRadius: "50%",
+                  }}
+                >
+                  00
+                </span>
+                {sortedBets[2]?.sport_name || "Total"}
+              </small>
             </div>
           </Card.Body>
         </Card>
 
-        <Row>
-          {/* Cold Streak Section */}
+        {/* <Row> 
           <Col md={6} className="mb-3">
             <Card
               className="shadow-sm"
@@ -454,8 +540,7 @@ const AnalyticsTab = () => {
               </Card.Body>
             </Card>
           </Col>
-
-          {/* Best Week Section */}
+ 
           <Col md={6} className="mb-3">
             <Card
               className="shadow-sm"
@@ -474,9 +559,7 @@ const AnalyticsTab = () => {
               </Card.Body>
             </Card>
           </Col>
-        </Row>
-
-        {/* Closing Line Value Section */}
+        </Row> 
         <Card
           className="shadow-sm"
           style={{ borderRadius: "12px", padding: "20px" }}
@@ -502,7 +585,7 @@ const AnalyticsTab = () => {
               </Col>
             </Row>
           </Card.Body>
-        </Card>
+        </Card> */}
       </div>
     </Container>
   );

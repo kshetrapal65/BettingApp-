@@ -23,6 +23,7 @@ import PrivateRoute from "../Components/PrivateRoute.js";
 import ChallangesList from "../Screens/Challanges/ChallangesList.js";
 import HedgeCalculater from "../Screens/Parlay/HedgeCalculater.js";
 import EvCalculater from "../Screens/Parlay/EvCalculater.js";
+import Notification from "../Screens/Notification/Notification.js";
 
 const PublicRouter = () => {
   return (
@@ -48,6 +49,7 @@ const PublicRouter = () => {
         <Route path="/leagues-list" element={<LeaguesList />} />
         <Route path="/create-leagues" element={<CreateLeagues />} />
         <Route path="/challanges" element={<ChallangesList />} />
+        <Route path="/notification" element={<Notification />} />
         <Route
           path="/league-details/:id/invite/:code"
           element={
