@@ -43,12 +43,14 @@ const CreateLeagues = () => {
   const [endDate, setEndDate] = useState("");
   const [unitType, setUnitType] = useState("");
   const [winnigPrize, setWinnigPrize] = useState("");
+  const [leagueFees, setLeagueFees] = useState("");
   const [load, setLoad] = useState(false);
   const [linkData, setLinkData] = useState(null);
   const [copy, setCopy] = useState(false);
   const [show, setShow] = useState(false);
   const shareUrl = ShareableLink(linkData?.id, linkData?.invite_code);
   const leaguesToShow = showAll ? sportsLeagues : sportsLeagues.slice(0, 10);
+
   setTimeout(() => {
     setCopy(false);
   }, 2000);
@@ -99,6 +101,7 @@ const CreateLeagues = () => {
     const formData = new FormData();
     formData.append("name", leagueName);
     formData.append("is_paid", gameType);
+    formData.append("entry_fee", leagueFees);
     formData.append("units_issued", unit);
     formData.append("units_issued_type", unitType);
     formData.append("match_length", matchLength);
@@ -212,7 +215,7 @@ const CreateLeagues = () => {
                   <Form.Label className="fw-bold">
                     Select Sports Leagues
                   </Form.Label>
-                  <Row>
+                  <Row style={{ maxHeight: "350px", overflowY: "auto" }}>
                     {leaguesToShow?.map((league, index) => (
                       <Col
                         xs={5}
@@ -245,7 +248,19 @@ const CreateLeagues = () => {
                     {showAll ? "Show Less" : "Show All"}
                   </Button>
                 </Form.Group>
-
+                {gameType === 1 && (
+                  <Col md={6}>
+                    <Form.Group controlId="matchLength" className="mt-4">
+                      <Form.Label className="fw-bold">Match Fees</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter match fees"
+                        value={leagueFees}
+                        onChange={(e) => setLeagueFees(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                )}
                 <Row>
                   <Col md={6}>
                     <Form.Group controlId="matchLength" className="mt-4">

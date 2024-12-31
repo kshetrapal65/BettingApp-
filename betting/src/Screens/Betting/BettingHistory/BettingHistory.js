@@ -164,7 +164,9 @@ const BettingHistory = () => {
             <th>No.</th>
             <th>Bet Type</th>
             <th>Sport</th>
+            <th>League Type</th>
             <th>Market</th>
+            <th>Team Name</th>
             <th>Amount</th>
             <th>Win Amount</th>
             <th>Bet Status</th>
@@ -194,7 +196,11 @@ const BettingHistory = () => {
                       </>
                     )}
                     <td>{detail.sport_name}</td>
+                    {detailIndex === 0 && (
+                      <td rowSpan={bet.bet_detail.length}>{bet.league_type}</td>
+                    )}
                     <td>{detail.market_key}</td>
+                    <td>{detail.team_name}</td>
                     {(bet.bet_type === "Parlay" && detailIndex === 0) ||
                     (bet.bet_type === "Teaser" && detailIndex === 0) ? (
                       <>

@@ -20,6 +20,7 @@ import "./createlegue.css";
 import { getUserdata } from "../../Helper/Storage";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 
 const LeaguesList = () => {
   const navigate = useNavigate();
@@ -33,6 +34,10 @@ const LeaguesList = () => {
     inputValue: "",
     selectValue: "",
   });
+  const [stripOpen, setStripOpen] = React.useState(false);
+  const stripe = useStripe();
+  const elements = useElements();
+  const [paymentStatus, setPaymentStatus] = React.useState("");
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -131,6 +136,51 @@ const LeaguesList = () => {
     }
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    try {
+      // Call your backend to create the PaymentIntent and get the clientSecret
+      const response = await fetch("http://localhost:4002/payment-sheet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: 3000, currency: "eur" }),
+      });
+      console.log("res", response);
+      const { clientSecret } = await response.json();
+
+      // Now confirm the card payment using the clientSecret
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+      if (result.error) {
+        setPaymentStatus(`Payment failed: ${result.error.message}`);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          setPaymentStatus("Payment successful!");
+          console.log("PaymentIntent: ", result.paymentIntent); // Stripe payment intent response
+        }
+      }
+    } catch (error) {
+      setPaymentStatus(`Payment failed: ${error.message}`);
+      console.error("Error processing payment:", error);
+    }
+  };
+
+  const handleClose = () => setStripOpen(false);
+  const handleOpen = () => setStripOpen(true);
+  const cardElementOptions = {
+    hidePostalCode: true,
+  };
   return (
     <Container>
       {load && (
@@ -176,12 +226,15 @@ const LeaguesList = () => {
         );
         const currentDate = moment(new Date()).format("YYYY-MM-DD");
         const endDate = moment(league?.season_end_date).format("YYYY-MM-DD");
-        const permit =
+        const leagueStatus =
           currentDate < startDate
             ? "Upcoming"
             : currentDate > endDate
             ? "Completed"
             : "Ongoing";
+        const canViewLeague =
+          league?.is_paid === 0 || league?.user_id === userData?.id;
+        // payment === "done";
         return (
           <Row key={index} className="mb-4">
             <Col>
@@ -196,7 +249,13 @@ const LeaguesList = () => {
                           fontWeight: "bold",
                         }}
                       >
-                        {league.name}
+                        {league.name}{" "}
+                        {/* <span
+                          className="text-muted"
+                          style={{ fontWeight: "normal", fontSize: "14px" }}
+                        >
+                          (paid)
+                        </span> */}
                       </Card.Title>
                     </Col>
                     <Col xs="auto" className="d-flex">
@@ -234,7 +293,31 @@ const LeaguesList = () => {
                           Update Units
                         </Button>
                       )} */}
-                      <Button
+                      {canViewLeague ? (
+                        <Button
+                          variant="#155239"
+                          size="sm"
+                          className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={() =>
+                            navigate(
+                              `/league-details/${league?.id}/invite/${league?.invite_code}`
+                            )
+                          }
+                        >
+                          View League <FaChevronRight className="ms-2" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="#155239"
+                          size="sm"
+                          className="custom-btns   ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={handleOpen}
+                        >
+                          pay
+                        </Button>
+                      )}
+
+                      {/* <Button
                         variant="#155239"
                         size="sm"
                         className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
@@ -245,7 +328,7 @@ const LeaguesList = () => {
                         }
                       >
                         View League <FaChevronRight className="ms-2" />
-                      </Button>
+                      </Button> */}
                       {/* <Button
                       variant="#155239"
                       size="sm"
@@ -269,7 +352,7 @@ const LeaguesList = () => {
                           color: "#155239",
                         }}
                       >
-                        {permit}
+                        {leagueStatus}
                       </p>
                     </Col>
                   </Row>
@@ -329,6 +412,28 @@ const LeaguesList = () => {
             Save
           </Button>
         </Modal.Footer>
+      </Modal>
+      {/* strip pament */}
+      <Modal show={stripOpen} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Stripe Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <CardElement options={cardElementOptions} />
+            <Button
+              className="w-100 fw-bold"
+              variant="primary"
+              type="submit"
+              disabled={!stripe}
+              style={{ marginTop: "20px" }}
+              // onClick={handleCheckout}
+            >
+              Pay
+            </Button>
+            {/* <p>{paymentStatus}</p> */}
+          </form>
+        </Modal.Body>
       </Modal>
     </Container>
   );
