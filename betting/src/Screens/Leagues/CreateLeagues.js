@@ -325,7 +325,7 @@ const CreateLeagues = () => {
                         value={unitType}
                         onChange={(e) => setUnitType(e.target.value)}
                       >
-                        <option value="" disabled></option>
+                        <option value="">select type</option>
                         <option value="a_day">A day</option>
                         <option value="a_week">A week</option>
                       </Form.Select>

@@ -27,14 +27,12 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { getUserdata } from "../../Helper/Storage";
 import { FaGear } from "react-icons/fa6";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 
 const LeagueDetails = () => {
-  const { id, code } = useParams();
+  const { id, code, ids } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const status = location.state?.status;
+  // const status = location.state?.status;
 
   const userData = getUserdata();
   const [league, setLeague] = React.useState([]);
@@ -42,13 +40,8 @@ const LeagueDetails = () => {
   const [load, setLoad] = React.useState(true);
   const [copy, setCopy] = React.useState(false);
   const [show, setShow] = React.useState(false);
-  const [dashboardDetails, setDashboardDetails] = React.useState([]);
-  const stripe = useStripe();
-  const elements = useElements();
-  const [paymentStatus, setPaymentStatus] = React.useState("");
-  const [stripOpen, setStripOpen] = React.useState(false);
 
-  const shareUrl = ShareableLink(league?.id, league?.invite_code);
+  const shareUrl = ShareableLink(league?.id, league?.invite_code, ids);
   const matchId = leagueList?.find((item) => item.id == id);
 
   const findInviteUser = league?.league_members?.find(
@@ -67,70 +60,6 @@ const LeagueDetails = () => {
   setTimeout(() => {
     setCopy(false);
   }, 2000);
-
-  const handleClose = () => setStripOpen(false);
-  const handleOpen = () => setStripOpen(true);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    try {
-      // Call your backend to create the PaymentIntent and get the clientSecret
-      const response = await fetch("http://localhost:4002/payment-sheet", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: 3000, currency: "eur" }),
-      });
-      console.log("res", response);
-      const { clientSecret } = await response.json();
-
-      // Now confirm the card payment using the clientSecret
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-        },
-      });
-
-      if (result.error) {
-        setPaymentStatus(`Payment failed: ${result.error.message}`);
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          setPaymentStatus("Payment successful!");
-          console.log("PaymentIntent: ", result.paymentIntent); // Stripe payment intent response
-        }
-      }
-    } catch (error) {
-      setPaymentStatus(`Payment failed: ${error.message}`);
-      console.error("Error processing payment:", error);
-    }
-  };
-
-  const handleCheckout = async () => {
-    const stripe = await loadStripe(
-      "pk_test_51ObzizSDKVzcMbwcsqNMuTHiU9e7LYlvKJcFDi4B9fXODzo9D3zbz7iCaOAWTF7WmNTO5XaXr6DM5Vp3p4pGTCoV00KjI7Hre5"
-    );
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [
-        {
-          price: "price_1HGsx6FJIG6IlLTxzQQAAAAP", // Replace with your price ID
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      successUrl: window.location.origin + "/success",
-      cancelUrl: window.location.origin + "/cancel",
-    });
-
-    if (error) {
-      console.error("Stripe checkout error", error);
-    }
-  };
 
   const deleteLeague = async (id) => {
     try {
@@ -170,7 +99,7 @@ const LeagueDetails = () => {
       const response = await apiCallNew(
         "get",
         null,
-        status == 1
+        ids == 1
           ? ApiEndPoints.globalLeagueDashboard + id
           : ApiEndPoints.leagueDashboard + id
       );
@@ -208,7 +137,7 @@ const LeagueDetails = () => {
       confirmButtonText: "Yes, remove it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        if (status == 1) {
+        if (ids == 1) {
           leaveFromGlobleLeague(id);
         } else {
           leaveFromLeague(id);
@@ -227,7 +156,7 @@ const LeagueDetails = () => {
       confirmButtonText: "Yes, accept it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        if (status == 1) {
+        if (ids == 1) {
           acceptGlobleInvites();
         } else {
           acceptInvites();
@@ -347,7 +276,7 @@ const LeagueDetails = () => {
             >
               <FaArrowLeft
                 onClick={() =>
-                  navigate(status == 1 ? "/challanges" : "/leagues-list")
+                  navigate(ids == 1 ? "/challanges" : "/leagues-list")
                 }
                 className="me-3"
                 style={{ cursor: "pointer" }}
@@ -359,17 +288,7 @@ const LeagueDetails = () => {
               lg={5}
               className="d-flex justify-content-center justify-content-lg-end"
             >
-              {/* <Button
-                className="ms-lg-2 mb-2 mb-lg-0 me-1"
-                size="sm"
-                variant="#155239"
-                style={{ backgroundColor: "#b50404", color: "white" }}
-                onClick={() => handleOpen()}
-              >
-                Strip
-              </Button> */}
-
-              {status == 1 ? (
+              {ids == 1 ? (
                 findInviteUser ? (
                   <>
                     <Button
@@ -425,7 +344,7 @@ const LeagueDetails = () => {
                 </>
               )}
 
-              {status == 1 ? (
+              {ids == 1 ? (
                 findInviteUser ? null : (
                   <>
                     <Button
@@ -471,19 +390,6 @@ const LeagueDetails = () => {
         </Card.Header>
       </Card>
       <Card className="mb-4">
-        {/* <Card.Header
-          as="h5"
-          className="fw-bold text-white"
-          style={{ backgroundColor: "#155239" }}
-        >
-          {" "}
-          <FaArrowLeft
-            onClick={() => navigate(-1)}
-            className="me-3"
-            style={{ cursor: "pointer" }}
-          />
-          {league.name} Details
-        </Card.Header> */}
         <Card.Body>
           <Row>
             <Col md={6}>
@@ -517,7 +423,7 @@ const LeagueDetails = () => {
           className="text-white"
           style={{ backgroundColor: "#155239" }}
         >
-          {status == 1 ? "Sports in season" : "Sports in League"}
+          {ids == 1 ? "Sports in season" : "Sports in League"}
         </Card.Header>
         <Card.Body>
           {league?.league_sports?.length > 0 ? (
@@ -810,7 +716,7 @@ const LeagueDetails = () => {
           </Row>
           <Card className="mb-4">
             <Card.Body>
-              <h5>{status == 1 ? "Season Invites" : "League Invites"}</h5>
+              <h5>{ids == 1 ? "Season Invites" : "League Invites"}</h5>
               <InputGroup>
                 <InputGroup.Text>
                   <FaLink />
@@ -835,7 +741,7 @@ const LeagueDetails = () => {
           </Card>
           <Card>
             <Card.Body>
-              <h5>{status == 1 ? "Season Members" : "League Members"}</h5>
+              <h5>{ids == 1 ? "Season Members" : "League Members"}</h5>
               {league?.league_members?.length > 0 ? (
                 <Table striped bordered hover>
                   <thead>
@@ -862,7 +768,7 @@ const LeagueDetails = () => {
           </Card>
         </Modal.Body>
       </Modal>
-      <Modal show={stripOpen} onHide={handleClose}>
+      {/* <Modal show={stripOpen} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Stripe Payment</Modal.Title>
         </Modal.Header>
@@ -878,11 +784,10 @@ const LeagueDetails = () => {
               // onClick={handleCheckout}
             >
               Pay
-            </Button>
-            {/* <p>{paymentStatus}</p> */}
+            </Button> 
           </form>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </Container>
   );
 };

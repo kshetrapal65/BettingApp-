@@ -34,10 +34,12 @@ const LeaguesList = () => {
     inputValue: "",
     selectValue: "",
   });
+  const [leagueId, setLeagueId] = useState(0);
   const [stripOpen, setStripOpen] = React.useState(false);
   const stripe = useStripe();
   const elements = useElements();
   const [paymentStatus, setPaymentStatus] = React.useState("");
+  const [clientSecret, setClientSecret] = useState(null);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -46,6 +48,9 @@ const LeaguesList = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchKeyword]);
+  React.useEffect(() => {
+    createPaymentIntent();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +59,21 @@ const LeaguesList = () => {
       [name]: value,
     }));
   };
+
+  const createPaymentIntent = async () => {
+    const response = await fetch("/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: 1000, currency: "usd" }),
+    });
+
+    const data = await response.json();
+    setClientSecret(data.clientSecret);
+  };
+
+  React.useEffect(() => {
+    createPaymentIntent();
+  }, []);
 
   const handleSave = async () => {
     try {
@@ -98,6 +118,8 @@ const LeaguesList = () => {
       if (response.success === true) {
         setLeagues(response.result);
         setLoad(false);
+      } else {
+        setLoad(false);
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -140,47 +162,90 @@ const LeaguesList = () => {
     event.preventDefault();
 
     if (!stripe || !elements) {
+      console.error("Stripe has not loaded yet.");
       return;
     }
+    setLoad(true);
+    const cardElement = elements.getElement(CardElement);
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
 
-    try {
-      // Call your backend to create the PaymentIntent and get the clientSecret
-      const response = await fetch("http://localhost:4002/payment-sheet", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: 3000, currency: "eur" }),
-      });
-      console.log("res", response);
-      const { clientSecret } = await response.json();
-
-      // Now confirm the card payment using the clientSecret
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-        },
-      });
-
-      if (result.error) {
-        setPaymentStatus(`Payment failed: ${result.error.message}`);
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          setPaymentStatus("Payment successful!");
-          console.log("PaymentIntent: ", result.paymentIntent); // Stripe payment intent response
-        }
+    if (error) {
+      console.error("[PaymentMethod Error]", error);
+      toast.error(error?.message);
+      setLoad(false);
+    } else {
+      console.log("[PaymentMethod]", paymentMethod);
+      const { id: cardId } = paymentMethod.card;
+      const tokenResponse = await stripe.createToken(cardElement);
+      if (tokenResponse) {
+        stripSubmit(tokenResponse.token.id);
       }
-    } catch (error) {
-      setPaymentStatus(`Payment failed: ${error.message}`);
-      console.error("Error processing payment:", error);
     }
   };
 
   const handleClose = () => setStripOpen(false);
-  const handleOpen = () => setStripOpen(true);
+  const handleOpen = (item) => {
+    setLeagueId(item);
+    setStripOpen(true);
+  };
   const cardElementOptions = {
     hidePostalCode: true,
   };
+
+  const stripSubmit = async (token) => {
+    try {
+      setLoad(true);
+      const formData = new FormData();
+      formData.append("intent_token", token);
+      formData.append("amount", leagueId?.entry_fee);
+      formData.append("league_id", leagueId?.id);
+
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.StripeCharge
+      );
+      if (response.success === true) {
+        // getLeagues();
+        stripPaymentStatus(response?.result);
+        setLoad(false);
+        handleClose();
+      } else {
+        setLoad(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
+  const stripPaymentStatus = async (res) => {
+    try {
+      const formData = new FormData();
+      formData.append("payment_status", res?.status);
+      formData.append("transaction_id", res?.balance_transaction);
+      formData.append("league_id", leagueId?.id);
+
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.StripePayStatus
+      );
+      if (response.success === true) {
+        getLeagues();
+        toast.success(response?.msg);
+      } else {
+        setLoad(false);
+        toast.error(response?.msg);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+
   return (
     <Container>
       {load && (
@@ -233,8 +298,9 @@ const LeaguesList = () => {
             ? "Completed"
             : "Ongoing";
         const canViewLeague =
-          league?.is_paid === 0 || league?.user_id === userData?.id;
-        // payment === "done";
+          league?.is_paid === 1 &&
+          league?.payment_status !== "succeeded" &&
+          league?.user_id !== userData?.id;
         return (
           <Row key={index} className="mb-4">
             <Col>
@@ -250,17 +316,27 @@ const LeaguesList = () => {
                         }}
                       >
                         {league.name}{" "}
-                        {/* <span
-                          className="text-muted"
-                          style={{ fontWeight: "normal", fontSize: "14px" }}
+                        <span
+                          className=" "
+                          style={{
+                            fontWeight: "normal",
+                            fontSize: "14px",
+                            color: "#155239",
+                          }}
                         >
-                          (paid)
-                        </span> */}
+                          {league?.is_paid == 0
+                            ? "(free)"
+                            : league?.payment_status == "succeeded"
+                            ? "(paid)"
+                            : league?.user_id == userData?.id
+                            ? "(owned)"
+                            : "(unpaid)"}
+                        </span>
                       </Card.Title>
                     </Col>
                     <Col xs="auto" className="d-flex">
-                      {startDate > currentDate &&
-                        userData?.id == league?.user_id && (
+                      {league?.user_id == userData?.id &&
+                        leagueStatus !== "Completed" && (
                           <Button
                             className="ms-lg-2 mb-2 mb-lg-0 me-1"
                             size="sm"
@@ -278,65 +354,47 @@ const LeaguesList = () => {
                             Update Units
                           </Button>
                         )}
-                      {/* {userData?.id == league?.user_id && (
-                        <Button
-                          className="ms-lg-2 mb-2 mb-lg-0 me-1"
-                          size="sm"
-                          variant="#155239"
-                          style={{ backgroundColor: "#155239", color: "white" }}
-                          onClick={() => {
-                            setShow(true);
-                            setid(league.id);
-                          }}
-                          disabled={currentDate > endDate}
-                        >
-                          Update Units
-                        </Button>
-                      )} */}
+
                       {canViewLeague ? (
+                        <Button
+                          variant="#155239"
+                          size="sm"
+                          className="custom-btns   ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={() => handleOpen(league)}
+                        >
+                          pay
+                        </Button>
+                      ) : leagueStatus == "Completed" ? (
                         <Button
                           variant="#155239"
                           size="sm"
                           className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
                           onClick={() =>
                             navigate(
-                              `/league-details/${league?.id}/invite/${league?.invite_code}`
+                              `/league-details/${league?.id}/invite/${
+                                league?.invite_code
+                              }/${0}`
                             )
                           }
                         >
-                          View League <FaChevronRight className="ms-2" />
+                          View <FaChevronRight className="ms-2" />
                         </Button>
                       ) : (
                         <Button
                           variant="#155239"
                           size="sm"
-                          className="custom-btns   ms-lg-2 mb-2 mb-lg-0 me-1"
-                          onClick={handleOpen}
+                          className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={() =>
+                            navigate(
+                              `/league-details/${league?.id}/invite/${
+                                league?.invite_code
+                              }/${0}`
+                            )
+                          }
                         >
-                          pay
+                          Bet <FaChevronRight className="ms-2" />
                         </Button>
                       )}
-
-                      {/* <Button
-                        variant="#155239"
-                        size="sm"
-                        className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
-                        onClick={() =>
-                          navigate(
-                            `/league-details/${league?.id}/invite/${league?.invite_code}`
-                          )
-                        }
-                      >
-                        View League <FaChevronRight className="ms-2" />
-                      </Button> */}
-                      {/* <Button
-                      variant="#155239"
-                      size="sm"
-                      className="custom-btns ms-2 d-flex align-items-center"
-                      onClick={() => confirmDeletion(league.id)}
-                    >
-                      <FaTrash />
-                    </Button> */}
                     </Col>
                   </Row>
                   <Row className="mt-4">
@@ -416,22 +474,41 @@ const LeaguesList = () => {
       {/* strip pament */}
       <Modal show={stripOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Stripe Payment</Modal.Title>
+          <Modal.Title className="fw-bold fs-4">Stripe Payment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {load && (
+            <div>
+              <PulseLoader
+                loading={load}
+                color="#155239"
+                style={styles.backdrop}
+              />
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
+            <p className="mb-4" style={{ fontSize: "0.8rem", color: "gray" }}>
+              For betting on this league you need to pay the entry fee of{" "}
+              <span style={{ color: "#155239", fontWeight: "bold" }}>
+                ${leagueId?.entry_fee}
+              </span>{" "}
+              then you can bet on this league, if you win you will get the earn
+              amount and will be credited to your account.
+            </p>
             <CardElement options={cardElementOptions} />
             <Button
               className="w-100 fw-bold"
-              variant="primary"
+              variant="#155239"
               type="submit"
               disabled={!stripe}
-              style={{ marginTop: "20px" }}
-              // onClick={handleCheckout}
+              style={{
+                marginTop: "25px",
+                backgroundColor: "#155239",
+                color: "white",
+              }}
             >
               Pay
             </Button>
-            {/* <p>{paymentStatus}</p> */}
           </form>
         </Modal.Body>
       </Modal>

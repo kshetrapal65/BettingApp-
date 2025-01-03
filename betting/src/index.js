@@ -8,7 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 
 // Your Stripe publishable key
 const stripePromise = loadStripe(
-  "pk_test_51ObzizSDKVzcMbwcsqNMuTHiU9e7LYlvKJcFDi4B9fXODzo9D3zbz7iCaOAWTF7WmNTO5XaXr6DM5Vp3p4pGTCoV00KjI7Hre5"
+  "pk_test_51QJqjRCNMTpLnffXQ6xSsKetMvyhZTcGh9dPMHtK6VONAGTD4ABNFdubmgJkmuv64qOSXLNgjRHBZgwv3OZ5NGFq00np0m539m"
 );
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

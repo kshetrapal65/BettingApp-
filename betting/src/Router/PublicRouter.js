@@ -51,7 +51,7 @@ const PublicRouter = () => {
         <Route path="/challanges" element={<ChallangesList />} />
         <Route path="/notification" element={<Notification />} />
         <Route
-          path="/league-details/:id/invite/:code"
+          path="/league-details/:id/invite/:code/:ids"
           element={
             <PrivateRoute>
               <LeagueDetails />

@@ -2017,8 +2017,8 @@ export const OddsScreen = () => {
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
-  const [Bookmaker, setBookmaker] = React.useState("draftkings");
-  const [BookmakerName, setBookmakername] = React.useState("DraftKings");
+  const [Bookmaker, setBookmaker] = React.useState("fanduel");
+  const [BookmakerName, setBookmakername] = React.useState("FanDuel");
   const [load, setLoad] = React.useState(false);
   const [unitData, setUnitData] = React.useState("");
   const [teaser, setTeaser] = React.useState(6);
@@ -2032,7 +2032,6 @@ export const OddsScreen = () => {
     active: true,
     has_outrights: false,
   });
-
   const totalWager = cartData.reduce(
     (total, market) => total + (market.wager || 0),
     0
