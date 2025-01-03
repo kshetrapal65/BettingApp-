@@ -10,6 +10,7 @@ import {
   Badge,
   Dropdown,
   FormSelect,
+  Modal,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { apiCallNew } from "../../Network_Call/apiservices";
@@ -18,6 +19,8 @@ import { PulseLoader } from "react-spinners";
 import { formatCapital } from "../../Components/formatCapitalize";
 import { FaChevronRight } from "react-icons/fa";
 import { getUserdata } from "../../Helper/Storage";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import toast from "react-hot-toast";
 
 const ChallangesList = () => {
   const navigate = useNavigate();
@@ -26,6 +29,10 @@ const ChallangesList = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [load, setLoad] = useState(false);
   const [leagueType, setLeagueType] = useState("season");
+  const [leagueId, setLeagueId] = useState(0);
+  const [stripOpen, setStripOpen] = React.useState(false);
+  const stripe = useStripe();
+  const elements = useElements();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -59,6 +66,93 @@ const ChallangesList = () => {
       console.error("Error fetching profile:", error);
       setLoad(false);
     }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      console.error("Stripe has not loaded yet.");
+      return;
+    }
+    setLoad(true);
+    const cardElement = elements.getElement(CardElement);
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
+    if (error) {
+      console.error("[PaymentMethod Error]", error);
+      setLoad(false);
+    } else {
+      console.log("[PaymentMethod]", paymentMethod);
+      const { id: cardId } = paymentMethod.card;
+      const tokenResponse = await stripe.createToken(cardElement);
+      if (tokenResponse) {
+        stripSubmit(tokenResponse.token.id);
+      }
+    }
+  };
+
+  const stripSubmit = async (token) => {
+    try {
+      setLoad(true);
+      const formData = new FormData();
+      formData.append("intent_token", token);
+      formData.append("amount", leagueId?.entry_fee);
+      formData.append("league_id", leagueId?.id);
+
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.StripeChargeGlobal
+      );
+      if (response.success === true) {
+        getLeagues();
+        stripPaymentStatus(response?.result);
+        setLoad(false);
+        handleClose();
+      } else {
+        setLoad(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  };
+  const stripPaymentStatus = async (res) => {
+    try {
+      const formData = new FormData();
+      formData.append("payment_status", res?.status);
+      formData.append("transaction_id", res?.balance_transaction);
+      formData.append("league_id", leagueId?.id);
+
+      const response = await apiCallNew(
+        "post",
+        formData,
+        ApiEndPoints.StripePayStatusGlobal
+      );
+      if (response.success === true) {
+        getLeagues();
+        toast.success(response?.msg);
+      } else {
+        setLoad(false);
+        toast.error(response?.msg);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+
+  const handleClose = () => setStripOpen(false);
+  const handleOpen = (item) => {
+    setLeagueId(item);
+    setStripOpen(true);
+  };
+  const cardElementOptions = {
+    hidePostalCode: true,
   };
 
   return (
@@ -107,12 +201,14 @@ const ChallangesList = () => {
         );
         const currentDate = moment(new Date()).format("YYYY-MM-DD");
         const endDate = moment(league?.season_end_date).format("YYYY-MM-DD");
-        const permit =
+        const leagueStatus =
           currentDate < startDate
             ? "Upcoming"
             : currentDate > endDate
             ? "Completed"
             : "Ongoing";
+        const canViewLeague =
+          league?.is_paid === 1 && league?.payment_status !== "succeeded";
         return (
           <Row key={index} className="mb-4">
             <Col>
@@ -128,10 +224,24 @@ const ChallangesList = () => {
                         }}
                       >
                         {formatCapital(league.name)}
+                        <span
+                          className=" "
+                          style={{
+                            fontWeight: "normal",
+                            fontSize: "14px",
+                            color: "#155239",
+                          }}
+                        >
+                          {league?.is_paid == 0
+                            ? "(free)"
+                            : league?.payment_status == "succeeded"
+                            ? "(paid)"
+                            : "(unpaid)"}
+                        </span>
                       </Card.Title>
                     </Col>
                     <Col xs="auto" className="d-flex">
-                      {findInviteUser ? (
+                      {/* {findInviteUser ? (
                         <Button
                           variant="#155239"
                           size="sm"
@@ -168,16 +278,65 @@ const ChallangesList = () => {
                         >
                           Join Challenge <FaChevronRight className="ms-2" />
                         </Button>
-                      )}
+                      )} */}
 
-                      {/* <Button
-                      variant="#155239"
-                      size="sm"
-                      className="custom-btns ms-2 d-flex align-items-center"
-                      onClick={() => confirmDeletion(league.id)}
-                    >
-                      <FaTrash />
-                    </Button> */}
+                      {canViewLeague ? (
+                        findInviteUser ? (
+                          <Button
+                            variant="#155239"
+                            size="sm"
+                            className="custom-btns   ms-lg-2 mb-2 mb-lg-0 me-1"
+                            onClick={() => handleOpen(league)}
+                          >
+                            pay
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="#155239"
+                            size="sm"
+                            className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
+                            onClick={() =>
+                              navigate(
+                                `/league-details/${league?.id}/invite/${
+                                  league?.invite_code
+                                }/${1}`
+                              )
+                            }
+                          >
+                            Join <FaChevronRight className="ms-2" />
+                          </Button>
+                        )
+                      ) : leagueStatus == "Completed" ? (
+                        <Button
+                          variant="#155239"
+                          size="sm"
+                          className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={() =>
+                            navigate(
+                              `/league-details/${league?.id}/invite/${
+                                league?.invite_code
+                              }/${1}`
+                            )
+                          }
+                        >
+                          View <FaChevronRight className="ms-2" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="#155239"
+                          size="sm"
+                          className="custom-btns d-flex  align-items-center ms-lg-2 mb-2 mb-lg-0 me-1"
+                          onClick={() =>
+                            navigate(
+                              `/league-details/${league?.id}/invite/${
+                                league?.invite_code
+                              }/${1}`
+                            )
+                          }
+                        >
+                          Bet <FaChevronRight className="ms-2" />
+                        </Button>
+                      )}
                     </Col>
                   </Row>
                   <Row className="mt-4">
@@ -193,7 +352,7 @@ const ChallangesList = () => {
                           color: "#155239",
                         }}
                       >
-                        {permit}
+                        {leagueStatus}
                       </p>
                     </Col>
                   </Row>
@@ -203,6 +362,47 @@ const ChallangesList = () => {
           </Row>
         );
       })}
+      {/* strip pament */}
+      <Modal show={stripOpen} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title className="fw-bold fs-4">Stripe Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {load && (
+            <div>
+              <PulseLoader
+                loading={load}
+                color="#155239"
+                style={styles.backdrop}
+              />
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
+            <p className="mb-4" style={{ fontSize: "0.8rem", color: "gray" }}>
+              For betting on this league you need to pay the entry fee of{" "}
+              <span style={{ color: "#155239", fontWeight: "bold" }}>
+                ${leagueId?.entry_fee}
+              </span>{" "}
+              then you can bet on this league, if you win you will get the earn
+              amount and will be credited to your account.
+            </p>
+            <CardElement options={cardElementOptions} />
+            <Button
+              className="w-100 fw-bold"
+              variant="#155239"
+              type="submit"
+              disabled={!stripe}
+              style={{
+                marginTop: "25px",
+                backgroundColor: "#155239",
+                color: "white",
+              }}
+            >
+              Pay
+            </Button>
+          </form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

@@ -4,7 +4,7 @@ const APPConfig = {
 };
 // 752d253c74fc59219fd336b881fdd13c
 const ApiEndPoints = {
-  ApiKey: "752d253c74fc59219fd336b881fdd13c",
+  ApiKey: "70173f278a01e8435b455106129a550f",
   // ApiKey: "f9af698cc538367931ebfe9e11c6b3cc",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
@@ -45,6 +45,10 @@ const ApiEndPoints = {
   leagueDashboard: `${APPConfig.API_URL}/league-dashboard/`,
   UserAnalysis: `${APPConfig.API_URL}/user-analysis`,
   Notifications: `${APPConfig.API_URL}/notifications-list`,
+  StripeCharge: `${APPConfig.API_URL}/league-stripe-charge`,
+  StripePayStatus: `${APPConfig.API_URL}/league-pay-stripe`,
+  StripeChargeGlobal: `${APPConfig.API_URL}/global-league-stripe-charge`,
+  StripePayStatusGlobal: `${APPConfig.API_URL}/global-league-pay-stripe`,
 };
 
 export default ApiEndPoints;

@@ -1286,7 +1286,9 @@ export const EventScore = React.memo(() => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.sport_key_id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${markets}&oddsFormat=american`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${
+          event?.sport_key_id
+        }/odds?apiKey=${"70173f278a01e8435b455106129a550f"}&regions=us&markets=${markets}&oddsFormat=american`,
         {
           method: "GET",
           headers: {
@@ -2514,9 +2516,7 @@ export const EventScore = React.memo(() => {
             </Col>
           </Row>
           <hr />
-
-          {propData?.bookmakers?.filter((market) => market.key === "fanduel")
-            .length === 0 ? (
+          {propData?.bookmakers?.filter((market) => market.key).length === 0 ? (
             <p>No props found</p>
           ) : (
             propData?.bookmakers
