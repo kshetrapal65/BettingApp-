@@ -24,6 +24,7 @@ import ChallangesList from "../Screens/Challanges/ChallangesList.js";
 import HedgeCalculater from "../Screens/Parlay/HedgeCalculater.js";
 import EvCalculater from "../Screens/Parlay/EvCalculater.js";
 import Notification from "../Screens/Notification/Notification.js";
+import TransactionHistory from "../Screens/Transaction/TransactionHistory.js";
 
 const PublicRouter = () => {
   return (
@@ -50,6 +51,7 @@ const PublicRouter = () => {
         <Route path="/create-leagues" element={<CreateLeagues />} />
         <Route path="/challanges" element={<ChallangesList />} />
         <Route path="/notification" element={<Notification />} />
+        <Route path="/transaction-history" element={<TransactionHistory />} />
         <Route
           path="/league-details/:id/invite/:code/:ids"
           element={

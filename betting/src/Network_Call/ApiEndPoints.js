@@ -26,6 +26,7 @@ const ApiEndPoints = {
   LeaveLeague: `${APPConfig.API_URL}/league-leave/`,
   AcceptInvite: `${APPConfig.API_URL}/league-accept-invite`,
   LeagueUnits: `${APPConfig.API_URL}/league-member/`,
+  GlobalLeagueUnits: `${APPConfig.API_URL}/global-league-member/`,
   getOddsBygame: `${APPConfig.API_URL}/odds-by-game/`,
   UpdateUnit: `${APPConfig.API_URL}/update-unit-league/`,
   GlobalLeagues: `${APPConfig.API_URL}/global-leagues`,
@@ -45,10 +46,12 @@ const ApiEndPoints = {
   leagueDashboard: `${APPConfig.API_URL}/league-dashboard/`,
   UserAnalysis: `${APPConfig.API_URL}/user-analysis`,
   Notifications: `${APPConfig.API_URL}/notifications-list`,
+  NotificationDelete: `${APPConfig.API_URL}/notification-delete/`,
   StripeCharge: `${APPConfig.API_URL}/league-stripe-charge`,
   StripePayStatus: `${APPConfig.API_URL}/league-pay-stripe`,
   StripeChargeGlobal: `${APPConfig.API_URL}/global-league-stripe-charge`,
   StripePayStatusGlobal: `${APPConfig.API_URL}/global-league-pay-stripe`,
+  TransactionHistory: `${APPConfig.API_URL}/transaction-history`,
 };
 
 export default ApiEndPoints;

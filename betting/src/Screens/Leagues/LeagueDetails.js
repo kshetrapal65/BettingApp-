@@ -244,10 +244,10 @@ const LeagueDetails = () => {
         pairs.push({
           player1: members[i].member_name,
           id1: members[i].id,
-          unit1: members[i].member_unit || "NA",
+          unit1: members[i].member_unit_remain || "NA",
           player2: members[i + 1].member_name,
           id2: members[i + 1].id,
-          unit2: members[i + 1].member_unit || "NA",
+          unit2: members[i + 1].member_unit_remain || "NA",
         });
       }
     }
@@ -484,7 +484,7 @@ const LeagueDetails = () => {
                         {member?.roi?.bet_total}-{member?.roi?.bet_win}-
                         {member?.roi?.bet_loss}
                       </td>
-                      <td>{member.member_unit}</td>
+                      <td>{member.member_unit_remain}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -631,7 +631,7 @@ const LeagueDetails = () => {
                             <Col xs={12} lg={12}>
                               {" "}
                               <h5 className="text-muted fw-bold ">
-                                {item?.member_unit}
+                                {item?.member_unit_remain}
                               </h5>
                             </Col>
                             <Col xs={12} lg={12}>

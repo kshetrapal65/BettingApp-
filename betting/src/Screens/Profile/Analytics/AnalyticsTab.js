@@ -241,7 +241,9 @@ const AnalyticsTab = () => {
             >
               <Card.Title className="anal-title">Last 30</Card.Title>
               <Card.Text>
-                <span className="amount">$0.63</span>
+                <span className="amount">
+                  ${analyticsData?.last_30_days?.total_win_amt?.toFixed(2)}
+                </span>
                 <br />
                 <span className="record">
                   {analyticsData?.last_30_days?.bet_total}-
@@ -265,7 +267,9 @@ const AnalyticsTab = () => {
             >
               <Card.Title className="anal-title">Today</Card.Title>
               <Card.Text>
-                <span className="amount">$0.0</span>
+                <span className="amount">
+                  ${analyticsData?.today_data?.total_win_amt?.toFixed(2)}
+                </span>
                 <br />
                 <span className="record">
                   {" "}
@@ -296,7 +300,8 @@ const AnalyticsTab = () => {
                 color: "#d32f2f",
               }}
             >
-              $0.63 <span style={{ fontSize: "14px" }}>▼</span>
+              ${analyticsData?.last_30_days?.total_win_amt?.toFixed(2)}{" "}
+              <span style={{ fontSize: "14px" }}></span>
             </div>
           </Col>
           <Col xs={6} style={{ textAlign: "right" }}>
@@ -332,7 +337,8 @@ const AnalyticsTab = () => {
                 color: "#d32f2f",
               }}
             >
-              $0.63 <span style={{ fontSize: "14px" }}>▼</span>
+              ${analyticsData?.today_data?.total_win_amt?.toFixed(2)}
+              <span style={{ fontSize: "14px" }}></span>
             </div>
           </Col>
           <Col xs={6} style={{ textAlign: "right" }}>

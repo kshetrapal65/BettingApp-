@@ -115,6 +115,7 @@ const ChallangesList = () => {
         handleClose();
       } else {
         setLoad(false);
+        toast.error(response?.msg);
       }
     } catch (error) {
       console.log(error);

@@ -51,6 +51,8 @@ const CreateLeagues = () => {
   const shareUrl = ShareableLink(linkData?.id, linkData?.invite_code);
   const leaguesToShow = showAll ? sportsLeagues : sportsLeagues.slice(0, 10);
 
+  const currentDateTime = new Date().toISOString().slice(0, 16);
+
   setTimeout(() => {
     setCopy(false);
   }, 2000);
@@ -58,7 +60,6 @@ const CreateLeagues = () => {
   const handleGameTypeChange = (type) => {
     setGameType(type);
   };
-  console.log("unitType", unitType);
 
   const handleLeagueChange = (league) => {
     if (selectedLeagues.some((item) => item.title === league.title)) {
@@ -298,6 +299,7 @@ const CreateLeagues = () => {
                           type="datetime-local"
                           placeholder="Start Date"
                           value={startDate}
+                          min={currentDateTime}
                           onChange={(e) => setStartDate(e.target.value)}
                         />
                       </InputGroup>
@@ -311,6 +313,7 @@ const CreateLeagues = () => {
                           type="datetime-local"
                           placeholder="End Date"
                           value={endDate}
+                          min={currentDateTime}
                           onChange={(e) => setEndDate(e.target.value)}
                         />
                       </InputGroup>

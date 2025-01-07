@@ -19,7 +19,6 @@ const Home = () => {
   const [event, setEvent] = React.useState([]);
   const [league, setLeague] = React.useState([]);
   const navigate = useNavigate();
-  console.log("league", league);
 
   useEffect(() => {
     fetchEvent();

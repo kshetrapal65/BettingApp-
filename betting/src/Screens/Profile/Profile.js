@@ -421,29 +421,6 @@ const Profile = () => {
     getProfile();
   }, []);
 
-  // React.useEffect(() => {
-  //   if (profileData) {
-  //     setFormDatas({
-  //       name: profileData.name || "",
-  //       email: profileData.email || "",
-  //     });
-  //     setImageUrl(profileData.profile_image || "");
-  //   }
-  //   if (bankData) {
-  //     setBankForm({
-  //       bank_name: bankData.bank_name || "",
-  //       account_number: bankData.account_number || "",
-  //       account_name: bankData.account_name || "",
-  //     });
-  //   }
-  // }, [profileData, bankData]);
-
-  // const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-
-  // const handleBankClose = () => setShowBank(false);
-  // const handleBankShow = () => setShowBank(true);
-
   const getProfile = async () => {
     try {
       const response = await apiCallNew("get", null, ApiEndPoints.ProfileGet);
@@ -451,73 +428,9 @@ const Profile = () => {
         setProfileData(response.result);
       }
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error(error);
     }
   };
-
-  // const updateProfile = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("name", formDatas.name);
-  //     formData.append("profile_image", file);
-  //     setLoad(true);
-  //     const response = await apiCallNew(
-  //       "post",
-  //       formData,
-  //       ApiEndPoints.ProfileUpdate
-  //     );
-  //     if (response.success === true) {
-  //       getProfile();
-  //       handleClose();
-  //       setLoad(false);
-  //       toast.success(response.msg);
-  //     } else {
-  //       toast.error(response?.result?.profile_image[0]);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching profile:", error);
-  //     setLoad(false);
-  //   }
-  // };
-
-  // const getBankInfo = async () => {
-  //   try {
-  //     const response = await apiCallNew("get", null, ApiEndPoints.BankInfo);
-  //     if (response.success === true) {
-  //       setBankData(response.result);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching profile:", error);
-  //   }
-  // };
-
-  // const updateBankInfo = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("bank_name", bankForm.bank_name);
-  //     formData.append("account_number", bankForm.account_number);
-  //     formData.append("account_name", bankForm.account_name);
-  //     setLoad(true);
-  //     const response = await apiCallNew(
-  //       "post",
-  //       formData,
-  //       ApiEndPoints.BankUpdate
-  //     );
-  //     if (response.success === true) {
-  //       getBankInfo();
-  //       handleBankClose();
-  //       setLoad(false);
-  //       toast.success(response.msg);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching profile:", error);
-  //     setLoad(false);
-  //   }
-  // };
-  // const logout = () => {
-  //   localStorage.removeItem("@userToken");
-  //   navigate("/login");
-  // };
 
   const handleSelect = (key) => {
     setTabKey(key);
@@ -537,11 +450,13 @@ const Profile = () => {
             width="120"
             style={{ backgroundColor: "#ccc", height: "120px" }}
           />
-          <h5 className="mb-0 fw-bold ms-5">
-            {formatCapital(profileData?.name)}
-          </h5>
+          <div className="ms-5">
+            <h5 className="mb-0 fw-bold">{formatCapital(profileData?.name)}</h5>
+            <p className="text-muted mt-1">
+              {/* Wallet Unit: <strong> {profileData?.wallet?.toFixed(2)}</strong> */}
+            </p>
+          </div>
         </Col>
-        <Col xs={9}>{/* <p>Followers: 4 | Following: 2</p> */}</Col>
       </Row>
       <Row className="  mb-3 mt-3">
         <Col xs={12}>

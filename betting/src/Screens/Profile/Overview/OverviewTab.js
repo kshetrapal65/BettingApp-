@@ -312,6 +312,17 @@ const OverviewTab = ({ profileData, getProfile }) => {
               </div>
               <div className="option">
                 <span className="option-icon">
+                  <FaHistory />
+                </span>
+                <span
+                  className="small fw-bold"
+                  onClick={() => navigate("/transaction-history")}
+                >
+                  Transaction History
+                </span>
+              </div>
+              <div className="option">
+                <span className="option-icon">
                   <RiLogoutBoxLine />
                 </span>
                 <span className="small fw-bold" onClick={logout}>
