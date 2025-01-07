@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
-import { Container, Row, Col, Card, Badge } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import moment from "moment";
+import Swal from "sweetalert2";
+import { FaTrash } from "react-icons/fa";
 
 const Notification = () => {
   const [data, setData] = useState([]);
+
   useEffect(() => {
     getNotification();
   }, []);
+
   const getNotification = async () => {
     try {
       const response = await apiCallNew(
@@ -22,6 +32,36 @@ const Notification = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const deleteNotification = async (id) => {
+    try {
+      const response = await apiCallNew(
+        "delete",
+        {},
+        ApiEndPoints.NotificationDelete + id
+      );
+      if (response.success === true) {
+        getNotification();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const confirmDeletion = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete the notification?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#155636",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteNotification(id);
+      }
+    });
   };
 
   return (
@@ -41,25 +81,28 @@ const Notification = () => {
             data.map((notification) => (
               <Card key={notification.id} className="mb-3 shadow-sm">
                 <Card.Body>
-                  <Card.Title
-                    style={{
-                      fontSize: "1.3rem",
-                      color: "#2c3e50",
-                      fontWeight: "bold",
-                    }}
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    {notification.title}
-                  </Card.Title>
+                    <Card.Title
+                      style={{
+                        fontSize: "1.3rem",
+                        color: "#2c3e50",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {notification.title}
+                    </Card.Title>
+                    <FaTrash
+                      style={{ cursor: "pointer", color: "red" }}
+                      onClick={() => confirmDeletion(notification.id)}
+                    />
+                  </div>
                   <Card.Text>{notification.message}</Card.Text>
                   <small className="text-muted">
                     {moment(notification.created_at).format("YYYY-MM-DD HH:mm")}
                   </small>
                   <br />
-                  {/* {notification.read_at ? (
-                    <small className="text-success">Read</small>
-                  ) : (
-                    <small className="text-danger">Unread</small>
-                  )} */}
                 </Card.Body>
               </Card>
             ))

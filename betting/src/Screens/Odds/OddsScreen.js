@@ -2004,7 +2004,6 @@ export const OddsScreen = () => {
   const league = location.state?.league;
   const status = location.state?.status;
   const league_type = location.state?.league_type;
-
   const [sport, setSport] = React.useState(key ? key : "americanfootball_cfl");
   const [market, setMarket] = React.useState("h2h");
 
@@ -2044,8 +2043,6 @@ export const OddsScreen = () => {
 
   const getmonyline = cartData?.find((item) => item?.market == "moneyline");
 
-  console.log("unitData", unitData?.member_unit);
-
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
@@ -2072,12 +2069,12 @@ export const OddsScreen = () => {
       calculateParlay();
     }
   }, [activeTabs, parlayBet, cartData]);
+
   useEffect(() => {
     if (activeTabs === "Teaser") {
       calculateTeaser();
     }
   }, [activeTabs, teaserBet, cartData]);
-
   React.useEffect(() => {
     if (cartData?.length >= 2) {
       setActiveTabs("Straights");
@@ -2139,7 +2136,9 @@ export const OddsScreen = () => {
       const response = await apiCallNew(
         "get",
         null,
-        ApiEndPoints.LeagueUnits + league?.id
+        league_type == "global_league"
+          ? ApiEndPoints.GlobalLeagueUnits + league?.id
+          : ApiEndPoints.LeagueUnits + league?.id
       );
       if (response.success === true) {
         setUnitData(response.result);
@@ -2218,7 +2217,6 @@ export const OddsScreen = () => {
 
     const totalPayout = teaserBet * decimalOdds;
     const profit = totalPayout - teaserBet;
-
     setTeaserResult(profit?.toFixed(2));
 
     return {
@@ -2243,7 +2241,6 @@ export const OddsScreen = () => {
     const result = wagerAmount * totalOdds;
     const result2 = result - parlayBet;
     setParlayResult(result2.toFixed(2));
-    console.log("result", result);
   };
 
   const SubmitPlaceBet = async () => {
@@ -2328,6 +2325,7 @@ export const OddsScreen = () => {
         setCartData([]);
         setParlayBet(0);
         setParlayResult(0);
+        getUnits();
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -2395,7 +2393,7 @@ export const OddsScreen = () => {
             {status == 1 && cartData?.length > 0 && (
               <Col xs="auto">
                 <p className="mb-0 small text-muted fw-bold text-uppercase text-center">
-                  remaining unit: {unitData?.member_unit}
+                  remaining unit: {unitData?.member_unit_remain || 0}
                 </p>
               </Col>
             )}
@@ -2549,7 +2547,7 @@ export const OddsScreen = () => {
               disabled={
                 cartData?.length === 0 ||
                 (status == 1 &&
-                  Number(parlayBet) > Number(unitData.member_unit))
+                  Number(parlayBet) > Number(unitData.member_unit_remain || 0))
               }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2751,7 +2749,14 @@ export const OddsScreen = () => {
                 <h6>${teaserResult == "NaN" ? 0 : teaserResult}</h6>
               </Col>
             </Row>
-
+            {sport == "americanfootball_nfl" || sport == "basketball_nba" ? (
+              ""
+            ) : (
+              <span className="text-danger mb-2" style={{ fontSize: "12px" }}>
+                This bet is not a teaser or it's not for
+                americanfootball_nfl/basketball_nba.
+              </span>
+            )}
             {getmonyline && (
               <span className="text-danger" style={{ fontSize: "12px" }}>
                 Teasers can only include spreads and totals from football and
@@ -2765,7 +2770,8 @@ export const OddsScreen = () => {
               disabled={
                 cartData?.length === 0 ||
                 getmonyline ||
-                (status == 1 && teaserBet > Number(unitData.member_unit))
+                (status == 1 &&
+                  teaserBet > Number(unitData.member_unit_remain || 0))
               }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2894,7 +2900,7 @@ export const OddsScreen = () => {
             <Button
               disabled={
                 cartData?.length === 0 ||
-                (status == 1 && totalWager > unitData.member_unit)
+                (status == 1 && totalWager > (unitData.member_unit_remain || 0))
               }
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
