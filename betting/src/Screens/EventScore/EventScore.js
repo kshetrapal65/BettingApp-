@@ -15,15 +15,6 @@ import {
   Dropdown,
   Form,
 } from "react-bootstrap";
-import { BsCalendar3 } from "react-icons/bs"; // Import from react-icons
-import {
-  Box,
-  Typography,
-  Paper,
-  TextField,
-  Divider,
-  Grid,
-} from "@mui/material";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import moment from "moment";
 import toast from "react-hot-toast";
@@ -1091,9 +1082,8 @@ export const EventScore = React.memo(() => {
   const [parlayBet, setParlayBet] = React.useState();
   const [parlayResult, setParlayResult] = React.useState(0);
   const [bookmakers, setBookmakers] = React.useState([]);
-  const [bookmaker, setBookmaker] = React.useState("draftkings");
-  const [propBookmaker, setPropBookmaker] = React.useState("draftkings");
-  const [bookmakerName, setBookmakername] = React.useState("DraftKings");
+  const [bookmaker, setBookmaker] = React.useState("fanDuel");
+  const [bookmakerName, setBookmakername] = React.useState("FanDuel");
   const [load, setLoad] = React.useState(false);
   const token = getToken();
   const [teaser, setTeaser] = React.useState(6);
@@ -1101,7 +1091,7 @@ export const EventScore = React.memo(() => {
   const [teaserResult, setTeaserResult] = React.useState(0);
   const location = useLocation();
   const event = location.state || {};
-
+  const [userUnit, setUserUnit] = React.useState(0);
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(selectedMarkets));
   }, [selectedMarkets]);
@@ -1128,14 +1118,16 @@ export const EventScore = React.memo(() => {
     setBookmaker(e.target.value);
     setBookmakername(e.target.options[e.target.selectedIndex].text);
   };
-  const handlePropBookmaker = (e) => {
-    setPropBookmaker(e.target.value);
-    // setBookmakername(e.target.options[e.target.selectedIndex].text);
-  };
+  // const handlePropBookmaker = (e) => {
+  //   setPropBookmaker(e.target.value);
+  //   // setBookmakername(e.target.options[e.target.selectedIndex].text);
+  // };
   useEffect(() => {
     fetchScore();
     fetchEventOdds();
+    getUserUnit();
   }, [event, activeTab]);
+
   useEffect(() => {
     if (eventOdds?.bookmakers) {
       const bookmakerKeysAndTitles = eventOdds?.bookmakers?.map(
@@ -1144,7 +1136,16 @@ export const EventScore = React.memo(() => {
           title: bookmaker.title,
         })
       );
-
+      const fanduelBookmaker = bookmakerKeysAndTitles.find(
+        (bookmaker) => bookmaker.key === "fanduel"
+      );
+      if (fanduelBookmaker) {
+        setBookmaker("fanduel");
+        setBookmakername("FanDuel");
+      } else {
+        setBookmaker(bookmakerKeysAndTitles[0]?.key);
+        setBookmakername(bookmakerKeysAndTitles[0]?.title);
+      }
       setBookmakers(bookmakerKeysAndTitles);
     }
   }, [eventOdds]);
@@ -1191,6 +1192,17 @@ export const EventScore = React.memo(() => {
     fetchProps();
   }, [markets]);
 
+  const getUserUnit = async () => {
+    try {
+      const response = await apiCallNew("get", null, ApiEndPoints.ProfileGet);
+      if (response.success === true) {
+        setUserUnit(response.result);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchMarket = async () => {
     try {
       const response = await fetch(
@@ -1234,7 +1246,7 @@ export const EventScore = React.memo(() => {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
         // ` https://api.the-odds-api.com/v4/sports/${event?.sport_key}/scores/?daysFrom=1&apiKey=${ApiEndPoints.ApiKey}&eventIds=${event?.sport_key_id}`,
-        ApiEndPoints.getScoreById + event?.sport_key_id,
+        ApiEndPoints.getScoreById + event?.id,
         {
           method: "GET",
           headers: {
@@ -1259,7 +1271,7 @@ export const EventScore = React.memo(() => {
     formdata.append("region", "us");
     formdata.append("oddsFormat", "american");
     formdata.append("markets", activeTab);
-    formdata.append("eventId", event?.sport_key_id);
+    formdata.append("eventId", event?.id);
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
@@ -1282,13 +1294,12 @@ export const EventScore = React.memo(() => {
       console.log(error);
     }
   };
+  console.log(">>>>>>>>>", event);
   const fetchProps = async () => {
     try {
       const response = await fetch(
         // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${apikey}`,
-        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${
-          event?.sport_key_id
-        }/odds?apiKey=${"70173f278a01e8435b455106129a550f"}&regions=us&markets=${markets}&oddsFormat=american`,
+        `https://api.the-odds-api.com/v4/sports/${event?.sport_key}/events/${event?.id}/odds?apiKey=${ApiEndPoints.ApiKey}&regions=us&markets=${markets}&oddsFormat=american`,
         {
           method: "GET",
           headers: {
@@ -1542,6 +1553,7 @@ export const EventScore = React.memo(() => {
         setParlayBet(0);
         setParlayResult(0);
         setActiveTabs("Straights");
+        getUserUnit();
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -1611,21 +1623,19 @@ export const EventScore = React.memo(() => {
               </h7>
             </Col>
             <Col>
-              {bookmakers?.length > 0 && (
-                <Form.Group
-                  onChange={handleBookmaker}
-                  controlId="formSelect "
-                  className="mb-3"
-                >
-                  <Form.Select value={bookmaker} aria-label="Select option">
-                    {bookmakers?.map((sport, index) => (
-                      <option key={index} value={sport.key}>
-                        {sport.title}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              )}
+              <Form.Group
+                onChange={handleBookmaker}
+                controlId="formSelect "
+                className="mb-3"
+              >
+                <Form.Select value={bookmaker} aria-label="Select option">
+                  {bookmakers?.map((sport, index) => (
+                    <option key={index} value={sport.key}>
+                      {sport.title}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
             </Col>
           </Row>
 
@@ -1945,6 +1955,15 @@ export const EventScore = React.memo(() => {
               Clear All
             </Button>
           </Col>
+          <Row className="d-flex justify-content-center align-items-center">
+            {selectedMarkets?.length > 0 && (
+              <Col xs="auto">
+                <p className="mb-0 small text-muted fw-bold text-uppercase text-center">
+                  remaining unit: {userUnit?.wallet ?? 0}
+                </p>
+              </Col>
+            )}
+          </Row>
         </Row>
 
         {activeTabs === "Parlay" ? (
@@ -2091,7 +2110,10 @@ export const EventScore = React.memo(() => {
 
             <Button
               onClick={SubmitBet}
-              disabled={selectedMarkets.length === 0}
+              disabled={
+                selectedMarkets.length === 0 ||
+                parlayBet > (userUnit?.wallet ?? 0)
+              }
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2304,7 +2326,11 @@ export const EventScore = React.memo(() => {
             <Button
               onClick={SubmitBet}
               variant="#155239"
-              disabled={selectedMarkets?.length === 0 || getmonyline}
+              disabled={
+                selectedMarkets?.length === 0 ||
+                getmonyline ||
+                teaserBet > (userUnit?.wallet ?? 0)
+              }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
               className="w-100"
@@ -2430,7 +2456,10 @@ export const EventScore = React.memo(() => {
 
             <Button
               onClick={SubmitBet}
-              disabled={selectedMarkets.length === 0}
+              disabled={
+                selectedMarkets.length === 0 ||
+                totalWager > (userUnit?.wallet ?? 0)
+              }
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"

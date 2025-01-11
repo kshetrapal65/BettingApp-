@@ -30,10 +30,10 @@ const Home = () => {
   const fetchEvent = async () => {
     try {
       const response = await fetch(
-        // `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
-        ApiEndPoints.getScore + sport,
+        `https://api.the-odds-api.com/v4/sports/${sport}/events/?apiKey=${ApiEndPoints.ApiKey}`,
+        // ApiEndPoints.getScore + sport,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
@@ -46,7 +46,7 @@ const Home = () => {
 
       const data = await response.json();
       console.log("response", data);
-      setEvent(data?.result);
+      setEvent(data);
     } catch (error) {
       console.log(error);
     }
@@ -1250,7 +1250,7 @@ const Home = () => {
               </Form.Group>
             </Col>
             <Col lg={10}>
-              {event.length > 0 ? (
+              {event?.length > 0 ? (
                 <div
                   style={{
                     display: "flex",
@@ -1261,7 +1261,7 @@ const Home = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {event.map((eventItem) => (
+                  {event?.map((eventItem) => (
                     <Card
                       key={eventItem.id}
                       className="shadow-sm"
@@ -1389,52 +1389,6 @@ const Home = () => {
             </Col>
           </Row>
 
-          {/* <Row className="mt-5 justify-content-around  ">
-            <Col className="bg-light p-4 rounded-5" lg={12}>
-              <Row>
-                <Col>
-                  <h5>Recent Stories</h5>
-                </Col>
-                <Col className="text-end">
-                  <h5 className="text-primary">
-                    <span style={{ cursor: "pointer" }}>See All</span>
-                  </h5>
-                </Col>
-              </Row>
-
-              <Row className="mt-3 p-3">
-                {newsData?.map((item, index) => (
-                  <Col lg={4} md={6} sm={12} className="d-flex" key={index}>
-                    <div className="d-flex mb-3" style={{ width: "100%" }}>
-                      <div style={{ flexShrink: 0, width: "120px" }}>
-                        <Image
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            objectFit: "cover",
-                            aspectRatio: "1/1",
-                            borderRadius: "18px",
-                          }}
-                          src={item.urlToImage}
-                        />
-                      </div>
-                      <div
-                        className="d-flex flex-column ms-3"
-                        style={{ flex: 1 }}
-                      >
-                        <h5 className="fw-bold">{item.title}</h5>
-                        <p>{item.description}</p>
-                        <p style={{ fontSize: "12px" }} className="text-muted">
-                          {new Date(item.publishedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </Col>
-                ))} 
-              </Row>
-            </Col>
-            <Col className="  text-end" lg={4}></Col>
-          </Row> */}
           <RecentStory />
         </Container>
       </div>

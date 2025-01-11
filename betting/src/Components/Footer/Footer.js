@@ -1,18 +1,10 @@
 import React from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
-// import "./App.css";
 import "./Footer.css";
-// import Images from "./Helper/Images";
-import {
-  FaApple,
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
-import { create } from "@mui/material/styles/createTransitions";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="footer mt-auto py-4 bg-dark text-white">
@@ -54,21 +46,15 @@ function Footer() {
 
           {/* For Customers Section */}
           <Col md={3} xs={6} className="mb-3">
-            <h6 className="font-weight-bold text-white">Expert Picks</h6>
+            <h6 className="font-weight-bold text-white">Sports</h6>
             <ul className="list-unstyled">
               <li>
                 <a href="#">NFL Picks & Analysis</a>
               </li>
               <li>
-                <Link to="/user-guide">
-                  <a href="#">NBA Picks & Analysis</a>
-                </Link>
+                <a href="#">NBA Picks & Analysis</a>
               </li>
-              <li>
-                <Link to="/blogs">
-                  <a href="#">College Football Picks & Analysis</a>
-                </Link>
-              </li>
+
               <li>
                 <Link to="/contact-us">
                   <a href="#">Contact us</a>
@@ -87,9 +73,7 @@ function Footer() {
               <li>
                 <a href="#">NBA Odds & Betting Lines</a>
               </li>
-              <li>
-                <a href="#">College Football Odds & Betting Lines</a>
-              </li>
+
               <li>
                 <a href="#">NHL Odds & Betting Lines</a>
               </li>

@@ -1,33 +1,38 @@
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-  useTransition,
-} from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import ApiEndPoints from "../../Network_Call/ApiEndPoints";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Pagination } from "react-bootstrap";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { FaTrash } from "react-icons/fa";
 
 const Notification = () => {
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [load, setLoad] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemPerPage = 20;
 
   useEffect(() => {
-    getNotification();
-  }, []);
+    getNotification(page);
+  }, [page]);
 
-  const getNotification = async () => {
+  const handlePageChange = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
+  const getNotification = async (page) => {
+    const formData = new FormData();
+    formData.append("page", page - 1);
     try {
       const response = await apiCallNew(
         "post",
-        null,
+        formData,
         ApiEndPoints.Notifications
       );
       if (response.success === true) {
         setData(response.result);
+        setTotalCount(response.count);
       }
     } catch (error) {
       console.error(error);
@@ -111,6 +116,37 @@ const Notification = () => {
               No notifications available.
             </p>
           )}
+          <Pagination className="mt-3 justify-content-center">
+            <Pagination.First
+              onClick={() => handlePageChange(1)}
+              disabled={page === 1}
+            />
+            <Pagination.Prev
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+            />
+            {[...Array(Math.ceil(totalCount / itemPerPage)).keys()].map(
+              (pageIndex) => (
+                <Pagination.Item
+                  key={pageIndex + 1}
+                  active={pageIndex + 1 === page}
+                  onClick={() => handlePageChange(pageIndex + 1)}
+                >
+                  {pageIndex + 1}
+                </Pagination.Item>
+              )
+            )}
+            <Pagination.Next
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === Math.ceil(totalCount / itemPerPage)}
+            />
+            <Pagination.Last
+              onClick={() =>
+                handlePageChange(Math.ceil(totalCount / itemPerPage))
+              }
+              disabled={page === Math.ceil(totalCount / itemPerPage)}
+            />
+          </Pagination>
         </Col>
       </Row>
     </Container>

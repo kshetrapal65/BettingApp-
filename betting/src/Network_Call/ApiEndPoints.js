@@ -4,8 +4,8 @@ const APPConfig = {
 };
 // 752d253c74fc59219fd336b881fdd13c
 const ApiEndPoints = {
-  ApiKey: "70173f278a01e8435b455106129a550f",
-  // ApiKey: "f9af698cc538367931ebfe9e11c6b3cc",
+  // ApiKey: "f352d269d2e26c8816a06c58b2d74d03",
+  ApiKey: "f9af698cc538367931ebfe9e11c6b3cc",
   Login: `${APPConfig.API_URL}/login`,
   Register: `${APPConfig.API_URL}/register`,
   ForgotPassword: `${APPConfig.API_URL}/forgot-password`,
@@ -52,6 +52,9 @@ const ApiEndPoints = {
   StripeChargeGlobal: `${APPConfig.API_URL}/global-league-stripe-charge`,
   StripePayStatusGlobal: `${APPConfig.API_URL}/global-league-pay-stripe`,
   TransactionHistory: `${APPConfig.API_URL}/transaction-history`,
+  PrivacyPolicy: `${APPConfig.API_URL}/page/privacy_policy`,
+  TandC: `${APPConfig.API_URL}/page/terms_condition`,
+  ContactsUs: `${APPConfig.API_URL}/contactus`,
 };
 
 export default ApiEndPoints;
