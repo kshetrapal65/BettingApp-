@@ -18,12 +18,10 @@ import ApiEndPoints from "../../Network_Call/ApiEndPoints";
 import RecentStory from "../../Components/RecentStory";
 import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
-import { FaChampagneGlasses } from "react-icons/fa6";
 import { apiCallNew } from "../../Network_Call/apiservices";
 import { getToken } from "../../Helper/Storage";
 import { PulseLoader } from "react-spinners";
 const Data = oddsData;
-const apikey = "0119dd31fef7c240837b6c47a04c03ee";
 
 const SportList = [
   {
@@ -1994,6 +1992,10 @@ const teamImages = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_braz_logo.svg/1200px-Flamengo_braz_logo.svg.png",
   Fortaleza:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRayCOHSg5DkLr6sa59uyPoMcVjtiY6cuqIeg&s",
+  "Sri Lanka":
+    "https://static.vecteezy.com/system/resources/previews/015/309/699/non_2x/sri-lanka-waving-flag-realistic-transparent-background-free-png.png",
+  "New Zealand":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_New_Zealand.png/1200px-Flag_of_New_Zealand.png",
 };
 
 export const OddsScreen = () => {
@@ -2020,6 +2022,7 @@ export const OddsScreen = () => {
   const [BookmakerName, setBookmakername] = React.useState("FanDuel");
   const [load, setLoad] = React.useState(false);
   const [unitData, setUnitData] = React.useState("");
+  const [userUnit, setUserUnit] = React.useState(0);
   const [teaser, setTeaser] = React.useState(6);
   const [teaserBet, setTeaserBet] = React.useState();
   const [teaserResult, setTeaserResult] = React.useState(0);
@@ -2042,7 +2045,6 @@ export const OddsScreen = () => {
   );
 
   const getmonyline = cartData?.find((item) => item?.market == "moneyline");
-
   useEffect(() => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   }, [cartData]);
@@ -2088,6 +2090,7 @@ export const OddsScreen = () => {
   useEffect(() => {
     fetchEvent();
     getUnits();
+    getUserUnit();
   }, [sport]);
   useEffect(() => {
     if (data?.[0]?.bookmakers) {
@@ -2095,9 +2098,20 @@ export const OddsScreen = () => {
         key: bookmaker.key,
         title: bookmaker.title,
       }));
+      const fanduelBookmaker = bookmakerKeysAndTitles.find(
+        (bookmaker) => bookmaker.key === "fanduel"
+      );
+      if (fanduelBookmaker) {
+        setBookmaker("fanduel");
+        setBookmakername("FanDuel");
+      } else {
+        setBookmaker(bookmakerKeysAndTitles[0]?.key);
+        setBookmakername(bookmakerKeysAndTitles[0]?.title);
+      }
       setBookmakers(bookmakerKeysAndTitles);
     }
   }, [data]);
+
   const handleBookmaker = (e) => {
     setBookmaker(e.target.value);
     setBookmakername(e.target.options[e.target.selectedIndex].text);
@@ -2147,6 +2161,17 @@ export const OddsScreen = () => {
       console.error("Error fetching profile:", error);
     }
   };
+  const getUserUnit = async () => {
+    try {
+      const response = await apiCallNew("get", null, ApiEndPoints.ProfileGet);
+      if (response.success === true) {
+        setUserUnit(response.result.wallet);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleWagerChange = (index, wager) => {
     setCartData((prevMarkets) =>
       prevMarkets.map((market, i) =>
@@ -2326,6 +2351,7 @@ export const OddsScreen = () => {
         setParlayBet(0);
         setParlayResult(0);
         getUnits();
+        getUserUnit();
       } else {
         toast.error(response.msg);
         setLoad(false);
@@ -2354,15 +2380,6 @@ export const OddsScreen = () => {
               </Badge>
             </h5>
           </Col>
-          {/* <Col xs="auto">
-            <Button
-              variant="link"
-              size="sm"
-              className="p-0 text-decoration-none ms-3"
-            >
-              Settled
-            </Button>
-          </Col> */}
         </Row>
 
         <Row className="d-flex justify-content-between align-items-center mb-2">
@@ -2390,12 +2407,20 @@ export const OddsScreen = () => {
             </Button>
           </Col>
           <Row className="d-flex justify-content-center align-items-center">
-            {status == 1 && cartData?.length > 0 && (
+            {status == 1 && cartData?.length > 0 ? (
               <Col xs="auto">
                 <p className="mb-0 small text-muted fw-bold text-uppercase text-center">
                   remaining unit: {unitData?.member_unit_remain || 0}
                 </p>
               </Col>
+            ) : cartData?.length > 0 ? (
+              <Col xs="auto">
+                <p className="mb-0 small text-muted fw-bold text-uppercase text-center">
+                  remaining unit: {userUnit}
+                </p>
+              </Col>
+            ) : (
+              ""
             )}
           </Row>
         </Row>
@@ -2546,8 +2571,9 @@ export const OddsScreen = () => {
               variant="#155239"
               disabled={
                 cartData?.length === 0 ||
-                (status == 1 &&
-                  Number(parlayBet) > Number(unitData.member_unit_remain || 0))
+                (status == 1
+                  ? Number(parlayBet) > Number(unitData.member_unit_remain || 0)
+                  : Number(parlayBet) > userUnit)
               }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2770,8 +2796,9 @@ export const OddsScreen = () => {
               disabled={
                 cartData?.length === 0 ||
                 getmonyline ||
-                (status == 1 &&
-                  teaserBet > Number(unitData.member_unit_remain || 0))
+                (status == 1
+                  ? teaserBet > Number(unitData.member_unit_remain || 0)
+                  : teaserBet > userUnit)
               }
               style={{ backgroundColor: "#155239", color: "white" }}
               size="lg"
@@ -2900,7 +2927,9 @@ export const OddsScreen = () => {
             <Button
               disabled={
                 cartData?.length === 0 ||
-                (status == 1 && totalWager > (unitData.member_unit_remain || 0))
+                (status == 1
+                  ? totalWager > (unitData.member_unit_remain || 0)
+                  : totalWager > userUnit)
               }
               variant="#155239"
               style={{ backgroundColor: "#155239", color: "white" }}
@@ -3022,34 +3051,30 @@ export const OddsScreen = () => {
               )}
             </Form.Group>
           </Col>
-          {data?.length > 0 && (
-            <Col md={4}>
-              <Form.Group onChange={handleBookmaker} controlId="secondSelect">
-                <Form.Label className="fw-bold">Bookmakers</Form.Label>
-                <Form.Select
-                  className=""
-                  value={Bookmaker}
-                  onChange={(e) => setMarket(e.target.value)}
-                >
-                  {bookmakers?.map((bookmaker, index) => (
-                    <option
-                      className="fw-bold"
-                      key={index}
-                      value={bookmaker.key}
-                    >
-                      {bookmaker.title}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          )}
+          {/* {data?.length > 0 && ( */}
+          <Col md={4}>
+            <Form.Group onChange={handleBookmaker} controlId="secondSelect">
+              <Form.Label className="fw-bold">Bookmakers</Form.Label>
+              <Form.Select
+                className=""
+                value={Bookmaker}
+                onChange={(e) => setMarket(e.target.value)}
+              >
+                {bookmakers?.map((bookmaker, index) => (
+                  <option className="fw-bold" key={index} value={bookmaker.key}>
+                    {bookmaker.title}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          {/* )} */}
         </Row>
       </Form>
       <Row className="mt-3">
         <Col className="text-start" lg={8}>
           <div className="odds-table">
-            {data.length === 0 && (
+            {data?.length === 0 && (
               <div
                 className="text-center"
                 style={{ position: "relative", top: "30%" }}
@@ -3057,11 +3082,11 @@ export const OddsScreen = () => {
                 <p className="text-muted">No events available.</p>
               </div>
             )}
-            {data.map((game) => {
+            {/* {console.log("dddadadadada", data)} */}
+            {data?.map((game) => {
               const fanduelBookmaker = game?.bookmakers.find(
                 (bookmaker) => bookmaker.key === Bookmaker
               );
-
               const moneylineMarket = fanduelBookmaker?.markets.find(
                 (market) => market.key === "h2h"
               );
@@ -3080,6 +3105,8 @@ export const OddsScreen = () => {
                         <img
                           src={
                             teamImages[spreadMarket?.outcomes[0].name] ||
+                            teamImages[totalsMarket?.outcomes[0].name] ||
+                            teamImages[moneylineMarket?.outcomes[0].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.home_team}
@@ -3091,7 +3118,10 @@ export const OddsScreen = () => {
                           }}
                         />
                         <span className="team-name">
-                          {spreadMarket?.outcomes[0].name}
+                          {/* {spreadMarket?.outcomes[0].name} */}
+                          {spreadMarket?.outcomes[0].name ||
+                            totalsMarket?.outcomes[0].name ||
+                            moneylineMarket?.outcomes[0].name}
                         </span>
                       </div>
                     </Col>
@@ -3223,6 +3253,8 @@ export const OddsScreen = () => {
                         <img
                           src={
                             teamImages[spreadMarket?.outcomes[1].name] ||
+                            teamImages[totalsMarket?.outcomes[1].name] ||
+                            teamImages[moneylineMarket?.outcomes[1].name] ||
                             "https://assets.actionnetwork.com/372790_jets.png"
                           }
                           alt={game.away_team}
@@ -3234,7 +3266,10 @@ export const OddsScreen = () => {
                           }}
                         />
                         <span className="team-name">
-                          {spreadMarket?.outcomes[1].name}
+                          {/* {spreadMarket?.outcomes[1].name} */}
+                          {spreadMarket?.outcomes[1].name ||
+                            totalsMarket?.outcomes[1].name ||
+                            moneylineMarket?.outcomes[1].name}
                         </span>
                       </div>
                     </Col>

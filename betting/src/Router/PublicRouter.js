@@ -25,6 +25,9 @@ import HedgeCalculater from "../Screens/Parlay/HedgeCalculater.js";
 import EvCalculater from "../Screens/Parlay/EvCalculater.js";
 import Notification from "../Screens/Notification/Notification.js";
 import TransactionHistory from "../Screens/Transaction/TransactionHistory.js";
+import TermAndCondition from "../Screens/T&c/TermAndCondition.js";
+import PrivacyPolicy from "../Screens/Privacy/PrivacyPolicy.js";
+import ContactUs from "../Screens/ContactUs/ContactUs.js";
 
 const PublicRouter = () => {
   return (
@@ -52,6 +55,9 @@ const PublicRouter = () => {
         <Route path="/challanges" element={<ChallangesList />} />
         <Route path="/notification" element={<Notification />} />
         <Route path="/transaction-history" element={<TransactionHistory />} />
+        <Route path="/term-and-condition" element={<TermAndCondition />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/contact-us" element={<ContactUs />} />
         <Route
           path="/league-details/:id/invite/:code/:ids"
           element={
